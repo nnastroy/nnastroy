@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N4STR0Y | Instagram Bağlantısı</title>
+    <title>N4STR0Y | Dark Mode Panel</title>
     <style>
         body {
-            background-color: #fafafa;
+            background-color: #000000; /* Arka planı tamamen siyah yaptık */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -16,20 +16,23 @@
         }
         .container {
             text-align: center;
-            background: white;
+            /* Ortadaki kutuyu da koyu yaptık ama siyahla karışmaması için hafif gri */
+            background: #121212; 
             padding: 40px;
-            border: 1px solid #dbdbdb;
-            border-radius: 1px;
+            border: 1px solid #333333; /* Kenarlığı koyulaştırdık */
+            border-radius: 4px;
             max-width: 350px;
             width: 100%;
         }
         .logo {
             width: 175px;
             margin-bottom: 20px;
+            /* Instagram logosunu karanlık modda daha iyi görünmesi için beyazlattık */
+            filter: invert(1); 
         }
         .loader {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #3897f0;
+            border: 3px solid #333333; /* Halkanın dönmeyen kısmını koyu gri yaptık */
+            border-top: 3px solid #ffffff; /* Dönen kısmını (bağlantı yerini) beyaz yaptık */
             border-radius: 50%;
             width: 30px;
             height: 30px;
@@ -40,8 +43,8 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        h2 { color: #262626; font-size: 18px; margin-bottom: 10px; }
-        p { color: #8e8e8e; font-size: 14px; }
+        h2 { color: #ffffff; font-size: 18px; margin-bottom: 10px; } /* Başlık beyaz */
+        p { color: #b0b0b0; font-size: 14px; } /* Yazılar açık gri */
     </style>
 </head>
 <body>
@@ -49,9 +52,9 @@
 <div class="container">
     <img src="https://www.instagram.com/static/images/web/mobile_port_monospaced_with_gradient.png/11974b40a22d.png" class="logo" alt="Instagram">
     <div class="loader"></div>
-    <h2>N4STR0Y Paneli Hazırlanıyor</h2>
-    <p>API bağlantısı kuruluyor, lütfen bekleyin...</p>
-    <p style="font-size: 12px; margin-top: 20px; color: #dbdbdb;">v1.0.4 Build Mode</p>
+    <h2>N4STR0Y Dark Panel Active</h2>
+    <p>API bağlantısı şifreleniyor, lütfen bekleyin...</p>
+    <p style="font-size: 12px; margin-top: 20px; color: #444444;">v1.0.9 Secure Build Mode</p>
 </div>
 
 </body>

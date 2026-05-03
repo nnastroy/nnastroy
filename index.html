@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N4STR0Y | Matrix Panel</title>
+    <title>N4STR0Y | System Access</title>
     <style>
         body {
             background-color: #000000;
             margin: 0;
-            overflow: hidden; /* Kodların taşmaması için */
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -16,24 +16,23 @@
             font-family: 'Courier New', Courier, monospace;
         }
 
-        /* Arka plandaki Matrix kodları için Canvas */
         canvas {
             position: absolute;
             top: 0;
             left: 0;
-            display: none; /* Başlangıçta gizli */
+            display: none;
         }
 
         .container {
             text-align: center;
-            background: rgba(18, 18, 18, 0.9); /* Hafif şeffaf yaptık arkası görünsün diye */
+            background: rgba(10, 10, 10, 0.9);
             padding: 40px;
-            border: 1px solid #00ff41; /* Instagram mavisi yerine Matrix yeşili */
-            border-radius: 8px;
-            max-width: 350px;
+            border: 2px solid #00ff41;
+            border-radius: 10px;
+            max-width: 380px;
             width: 90%;
-            z-index: 10; /* Yazıların kodların üstünde kalması için */
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+            z-index: 10;
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
         }
 
         .start-btn {
@@ -45,11 +44,14 @@
             font-weight: bold;
             cursor: pointer;
             letter-spacing: 2px;
-            box-shadow: 0 0 10px #00ff41;
+            box-shadow: 0 0 15px #00ff41;
+            transition: 0.3s;
         }
 
-        h2 { color: #00ff41; text-shadow: 0 0 5px #00ff41; }
-        p { color: #008f11; font-size: 14px; }
+        .start-btn:active { transform: scale(0.95); }
+
+        h2 { color: #00ff41; text-shadow: 0 0 10px #00ff41; margin-bottom: 20px; }
+        p { color: #008f11; font-size: 14px; line-height: 1.6; }
     </style>
 </head>
 <body>
@@ -58,9 +60,9 @@
 
 <div class="container" id="panel">
     <h2 id="statusTitle">SYSTEM: N4STR0Y</h2>
-    <p id="statusText">Agresif bağlantı için butona dokun...</p>
+    <p id="statusText">Erişim yetkisi doğrulanıyor...<br>Devam etmek için onay verin.</p>
     
-    <button class="start-btn" id="startBtn">BAĞLANTIYI ZORLA</button>
+    <button class="start-btn" id="startBtn">SİSTEMİ AÇ</button>
 
     <audio id="myAudio" loop>
         <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
@@ -75,10 +77,9 @@
     const title = document.getElementById('statusTitle');
     const text = document.getElementById('statusText');
 
-    // Matrix Efekti Ayarları
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%'\"#&_(),.;:?!\\|{}<>[]^~";
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%#&@";
     const fontSize = 16;
     const columns = canvas.width / fontSize;
     const drops = [];
@@ -90,8 +91,8 @@
         ctx.fillStyle = "#00ff41";
         ctx.font = fontSize + "px arial";
         for (let i = 0; i < drops.length; i++) {
-            const text = chars[Math.floor(Math.random() * chars.length)];
-            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+            const char = chars[Math.floor(Math.random() * chars.length)];
+            ctx.fillText(char, i * fontSize, drops[i] * fontSize);
             if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
             drops[i]++;
         }
@@ -100,10 +101,14 @@
     btn.addEventListener('click', function() {
         audio.play();
         btn.style.display = 'none';
-        canvas.style.display = 'block'; // Kod yağmurunu başlat
-        title.innerText = "SYSTEM CRACKED";
-        text.innerText = "Bypass başarılı. Kodlar akıyor...";
-        setInterval(drawMatrix, 35); // Hızı buradan ayarlayabilirsin
+        canvas.style.display = 'block';
+        
+        // Burası istediğin değişikliği yapan kısım
+        title.innerText = "HOŞGELDİN MERYEM";
+        title.style.fontSize = "24px";
+        text.innerHTML = "Erişim başarılı. Tüm protokoller aktif edildi.<br>Sistem senin kontrolünde.";
+        
+        setInterval(drawMatrix, 35);
     });
 </script>
 

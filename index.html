@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N4STR0Y | SECURE FEED</title>
+    <title>N4STR0Y | CCTV ACCESS</title>
     <style>
         body { background-color: #000; margin: 0; overflow: hidden; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Courier New', monospace; color: #ff0000; }
         canvas { position: absolute; top: 0; left: 0; z-index: 1; opacity: 0.2; }
@@ -16,7 +16,7 @@
         
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
 
-        .container { position: relative; z-index: 30; background: rgba(10, 0, 0, 0.9); padding: 30px; border: 1px solid #ff0000; box-shadow: 0 0 25px #ff000044; width: 85%; max-width: 400px; }
+        .container { position: relative; z-index: 30; background: rgba(10, 0, 0, 0.9); padding: 30px; border: 1px solid #ff0000; box-shadow: 0 0 25px #ff000044; width: 85%; max-width: 400px; text-align: center; }
         
         .btn { background: #ff0000; color: #000; border: none; padding: 15px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; letter-spacing: 2px; }
         
@@ -34,30 +34,30 @@
 <div class="cam-overlay">
     <div class="rec-dot"></div>
     <div class="rec-text">REC</div>
-    <div class="timestamp" id="time">04/05/2026 18:42:01</div>
+    <div class="timestamp" id="time"></div>
 </div>
 
 <canvas id="matrix"></canvas>
 
 <div class="container" id="mainBox">
-    <div style="border-bottom: 1px solid #ff0000; margin-bottom: 15px; font-size: 12px;">LIVE FEED: NODE_N4STR0Y</div>
+    <div style="border-bottom: 1px solid #ff0000; margin-bottom: 15px; font-size: 12px; text-align: left;">LIVE FEED: NODE_N4STR0Y</div>
     
     <div id="init">
-        <p style="font-size: 13px;">SİSTEME SIZILIYOR...</p>
+        <p style="font-size: 13px;">KRİTİK BAĞLANTI BEKLENİYOR...</p>
         <button class="btn" onclick="startBruteForce()">BAĞLANTIYI ZORLA</button>
     </div>
 
     <div id="work" style="display:none;">
-        <div id="status" style="font-size: 14px; font-weight: bold;">ENCRYPTING...</div>
+        <div id="status" style="font-size: 14px; font-weight: bold;">OVERRIDING...</div>
         <div class="loader-bar" id="bar"></div>
-        <div id="console" style="font-size: 10px; color: #600;"></div>
+        <div id="console" style="font-size: 10px; color: #600; text-align: left;"></div>
     </div>
 
     <div id="choiceArea">
         <p style="font-size: 12px;">SİSTEM KONTROLÜ SAĞLANDI.</p>
         <div style="display: flex; justify-content: space-between;">
-            <button class="choice-btn" onclick="playBeep(); alert('SİSTEM İMHASI BAŞLATILDI')">İMHA ET</button>
-            <button class="choice-btn" onclick="playBeep(); alert('HAYALET MODU AKTİF')">İZLE</button>
+            <button class="choice-btn" onclick="finish('destruct')">İMHA ET</button>
+            <button class="choice-btn" onclick="finish('watch')">İZLE</button>
         </div>
     </div>
 
@@ -71,7 +71,6 @@
     const music = document.getElementById('music');
     const beep = document.getElementById('beep');
 
-    // Matrix Efekti
     canvas.height = window.innerHeight; canvas.width = window.innerWidth;
     const drops = Array(Math.floor(canvas.width/16)).fill(1);
     function draw() {
@@ -84,7 +83,6 @@
         });
     }
 
-    // Saat Güncelleme
     setInterval(() => {
         const now = new Date();
         document.getElementById('time').innerText = now.toLocaleString();
@@ -95,12 +93,7 @@
     function startBruteForce() {
         playBeep();
         music.play();
-        
-        // 3 Saniye Titreşim (Android için)
-        if (navigator.vibrate) {
-            navigator.vibrate(3000); 
-        }
-
+        if (navigator.vibrate) { navigator.vibrate(3000); }
         document.getElementById('init').style.display = 'none';
         document.getElementById('work').style.display = 'block';
         setInterval(draw, 50);
@@ -108,11 +101,7 @@
         let w = 0;
         const intr = setInterval(() => {
             w += Math.random() * 3;
-            if(w >= 100) {
-                w = 100;
-                clearInterval(intr);
-                showFinal();
-            }
+            if(w >= 100) { w = 100; clearInterval(intr); showFinal(); }
             document.getElementById('bar').style.width = w + "%";
             document.getElementById('status').innerText = "HACKING: %" + Math.floor(w);
         }, 100);
@@ -124,6 +113,21 @@
         document.getElementById('mainBox').classList.add('glitch');
         playBeep();
         setTimeout(() => document.getElementById('mainBox').classList.remove('glitch'), 500);
+    }
+
+    function finish(type) {
+        if(type === 'destruct') {
+            document.getElementById('mainBox').innerHTML = "<h3 style='color:red'>SİSTEM İMHA EDİLDİ</h3><p>Loglar siliniyor...</p>";
+            document.body.style.backgroundColor = "#300";
+        } else {
+            playBeep();
+            document.body.innerHTML = `
+                <div style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:9999;">
+                    <div style="position:absolute; top:20px; left:20px; color:red; font-family:monospace; z-index:10000; font-weight:bold;">LIVE FEED - CAMERA 04 [RESTRICTED]</div>
+                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/Z8Jnd_0L7I0?autoplay=1&controls=0&mute=0" frameborder="0" allow="autoplay"></iframe>
+                    <div style="position:absolute; bottom:20px; right:20px; color:red; font-family:monospace; z-index:10000;">SIGNAL: STABLE</div>
+                </div>`;
+        }
     }
 </script>
 </body>

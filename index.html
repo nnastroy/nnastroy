@@ -3,76 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N4STR0Y | CRITICAL ACCESS</title>
+    <title>N4STR0Y | SECURE FEED</title>
     <style>
         body { background-color: #000; margin: 0; overflow: hidden; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Courier New', monospace; color: #ff0000; }
-        canvas { position: absolute; top: 0; left: 0; z-index: 1; opacity: 0.25; }
+        canvas { position: absolute; top: 0; left: 0; z-index: 1; opacity: 0.2; }
         
-        .container { position: relative; z-index: 10; background: rgba(15, 0, 0, 0.95); padding: 30px; border: 1px solid #ff0000; box-shadow: 0 0 25px #ff000044; width: 90%; max-width: 400px; text-align: left; }
+        /* Kamera Kayıt Efekti */
+        .cam-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 20; border: 20px solid transparent; box-sizing: border-box; }
+        .rec-dot { position: absolute; top: 30px; left: 30px; width: 15px; height: 15px; background: red; border-radius: 50%; animation: blink 1s infinite; }
+        .rec-text { position: absolute; top: 28px; left: 55px; font-weight: bold; font-size: 18px; }
+        .timestamp { position: absolute; bottom: 30px; right: 30px; font-size: 14px; }
         
-        .loader-bar { width: 0%; height: 2px; background: #ff0000; margin: 15px 0; transition: width 0.1s; box-shadow: 0 0 15px #ff0000; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
+
+        .container { position: relative; z-index: 30; background: rgba(10, 0, 0, 0.9); padding: 30px; border: 1px solid #ff0000; box-shadow: 0 0 25px #ff000044; width: 85%; max-width: 400px; }
         
-        .btn { background: #ff0000; color: #000; border: none; padding: 12px 20px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; letter-spacing: 2px; text-transform: uppercase; }
+        .btn { background: #ff0000; color: #000; border: none; padding: 15px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; letter-spacing: 2px; }
         
-        .console-text { font-size: 13px; min-height: 20px; margin: 5px 0; color: #990000; }
-        .alert { color: #ff0000; text-shadow: 0 0 8px #ff0000; font-weight: bold; }
+        .loader-bar { width: 0%; height: 2px; background: #ff0000; margin: 15px 0; box-shadow: 0 0 10px #ff0000; }
         
         #choiceArea { display: none; margin-top: 20px; }
-        .choice-btn { background: transparent; border: 1px solid #ff0000; color: #ff0000; padding: 10px; width: 48%; cursor: pointer; font-size: 11px; text-transform: uppercase; }
-        .choice-btn:hover { background: #ff0000; color: #000; }
+        .choice-btn { background: transparent; border: 1px solid #ff0000; color: #ff0000; padding: 10px; width: 48%; cursor: pointer; font-size: 11px; }
 
-        .glitch { animation: glitch 0.15s infinite; }
-        @keyframes glitch {
-            0% { transform: translate(3px, 1px); }
-            50% { transform: translate(-2px, -3px); border-color: #fff; }
-            100% { transform: translate(1px, 2px); }
-        }
+        .glitch { animation: glitch 0.2s infinite; }
+        @keyframes glitch { 0% { transform: translate(2px,1px); } 50% { transform: translate(-1px,-2px); } 100% { transform: translate(1px,2px); } }
     </style>
 </head>
 <body>
 
+<div class="cam-overlay">
+    <div class="rec-dot"></div>
+    <div class="rec-text">REC</div>
+    <div class="timestamp" id="time">04/05/2026 18:42:01</div>
+</div>
+
 <canvas id="matrix"></canvas>
 
 <div class="container" id="mainBox">
-    <div style="font-weight: bold; border-bottom: 1px solid #ff0000; padding-bottom: 5px; margin-bottom: 15px; display: flex; justify-content: space-between;">
-        <span>DANGER ZONE v4.0</span>
-        <span style="color: #fff;">[OFFLINE]</span>
-    </div>
+    <div style="border-bottom: 1px solid #ff0000; margin-bottom: 15px; font-size: 12px;">LIVE FEED: NODE_N4STR0Y</div>
     
-    <div id="display">
-        <div class="console-text" id="line1">UYARI: İzinsiz giriş tespit edildi.</div>
-        <button class="btn" id="startBtn">BAĞLANTIYI ZORLA</button>
+    <div id="init">
+        <p style="font-size: 13px;">SİSTEME SIZILIYOR...</p>
+        <button class="btn" onclick="startBruteForce()">BAĞLANTIYI ZORLA</button>
     </div>
 
-    <div id="progressContainer" style="display:none;">
-        <div class="console-text alert" id="statusMsg">PROTOKOL BAŞLATILIYOR...</div>
+    <div id="work" style="display:none;">
+        <div id="status" style="font-size: 14px; font-weight: bold;">ENCRYPTING...</div>
         <div class="loader-bar" id="bar"></div>
-        <div id="log" style="font-size: 10px; color: #660000; height: 20px;"></div>
+        <div id="console" style="font-size: 10px; color: #600;"></div>
     </div>
 
     <div id="choiceArea">
-        <div class="console-text alert">SİSTEM ÇEKİRDEĞİNE ERİŞİLDİ.</div>
-        <div style="display: flex; justify-content: space-between; margin-top: 15px;">
-            <button class="choice-btn" onclick="finish('destruct')">İMHA ET</button>
-            <button class="choice-btn" onclick="finish('bypass')">DEVAM ET</button>
+        <p style="font-size: 12px;">SİSTEM KONTROLÜ SAĞLANDI.</p>
+        <div style="display: flex; justify-content: space-between;">
+            <button class="choice-btn" onclick="playBeep(); alert('SİSTEM İMHASI BAŞLATILDI')">İMHA ET</button>
+            <button class="choice-btn" onclick="playBeep(); alert('HAYALET MODU AKTİF')">İZLE</button>
         </div>
     </div>
 
-    <audio id="snd" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg"></audio>
+    <audio id="music" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg"></audio>
+    <audio id="beep"><source src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" type="audio/mpeg"></audio>
 </div>
 
 <script>
     const canvas = document.getElementById('matrix');
     const ctx = canvas.getContext('2d');
-    const startBtn = document.getElementById('startBtn');
-    const logs = ["Brute forcing...", "Override sequence...", "Accessing kernel...", "Decrypting...", "SUCCESS."];
-    
+    const music = document.getElementById('music');
+    const beep = document.getElementById('beep');
+
+    // Matrix Efekti
     canvas.height = window.innerHeight; canvas.width = window.innerWidth;
     const drops = Array(Math.floor(canvas.width/16)).fill(1);
-
     function draw() {
-        ctx.fillStyle = "rgba(0,0,0,0.08)"; ctx.fillRect(0,0,canvas.width,canvas.height);
-        ctx.fillStyle = "#ff0000"; ctx.font = "16px arial";
+        ctx.fillStyle = "rgba(0,0,0,0.05)"; ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle = "#f00"; ctx.font = "16px arial";
         drops.forEach((y, i) => {
             ctx.fillText(Math.floor(Math.random()*2), i*16, y*16);
             if(y*16 > canvas.height && Math.random() > 0.98) drops[i] = 0;
@@ -80,53 +84,46 @@
         });
     }
 
-    startBtn.onclick = () => {
-        // Titreşim Komutu (Vibrate)
-        if (navigator.vibrate) {
-            navigator.vibrate([200, 100, 200]); // 200ms titre, 100ms dur, 200ms titre
-        }
-        
-        document.getElementById('snd').play();
-        startBtn.style.display = 'none';
-        document.getElementById('line1').style.display = 'none';
-        document.getElementById('progressContainer').style.display = 'block';
-        setInterval(draw, 50);
-        
-        let width = 0;
-        let logIdx = 0;
-        const interval = setInterval(() => {
-            width += Math.random() * 4;
-            if(width >= 100) {
-                width = 100;
-                clearInterval(interval);
-                showChoices();
-            }
-            document.getElementById('bar').style.width = width + "%";
-            document.getElementById('statusMsg').innerText = "HACKING: %" + Math.floor(width);
-            if(Math.random() > 0.7) {
-                document.getElementById('log').innerText = logs[logIdx % logs.length];
-                logIdx++;
-            }
-        }, 120);
-    };
+    // Saat Güncelleme
+    setInterval(() => {
+        const now = new Date();
+        document.getElementById('time').innerText = now.toLocaleString();
+    }, 1000);
 
-    function showChoices() {
-        document.getElementById('progressContainer').style.display = 'none';
-        document.getElementById('choiceArea').style.display = 'block';
-        document.getElementById('mainBox').classList.add('glitch');
-        setTimeout(() => document.getElementById('mainBox').classList.remove('glitch'), 600);
+    function playBeep() { beep.currentTime = 0; beep.play(); }
+
+    function startBruteForce() {
+        playBeep();
+        music.play();
+        
+        // 3 Saniye Titreşim (Android için)
+        if (navigator.vibrate) {
+            navigator.vibrate(3000); 
+        }
+
+        document.getElementById('init').style.display = 'none';
+        document.getElementById('work').style.display = 'block';
+        setInterval(draw, 50);
+
+        let w = 0;
+        const intr = setInterval(() => {
+            w += Math.random() * 3;
+            if(w >= 100) {
+                w = 100;
+                clearInterval(intr);
+                showFinal();
+            }
+            document.getElementById('bar').style.width = w + "%";
+            document.getElementById('status').innerText = "HACKING: %" + Math.floor(w);
+        }, 100);
     }
 
-    function finish(type) {
-        document.getElementById('choiceArea').style.display = 'none';
-        const msg = document.getElementById('display');
-        msg.style.display = 'block';
-        if(type === 'destruct') {
-            msg.innerHTML = "<h3 class='alert'>SİSTEM KENDİNİ İMHA EDİYOR...</h3><p>Loglar silindi. IP adresi gizlendi.</p>";
-            document.body.style.backgroundColor = "#400";
-        } else {
-            msg.innerHTML = "<h3 class='alert'>ERİŞİM TAMAMLANDI</h3><p>Kritik verilere ulaşıldı. İzleniyorsunuz.</p>";
-        }
+    function showFinal() {
+        document.getElementById('work').style.display = 'none';
+        document.getElementById('choiceArea').style.display = 'block';
+        document.getElementById('mainBox').classList.add('glitch');
+        playBeep();
+        setTimeout(() => document.getElementById('mainBox').classList.remove('glitch'), 500);
     }
 </script>
 </body>

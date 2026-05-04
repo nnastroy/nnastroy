@@ -3,18 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N4STR0Y | INFINITE FATAL</title>
+    <title>N4STR0Y | FINAL WARNING</title>
     <style>
         body { background-color: #000; margin: 0; overflow: hidden; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Courier New', monospace; color: #ff0000; }
         canvas { position: absolute; top: 0; left: 0; z-index: 1; opacity: 0.2; }
         
-        .cam-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 20; border: 20px solid transparent; box-sizing: border-box; }
-        .rec-dot { position: absolute; top: 30px; left: 30px; width: 15px; height: 15px; background: red; border-radius: 50%; animation: blink 1s infinite; }
-        .rec-text { position: absolute; top: 28px; left: 55px; font-weight: bold; font-size: 18px; }
-        .timestamp { position: absolute; bottom: 30px; right: 30px; font-size: 14px; }
-        
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
-
         .container { position: relative; z-index: 30; background: rgba(10, 0, 0, 0.95); padding: 30px; border: 1px solid #ff0000; box-shadow: 0 0 25px #ff000044; width: 85%; max-width: 400px; text-align: center; }
         .btn { background: #ff0000; color: #000; border: none; padding: 15px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; letter-spacing: 2px; }
         .loader-bar { width: 0%; height: 2px; background: #ff0000; margin: 15px 0; box-shadow: 0 0 10px #ff0000; }
@@ -22,45 +15,38 @@
         #choiceArea { display: none; margin-top: 20px; }
         .choice-btn { background: transparent; border: 1px solid #ff0000; color: #ff0000; padding: 10px; width: 48%; cursor: pointer; font-size: 11px; }
 
-        /* Ekrandaki yazıyı titreten animasyon */
+        /* Dev Kalın Rakamlar */
+        .countdown-text { color: red; font-size: 120px; font-weight: 900; text-shadow: 0 0 30px red; font-family: sans-serif; }
+
         .shake-forever { animation: shake 0.1s infinite; }
         @keyframes shake {
-            0% { transform: translate(3px, 3px); }
-            25% { transform: translate(-3px, -3px); }
-            50% { transform: translate(3px, -3px); }
-            75% { transform: translate(-3px, 3px); }
-            100% { transform: translate(3px, 3px); }
+            0% { transform: translate(4px, 4px); }
+            25% { transform: translate(-4px, -4px); }
+            50% { transform: translate(4px, -4px); }
+            75% { transform: translate(-4px, 4px); }
+            100% { transform: translate(4px, 4px); }
         }
-
-        .glitch { animation: glitch 0.2s infinite; }
-        @keyframes glitch { 0% { transform: translate(2px,1px); } 50% { transform: translate(-1px,-2px); } 100% { transform: translate(1px,2px); } }
     </style>
 </head>
 <body>
 
-<div class="cam-overlay" id="camOverlay">
-    <div class="rec-dot"></div>
-    <div class="rec-text">REC</div>
-    <div class="timestamp" id="time"></div>
-</div>
-
 <canvas id="matrix"></canvas>
 
 <div class="container" id="mainBox">
-    <div style="border-bottom: 1px solid #ff0000; margin-bottom: 15px; font-size: 12px; text-align: left;">UNIT: N4STR0Y_FINAL_STRIKE</div>
+    <div style="border-bottom: 1px solid #ff0000; margin-bottom: 15px; font-size: 12px; text-align: left;">SECURE_SHELL: N4STR0Y</div>
     
     <div id="init">
-        <p style="font-size: 13px;">SİSTEME ERİŞİM BAŞLATILSIN MI?</p>
+        <p>SİSTEM ÇEKİRDEĞİNE BAĞLANILSIN MI?</p>
         <button class="btn" onclick="startBruteForce()">BAĞLANTIYI ZORLA</button>
     </div>
 
     <div id="work" style="display:none;">
-        <div id="status" style="font-size: 14px; font-weight: bold;">BREACHING...</div>
+        <div id="status" style="font-weight: bold;">OVERRIDING...</div>
         <div class="loader-bar" id="bar"></div>
     </div>
 
     <div id="choiceArea">
-        <p style="font-size: 12px;">TAM YETKİ SAĞLANDI.</p>
+        <p>ERİŞİM TAMAMLANDI.</p>
         <div style="display: flex; justify-content: space-between;">
             <button class="choice-btn" onclick="destructSequence()">İMHA ET</button>
             <button class="choice-btn" onclick="finish('watch')">İZLE</button>
@@ -69,6 +55,7 @@
 
     <audio id="music" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg"></audio>
     <audio id="beep"><source src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" type="audio/mpeg"></audio>
+    <audio id="laugh" loop><source src="https://assets.mixkit.co/active_storage/sfx/1042/1042-preview.mp3" type="audio/mpeg"></audio>
 </div>
 
 <script>
@@ -76,6 +63,7 @@
     const ctx = canvas.getContext('2d');
     const music = document.getElementById('music');
     const beep = document.getElementById('beep');
+    const laugh = document.getElementById('laugh');
 
     canvas.height = window.innerHeight; canvas.width = window.innerWidth;
     const drops = Array(Math.floor(canvas.width/16)).fill(1);
@@ -89,16 +77,10 @@
         });
     }
 
-    setInterval(() => {
-        const now = new Date();
-        document.getElementById('time').innerText = now.toLocaleString();
-    }, 1000);
-
     function playBeep() { beep.currentTime = 0; beep.play(); }
 
     function startBruteForce() {
-        playBeep();
-        music.play();
+        playBeep(); music.play();
         if (navigator.vibrate) { navigator.vibrate(3000); }
         document.getElementById('init').style.display = 'none';
         document.getElementById('work').style.display = 'block';
@@ -116,14 +98,12 @@
     function showFinal() {
         document.getElementById('work').style.display = 'none';
         document.getElementById('choiceArea').style.display = 'block';
-        document.getElementById('mainBox').classList.add('glitch');
         playBeep();
-        setTimeout(() => document.getElementById('mainBox').classList.remove('glitch'), 500);
     }
 
     function destructSequence() {
         playBeep();
-        document.getElementById('camOverlay').style.display = 'none';
+        music.pause(); // Geri sayımda müzik dursun ki ses duyulsun
         canvas.style.display = 'none';
         document.getElementById('mainBox').style.background = 'transparent';
         document.getElementById('mainBox').style.border = 'none';
@@ -131,42 +111,45 @@
         document.getElementById('choiceArea').style.display = 'none';
 
         let count = 3;
-        document.getElementById('mainBox').innerHTML = `<h1 style="color:red; font-size:80px; text-shadow: 0 0 20px red;">0${count}</h1>`;
-        
+        // İlk rakam
+        document.getElementById('mainBox').innerHTML = `<h1 class="countdown-text">0${count}</h1>`;
+        speak(count);
+
         const countdown = setInterval(() => {
             count--;
-            playBeep();
-            if (navigator.vibrate) { navigator.vibrate(500); }
             if(count > 0) {
-                document.getElementById('mainBox').innerHTML = `<h1 style="color:red; font-size:80px; text-shadow: 0 0 20px red;">0${count}</h1>`;
+                document.getElementById('mainBox').innerHTML = `<h1 class="countdown-text">0${count}</h1>`;
+                speak(count);
+                if (navigator.vibrate) { navigator.vibrate(500); }
             } else {
                 clearInterval(countdown);
+                laugh.play(); // KAHKAHA BAŞLASIN
                 document.body.innerHTML = `<div class="shake-forever" style="background:#000; color:#ff0000; width:100vw; height:100vh; display:flex; justify-content:center; align-items:center; flex-direction:column; text-align:center;">
-                    <h1 style="font-family:monospace; letter-spacing:10px; font-size:30px;">SYSTEM DEAD</h1>
-                    <p style="font-size:12px; opacity:0.5;">CRITICAL_FAILURE: KERNEL_HALTED</p>
-                    <p style="font-size:10px; margin-top:20px; color:#300;">TERMINAL CLOSED.</p>
+                    <h1 style="font-family:monospace; letter-spacing:10px; font-size:40px; font-weight:900;">YOU ARE INFECTED</h1>
+                    <p style="font-size:15px; margin-top:20px; font-weight:bold;">BYE BYE...</p>
                 </div>`;
                 
-                // --- SONSUZ TİTREŞİM DÖNGÜSÜ ---
                 if (navigator.vibrate) {
-                    setInterval(() => {
-                        navigator.vibrate(1000); // Her saniye 1 saniye boyunca titre
-                    }, 1100);
+                    setInterval(() => { navigator.vibrate(1000); }, 1100);
                 }
             }
-        }, 1000);
+        }, 1200);
+    }
+
+    // Robotik Konuşma Fonksiyonu
+    function speak(text) {
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.lang = 'en-US';
+        msg.rate = 0.8;
+        msg.pitch = 0.1; // Kalın robot sesi
+        window.speechSynthesis.speak(msg);
     }
 
     function finish(type) {
         playBeep();
-        document.body.innerHTML = `
-            <div style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:9999; display:flex; justify-content:center; align-items:center;">
-                <div style="position:absolute; top:20px; left:20px; color:red; font-family:monospace; z-index:10000; font-weight:bold;">LIVE FEED - CAMERA 04 [RESTRICTED]</div>
-                <video width="100%" height="100%" autoplay loop muted style="object-fit: cover;">
-                    <source src="https://assets.mixkit.co/videos/preview/mixkit-data-center-server-racks-in-dark-room-4435-large.mp4" type="video/mp4">
-                </video>
-                <div style="position:absolute; bottom:20px; right:20px; color:red; font-family:monospace; z-index:10000;">SIGNAL: STABLE</div>
-            </div>`;
+        document.body.innerHTML = `<div style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:9999;">
+            <iframe width="100%" height="100%" src="https://assets.mixkit.co/videos/preview/mixkit-data-center-server-racks-in-dark-room-4435-large.mp4" style="object-fit:cover;"></iframe>
+        </div>`;
     }
 </script>
 </body>

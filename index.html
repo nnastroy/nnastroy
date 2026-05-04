@@ -3,101 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N4STR0Y | Terminal</title>
+    <title>N4STR0Y | Restricted Access</title>
     <style>
-        body { background-color: #000; margin: 0; overflow: hidden; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Courier New', Courier, monospace; }
-        canvas { position: absolute; top: 0; left: 0; display: none; }
-        .container { text-align: center; background: rgba(10, 10, 10, 0.95); padding: 40px; border: 2px solid #00ff41; border-radius: 10px; max-width: 400px; width: 90%; z-index: 10; box-shadow: 0 0 30px rgba(0, 255, 65, 0.3); }
-        .btn-group { display: none; justify-content: center; gap: 10px; margin-top: 20px; }
-        .btn { background-color: transparent; color: #00ff41; border: 1px solid #00ff41; padding: 12px 18px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 12px; }
-        .btn:hover { background: #00ff41; color: #000; }
-        .start-btn { background-color: #00ff41; color: #000; border: none; padding: 15px 30px; border-radius: 5px; font-weight: bold; cursor: pointer; letter-spacing: 2px; }
-        h2 { color: #00ff41; text-shadow: 0 0 10px #00ff41; }
-        p { color: #008f11; font-size: 14px; }
-        .warning { color: #ff0000; text-shadow: 0 0 5px #ff0000; display: none; }
+        body { background-color: #000; margin: 0; overflow: hidden; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Courier New', monospace; color: #00ff41; }
+        canvas { position: absolute; top: 0; left: 0; z-index: 1; opacity: 0.3; }
+        
+        .container { position: relative; z-index: 10; background: rgba(0, 10, 0, 0.9); padding: 30px; border: 1px solid #00ff41; box-shadow: 0 0 20px #00ff4133; width: 90%; max-width: 400px; text-align: left; }
+        
+        .loader-bar { width: 0%; height: 2px; background: #00ff41; margin: 15px 0; transition: width 0.1s; box-shadow: 0 0 10px #00ff41; }
+        
+        .btn { background: #00ff41; color: #000; border: none; padding: 12px 20px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; letter-spacing: 2px; }
+        
+        .console-text { font-size: 13px; min-height: 20px; margin: 5px 0; color: #008f11; }
+        .critical { color: #ff0000; text-shadow: 0 0 5px #ff0000; }
+        
+        #choiceArea { display: none; margin-top: 20px; }
+        .choice-btn { background: transparent; border: 1px solid #00ff41; color: #00ff41; padding: 10px; width: 48%; cursor: pointer; font-size: 11px; }
+        .choice-btn:hover { background: #00ff41; color: #000; }
+
+        /* Glitch Efekti */
+        .glitch { animation: glitch 0.2s infinite; }
+        @keyframes glitch {
+            0% { transform: translate(2px, 1px) rotate(0deg); }
+            50% { transform: translate(-1px, -2px) rotate(-1deg); }
+            100% { transform: translate(1px, 2px) rotate(1deg); }
+        }
     </style>
 </head>
 <body>
 
 <canvas id="matrix"></canvas>
 
-<div class="container">
-    <h2 id="title">CENTRAL UNIT: N4STR0Y</h2>
-    <p id="desc">Sistem girişi için yetkilendirme bekleniyor...</p>
+<div class="container" id="mainBox">
+    <div style="font-weight: bold; border-bottom: 1px solid #00ff41; padding-bottom: 5px; margin-bottom: 15px;">
+        TERMINAL v3.0 - USER: N4STR0Y
+    </div>
     
-    <button class="start-btn" id="mainBtn">BAĞLANTIYI BAŞLAT</button>
-
-    <div class="btn-group" id="choiceGroup">
-        <button class="btn" onclick="makeChoice('crack')">SİSTEMİ ÇÖKERT</button>
-        <button class="btn" onclick="makeChoice('repair')">SİSTEMİ ONAR</button>
+    <div id="display">
+        <div class="console-text" id="line1">Sistem bağlantısı bekleniyor...</div>
+        <button class="btn" id="startBtn">BAĞLANTIYI ZORLA (EXE)</button>
     </div>
 
-    <p id="finalMsg" class="warning"></p>
+    <div id="progressContainer" style="display:none;">
+        <div class="console-text" id="statusMsg">Bağlanıyor...</div>
+        <div class="loader-bar" id="bar"></div>
+        <div class="console-text" id="log" style="font-size: 10px; opacity: 0.7;"></div>
+    </div>
 
-    <audio id="bgMusic" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
-    </audio>
+    <div id="choiceArea">
+        <div class="console-text" style="color: #fff;">ERİŞİM SAĞLANDI. SEÇİM YAPIN:</div>
+        <div style="display: flex; justify-content: space-between;">
+            <button class="choice-btn" onclick="finish('crack')">SİSTEMİ ÇÖKERT</button>
+            <button class="choice-btn" onclick="finish('ghost')">HAYALET MODU</button>
+        </div>
+    </div>
+
+    <audio id="snd" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg"></audio>
 </div>
 
 <script>
     const canvas = document.getElementById('matrix');
     const ctx = canvas.getContext('2d');
-    const mainBtn = document.getElementById('mainBtn');
-    const choiceGroup = document.getElementById('choiceGroup');
-    const title = document.getElementById('title');
-    const desc = document.getElementById('desc');
-    const music = document.getElementById('bgMusic');
-
-    canvas.height = window.innerHeight;
-    canvas.width = window.innerWidth;
-    const chars = "01";
-    const fontSize = 16;
-    const columns = canvas.width / fontSize;
-    const drops = [];
-    for (let i = 0; i < columns; i++) drops[i] = 1;
-
+    const startBtn = document.getElementById('startBtn');
+    const logs = ["Bypassing Firewall...", "Injecting SQL...", "Fetching IP...", "Root access granted.", "Encryption active."];
+    
+    // Matrix Ayarı
+    canvas.height = window.innerHeight; canvas.width = window.innerWidth;
+    const drops = Array(Math.floor(canvas.width/16)).fill(1);
     function draw() {
-        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "#00ff41";
-        ctx.font = fontSize + "px arial";
-        for (let i = 0; i < drops.length; i++) {
-            const text = chars[Math.floor(Math.random() * chars.length)];
-            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        ctx.fillStyle = "rgba(0,0,0,0.05)"; ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle = "#00ff41"; ctx.font = "16px arial";
+        drops.forEach((y, i) => {
+            ctx.fillText(Math.floor(Math.random()*2), i*16, y*16);
+            if(y*16 > canvas.height && Math.random() > 0.975) drops[i] = 0;
             drops[i]++;
-        }
+        });
     }
 
-    mainBtn.onclick = function() {
-        music.play();
-        mainBtn.style.display = 'none';
-        canvas.style.display = 'block';
-        setInterval(draw, 35);
+    startBtn.onclick = () => {
+        document.getElementById('snd').play();
+        startBtn.style.display = 'none';
+        document.getElementById('line1').style.display = 'none';
+        document.getElementById('progressContainer').style.display = 'block';
+        setInterval(draw, 40);
         
-        title.innerText = "ERİŞİM SEVİYESİ: 1";
-        desc.innerText = "Protokol seçimi yapın. Geri dönüş yok.";
-        choiceGroup.style.display = 'flex';
+        let width = 0;
+        let logIdx = 0;
+        const interval = setInterval(() => {
+            width += Math.random() * 5;
+            if(width >= 100) {
+                width = 100;
+                clearInterval(interval);
+                showChoices();
+            }
+            document.getElementById('bar').style.width = width + "%";
+            document.getElementById('statusMsg').innerText = "Yükleniyor: %" + Math.floor(width);
+            if(Math.random() > 0.8) {
+                document.getElementById('log').innerText = logs[logIdx % logs.length];
+                logIdx++;
+            }
+        }, 100);
     };
 
-    function makeChoice(type) {
-        choiceGroup.style.display = 'none';
-        const finalMsg = document.getElementById('finalMsg');
-        finalMsg.style.display = 'block';
-        
+    function showChoices() {
+        document.getElementById('progressContainer').style.display = 'none';
+        document.getElementById('choiceArea').style.display = 'block';
+        document.getElementById('mainBox').classList.add('glitch');
+        setTimeout(() => document.getElementById('mainBox').classList.remove('glitch'), 500);
+    }
+
+    function finish(type) {
+        document.getElementById('choiceArea').style.display = 'none';
+        const msg = document.getElementById('display');
+        msg.style.display = 'block';
         if(type === 'crack') {
-            title.innerText = "SİSTEM ÇÖKTÜ";
-            title.style.color = "#ff0000";
-            desc.innerText = "Tüm veriler siliniyor...";
-            finalMsg.innerText = "FATAL ERROR: Kernel Panic at 0x004F3";
+            msg.innerHTML = "<h3 class='critical'>SİSTEM İMHA EDİLDİ</h3><p>Tüm loglar temizlendi. Bağlantı kesiliyor...</p>";
+            document.body.style.backgroundColor = "#200";
         } else {
-            title.innerText = "SİSTEM ONARILDI";
-            desc.innerText = "Güvenlik duvarları aktif.";
-            finalMsg.style.color = "#00ff41";
-            finalMsg.innerText = "STATUS: SECURE - IP: Hidden";
+            msg.innerHTML = "<h3>HAYALET MODU AKTİF</h3><p>Sistemde iz bırakmadan dolaşabilirsiniz.</p>";
         }
     }
 </script>
-
 </body>
 </html>

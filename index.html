@@ -3,28 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N4STR0Y | FINAL WARNING</title>
+    <title>N4STR0Y | FINAL</title>
     <style>
         body { background-color: #000; margin: 0; overflow: hidden; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Courier New', monospace; color: #ff0000; }
-        canvas { position: absolute; top: 0; left: 0; z-index: 1; opacity: 0.2; }
+        canvas { position: absolute; top: 0; left: 0; z-index: 1; opacity: 0.15; }
         
         .container { position: relative; z-index: 30; background: rgba(10, 0, 0, 0.95); padding: 30px; border: 1px solid #ff0000; box-shadow: 0 0 25px #ff000044; width: 85%; max-width: 400px; text-align: center; }
         .btn { background: #ff0000; color: #000; border: none; padding: 15px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; letter-spacing: 2px; }
-        .loader-bar { width: 0%; height: 2px; background: #ff0000; margin: 15px 0; box-shadow: 0 0 10px #ff0000; }
+        .loader-bar { width: 0%; height: 2px; background: #ff0000; margin: 15px 0; }
         
         #choiceArea { display: none; margin-top: 20px; }
-        .choice-btn { background: transparent; border: 1px solid #ff0000; color: #ff0000; padding: 10px; width: 48%; cursor: pointer; font-size: 11px; }
+        .choice-btn { background: transparent; border: 1px solid #ff0000; color: #ff0000; padding: 10px; width: 48%; cursor: pointer; }
 
-        /* Dev Kalın Rakamlar */
-        .countdown-text { color: red; font-size: 120px; font-weight: 900; text-shadow: 0 0 30px red; font-family: sans-serif; }
+        /* İstediğin o devasa ve çok kalın rakamlar */
+        .countdown-text { color: #ff0000; font-size: 150px; font-weight: 900; text-shadow: 0 0 40px red; font-family: 'Arial Black', sans-serif; line-height: 1; margin: 0; }
 
         .shake-forever { animation: shake 0.1s infinite; }
         @keyframes shake {
-            0% { transform: translate(4px, 4px); }
-            25% { transform: translate(-4px, -4px); }
-            50% { transform: translate(4px, -4px); }
-            75% { transform: translate(-4px, 4px); }
-            100% { transform: translate(4px, 4px); }
+            0% { transform: translate(5px, 5px); }
+            25% { transform: translate(-5px, -5px); }
+            50% { transform: translate(5px, -5px); }
+            75% { transform: translate(-5px, 5px); }
+            100% { transform: translate(5px, 5px); }
         }
     </style>
 </head>
@@ -33,23 +33,21 @@
 <canvas id="matrix"></canvas>
 
 <div class="container" id="mainBox">
-    <div style="border-bottom: 1px solid #ff0000; margin-bottom: 15px; font-size: 12px; text-align: left;">SECURE_SHELL: N4STR0Y</div>
-    
     <div id="init">
-        <p>SİSTEM ÇEKİRDEĞİNE BAĞLANILSIN MI?</p>
+        <p style="font-size: 12px; letter-spacing: 1px;">SİSTEM YETKİSİ BEKLENİYOR...</p>
         <button class="btn" onclick="startBruteForce()">BAĞLANTIYI ZORLA</button>
     </div>
 
     <div id="work" style="display:none;">
-        <div id="status" style="font-weight: bold;">OVERRIDING...</div>
+        <div id="status" style="font-weight: bold; font-size: 14px;">BREACHING...</div>
         <div class="loader-bar" id="bar"></div>
     </div>
 
     <div id="choiceArea">
-        <p>ERİŞİM TAMAMLANDI.</p>
+        <p style="font-size: 12px;">ERİŞİM SAĞLANDI.</p>
         <div style="display: flex; justify-content: space-between;">
             <button class="choice-btn" onclick="destructSequence()">İMHA ET</button>
-            <button class="choice-btn" onclick="finish('watch')">İZLE</button>
+            <button class="choice-btn" onclick="finish()">İZLE</button>
         </div>
     </div>
 
@@ -77,10 +75,10 @@
         });
     }
 
-    function playBeep() { beep.currentTime = 0; beep.play(); }
+    function playBeep() { beep.currentTime = 0; beep.play().catch(e => {}); }
 
     function startBruteForce() {
-        playBeep(); music.play();
+        playBeep(); music.play().catch(e => {});
         if (navigator.vibrate) { navigator.vibrate(3000); }
         document.getElementById('init').style.display = 'none';
         document.getElementById('work').style.display = 'block';
@@ -88,11 +86,11 @@
 
         let w = 0;
         const intr = setInterval(() => {
-            w += Math.random() * 3;
+            w += 2;
             if(w >= 100) { w = 100; clearInterval(intr); showFinal(); }
             document.getElementById('bar').style.width = w + "%";
             document.getElementById('status').innerText = "HACKING: %" + Math.floor(w);
-        }, 100);
+        }, 80);
     }
 
     function showFinal() {
@@ -103,7 +101,7 @@
 
     function destructSequence() {
         playBeep();
-        music.pause(); // Geri sayımda müzik dursun ki ses duyulsun
+        music.pause();
         canvas.style.display = 'none';
         document.getElementById('mainBox').style.background = 'transparent';
         document.getElementById('mainBox').style.border = 'none';
@@ -111,44 +109,45 @@
         document.getElementById('choiceArea').style.display = 'none';
 
         let count = 3;
-        // İlk rakam
-        document.getElementById('mainBox').innerHTML = `<h1 class="countdown-text">0${count}</h1>`;
-        speak(count);
+        const renderCount = () => {
+            document.getElementById('mainBox').innerHTML = `<h1 class="countdown-text">0${count}</h1>`;
+            // Sesli konuşma (Hata riskine karşı kontrol eklendi)
+            if ('speechSynthesis' in window) {
+                const msg = new SpeechSynthesisUtterance(count.toString());
+                msg.lang = 'en-US'; msg.rate = 0.7; msg.pitch = 0.1;
+                window.speechSynthesis.speak(msg);
+            }
+        };
+
+        renderCount();
 
         const countdown = setInterval(() => {
             count--;
             if(count > 0) {
-                document.getElementById('mainBox').innerHTML = `<h1 class="countdown-text">0${count}</h1>`;
-                speak(count);
+                renderCount();
                 if (navigator.vibrate) { navigator.vibrate(500); }
             } else {
                 clearInterval(countdown);
-                laugh.play(); // KAHKAHA BAŞLASIN
-                document.body.innerHTML = `<div class="shake-forever" style="background:#000; color:#ff0000; width:100vw; height:100vh; display:flex; justify-content:center; align-items:center; flex-direction:column; text-align:center;">
-                    <h1 style="font-family:monospace; letter-spacing:10px; font-size:40px; font-weight:900;">YOU ARE INFECTED</h1>
-                    <p style="font-size:15px; margin-top:20px; font-weight:bold;">BYE BYE...</p>
+                laugh.play().catch(e => {}); 
+                document.body.innerHTML = `
+                <div class="shake-forever" style="background:#000; color:#ff0000; width:100vw; height:100vh; display:flex; justify-content:center; align-items:center; flex-direction:column; text-align:center;">
+                    <h1 style="font-family:sans-serif; letter-spacing:5px; font-size:45px; font-weight:900; margin:0;">SYSTEM DEAD</h1>
+                    <p style="font-size:18px; margin-top:10px; font-weight:bold; letter-spacing:2px;">YOU ARE INFECTED</p>
                 </div>`;
                 
                 if (navigator.vibrate) {
                     setInterval(() => { navigator.vibrate(1000); }, 1100);
                 }
             }
-        }, 1200);
+        }, 1300);
     }
 
-    // Robotik Konuşma Fonksiyonu
-    function speak(text) {
-        const msg = new SpeechSynthesisUtterance(text);
-        msg.lang = 'en-US';
-        msg.rate = 0.8;
-        msg.pitch = 0.1; // Kalın robot sesi
-        window.speechSynthesis.speak(msg);
-    }
-
-    function finish(type) {
+    function finish() {
         playBeep();
         document.body.innerHTML = `<div style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:9999;">
-            <iframe width="100%" height="100%" src="https://assets.mixkit.co/videos/preview/mixkit-data-center-server-racks-in-dark-room-4435-large.mp4" style="object-fit:cover;"></iframe>
+            <video width="100%" height="100%" autoplay loop muted style="object-fit:cover;">
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-data-center-server-racks-in-dark-room-4435-large.mp4" type="video/mp4">
+            </video>
         </div>`;
     }
 </script>

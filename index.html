@@ -3,68 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N4STR0Y | System Access</title>
+    <title>N4STR0Y | Terminal</title>
     <style>
-        body {
-            background-color: #000000;
-            margin: 0;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            font-family: 'Courier New', Courier, monospace;
-        }
-
-        canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            display: none;
-        }
-
-        .container {
-            text-align: center;
-            background: rgba(10, 10, 10, 0.9);
-            padding: 40px;
-            border: 2px solid #00ff41;
-            border-radius: 10px;
-            max-width: 380px;
-            width: 90%;
-            z-index: 10;
-            box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
-        }
-
-        .start-btn {
-            background-color: #00ff41;
-            color: black;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-            letter-spacing: 2px;
-            box-shadow: 0 0 15px #00ff41;
-            transition: 0.3s;
-        }
-
-        .start-btn:active { transform: scale(0.95); }
-
-        h2 { color: #00ff41; text-shadow: 0 0 10px #00ff41; margin-bottom: 20px; }
-        p { color: #008f11; font-size: 14px; line-height: 1.6; }
+        body { background-color: #000; margin: 0; overflow: hidden; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Courier New', Courier, monospace; }
+        canvas { position: absolute; top: 0; left: 0; display: none; }
+        .container { text-align: center; background: rgba(10, 10, 10, 0.95); padding: 40px; border: 2px solid #00ff41; border-radius: 10px; max-width: 400px; width: 90%; z-index: 10; box-shadow: 0 0 30px rgba(0, 255, 65, 0.3); }
+        .btn-group { display: none; justify-content: center; gap: 10px; margin-top: 20px; }
+        .btn { background-color: transparent; color: #00ff41; border: 1px solid #00ff41; padding: 12px 18px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 12px; }
+        .btn:hover { background: #00ff41; color: #000; }
+        .start-btn { background-color: #00ff41; color: #000; border: none; padding: 15px 30px; border-radius: 5px; font-weight: bold; cursor: pointer; letter-spacing: 2px; }
+        h2 { color: #00ff41; text-shadow: 0 0 10px #00ff41; }
+        p { color: #008f11; font-size: 14px; }
+        .warning { color: #ff0000; text-shadow: 0 0 5px #ff0000; display: none; }
     </style>
 </head>
 <body>
 
 <canvas id="matrix"></canvas>
 
-<div class="container" id="panel">
-    <h2 id="statusTitle">SYSTEM: N4STR0Y</h2>
-    <p id="statusText">Erişim yetkisi doğrulanıyor...<br>Devam etmek için onay verin.</p>
+<div class="container">
+    <h2 id="title">CENTRAL UNIT: N4STR0Y</h2>
+    <p id="desc">Sistem girişi için yetkilendirme bekleniyor...</p>
     
-    <button class="start-btn" id="startBtn">SİSTEMİ AÇ</button>
+    <button class="start-btn" id="mainBtn">BAĞLANTIYI BAŞLAT</button>
 
-    <audio id="myAudio" loop>
+    <div class="btn-group" id="choiceGroup">
+        <button class="btn" onclick="makeChoice('crack')">SİSTEMİ ÇÖKERT</button>
+        <button class="btn" onclick="makeChoice('repair')">SİSTEMİ ONAR</button>
+    </div>
+
+    <p id="finalMsg" class="warning"></p>
+
+    <audio id="bgMusic" loop>
         <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
     </audio>
 </div>
@@ -72,44 +42,61 @@
 <script>
     const canvas = document.getElementById('matrix');
     const ctx = canvas.getContext('2d');
-    const btn = document.getElementById('startBtn');
-    const audio = document.getElementById('myAudio');
-    const title = document.getElementById('statusTitle');
-    const text = document.getElementById('statusText');
+    const mainBtn = document.getElementById('mainBtn');
+    const choiceGroup = document.getElementById('choiceGroup');
+    const title = document.getElementById('title');
+    const desc = document.getElementById('desc');
+    const music = document.getElementById('bgMusic');
 
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%#&@";
+    const chars = "01";
     const fontSize = 16;
     const columns = canvas.width / fontSize;
     const drops = [];
     for (let i = 0; i < columns; i++) drops[i] = 1;
 
-    function drawMatrix() {
+    function draw() {
         ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = "#00ff41";
         ctx.font = fontSize + "px arial";
         for (let i = 0; i < drops.length; i++) {
-            const char = chars[Math.floor(Math.random() * chars.length)];
-            ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+            const text = chars[Math.floor(Math.random() * chars.length)];
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
             if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
             drops[i]++;
         }
     }
 
-    btn.addEventListener('click', function() {
-        audio.play();
-        btn.style.display = 'none';
+    mainBtn.onclick = function() {
+        music.play();
+        mainBtn.style.display = 'none';
         canvas.style.display = 'block';
+        setInterval(draw, 35);
         
-        // Burası istediğin değişikliği yapan kısım
-        title.innerText = "HOŞGELDİN MERYEM";
-        title.style.fontSize = "24px";
-        text.innerHTML = "Erişim başarılı. Tüm protokoller aktif edildi.<br>Sistem senin kontrolünde.";
+        title.innerText = "ERİŞİM SEVİYESİ: 1";
+        desc.innerText = "Protokol seçimi yapın. Geri dönüş yok.";
+        choiceGroup.style.display = 'flex';
+    };
+
+    function makeChoice(type) {
+        choiceGroup.style.display = 'none';
+        const finalMsg = document.getElementById('finalMsg');
+        finalMsg.style.display = 'block';
         
-        setInterval(drawMatrix, 35);
-    });
+        if(type === 'crack') {
+            title.innerText = "SİSTEM ÇÖKTÜ";
+            title.style.color = "#ff0000";
+            desc.innerText = "Tüm veriler siliniyor...";
+            finalMsg.innerText = "FATAL ERROR: Kernel Panic at 0x004F3";
+        } else {
+            title.innerText = "SİSTEM ONARILDI";
+            desc.innerText = "Güvenlik duvarları aktif.";
+            finalMsg.style.color = "#00ff41";
+            finalMsg.innerText = "STATUS: SECURE - IP: Hidden";
+        }
+    }
 </script>
 
 </body>

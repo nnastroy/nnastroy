@@ -3,91 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N4STR0Y | SOURCE ACCESS</title>
+    <title>N4STR0Y | CORE SYSTEM</title>
     <style>
         body { background-color: #000; margin: 0; overflow: hidden; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Courier New', monospace; color: #ff0000; }
+        canvas { position: absolute; top: 0; left: 0; z-index: 1; opacity: 0.15; }
         
-        /* Kamera Görüntüsü Katmanı */
         #videoElement {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; z-index: 5; opacity: 0; transition: opacity 1s;
-            filter: grayscale(100%) brightness(80%) sepia(100%) hue-rotate(-50deg) saturate(600%); /* Kırmızı Hacker Filtresi */
+            object-fit: cover; z-index: 5; display: none;
+            filter: grayscale(100%) brightness(70%) sepia(100%) hue-rotate(-50deg) saturate(800%) contrast(150%);
         }
 
-        .container { position: relative; z-index: 30; background: rgba(10, 0, 0, 0.85); padding: 30px; border: 1px solid #ff0000; width: 85%; max-width: 400px; text-align: center; }
+        .container { position: relative; z-index: 30; background: rgba(10, 0, 0, 0.95); padding: 30px; border: 1px solid #ff0000; box-shadow: 0 0 25px #ff000044; width: 85%; max-width: 400px; text-align: center; }
         .btn { background: #ff0000; color: #000; border: none; padding: 15px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+        
+        .countdown-text { color: #ff0000; font-size: 150px; font-weight: 900; text-shadow: 0 0 40px red; font-family: 'Arial Black', sans-serif; }
+
+        .shake-forever { animation: shake 0.1s infinite; }
+        @keyframes shake {
+            0% { transform: translate(5px, 5px); }
+            25% { transform: translate(-5px, -5px); }
+            50% { transform: translate(5px, -5px); }
+            75% { transform: translate(-5px, 5px); }
+            100% { transform: translate(5px, 5px); }
+        }
         
         #targetOverlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            border: 2px solid red; box-sizing: border-box; z-index: 10;
-            display: none; pointer-events: none;
-            background: radial-gradient(circle, transparent 30%, rgba(255,0,0,0.2) 100%);
+            border: 5px solid red; z-index: 10; display: none; pointer-events: none;
+            background: repeating-linear-gradient(0deg, rgba(255,0,0,0.05) 0px, rgba(255,0,0,0.05) 1px, transparent 1px, transparent 2px);
         }
-
-        .target-text { position: absolute; top: 20%; left: 50%; transform: translateX(-50%); color: red; font-weight: 900; font-size: 20px; text-shadow: 0 0 10px red; }
     </style>
 </head>
 <body>
 
-<video id="videoElement" autoplay playsinline></video>
+<video id="videoElement" autoplay playsinline muted></video>
 <div id="targetOverlay">
-    <div class="target-text">HEDEF BELİRLENDİ: ANALİZ EDİLİYOR...</div>
+    <div style="position: absolute; top: 10%; width: 100%; text-align: center; color: red; font-weight: 900; font-size: 24px; text-shadow: 0 0 10px red;">HEDEF İMHASI BAŞLATILDI</div>
 </div>
+<canvas id="matrix"></canvas>
 
 <div class="container" id="mainBox">
     <div id="init">
-        <p style="font-size: 13px;">SİSTEME GİRİŞ YAPMAK İÇİN BİYOMETRİK DOĞRULAMA GEREKLİ.</p>
-        <button class="btn" onclick="startCamera()">DOĞRULAMAYI BAŞLAT</button>
+        <p style="font-size: 12px;">SİSTEM DOSYALARINA ERİŞİM İÇİN BİYOMETRİK (KAMERA) İZNİ GEREKLİ.</p>
+        <button class="btn" onclick="askCamera()">İZİN VER VE BAŞLAT</button>
     </div>
 
-    <div id="loading" style="display:none;">
-        <p id="statusText">KAMERA ERİŞİMİ SAĞLANIYOR...</p>
-        <div style="width: 100%; background: #200; height: 5px; margin-top: 10px;">
-            <div id="bar" style="width: 0%; background: red; height: 100%; transition: 0.1s;"></div>
+    <div id="choiceArea" style="display:none;">
+        <p style="font-size: 14px; font-weight: bold;">YETKİ SAĞLANDI. <br> KOMUT BEKLENİYOR.</p>
+        <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+            <button class="btn" style="width: 48%; font-size: 10px;" onclick="destructSequence()">SİSTEMİ İMHA ET</button>
+            <button class="btn" style="width: 48%; font-size: 10px; background: transparent; color: red; border: 1px solid red;" onclick="finish()">CCTV İZLE</button>
         </div>
     </div>
 </div>
 
+<audio id="music" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg"></audio>
+<audio id="laugh" loop><source src="https://assets.mixkit.co/active_storage/sfx/1042/1042-preview.mp3" type="audio/mpeg"></audio>
+
 <script>
     const video = document.getElementById('videoElement');
     const mainBox = document.getElementById('mainBox');
+    const matrix = document.getElementById('matrix');
+    const laugh = document.getElementById('laugh');
+    const music = document.getElementById('music');
 
-    async function startCamera() {
+    // Matrix Rain
+    const ctx = matrix.getContext('2d');
+    matrix.height = window.innerHeight; matrix.width = window.innerWidth;
+    const drops = Array(Math.floor(matrix.width/16)).fill(1);
+    function drawMatrix() {
+        ctx.fillStyle = "rgba(0,0,0,0.05)"; ctx.fillRect(0,0,matrix.width,matrix.height);
+        ctx.fillStyle = "#f00"; ctx.font = "16px arial";
+        drops.forEach((y, i) => {
+            ctx.fillText(Math.floor(Math.random()*2), i*16, y*16);
+            if(y*16 > matrix.height && Math.random() > 0.98) drops[i] = 0;
+            drops[i]++;
+        });
+    }
+
+    async function askCamera() {
         try {
-            // Kamera izni istiyoruz
             const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
             video.srcObject = stream;
-            
-            // İzin verilince arayüzü değiştir
+            music.play();
+            setInterval(drawMatrix, 50);
             document.getElementById('init').style.display = 'none';
-            document.getElementById('loading').style.display = 'block';
-            
-            let w = 0;
-            const intr = setInterval(() => {
-                w += 1;
-                document.getElementById('bar').style.width = w + "%";
-                if(w === 50) document.getElementById('statusText').innerText = "YÜZ TARANIYOR...";
-                if(w >= 100) {
-                    clearInterval(intr);
-                    showFace();
-                }
-            }, 40);
-
+            document.getElementById('choiceArea').style.display = 'block';
         } catch (err) {
-            alert("SİSTEM HATASI: Kamera izni verilmediği için sızma işlemi başarısız oldu.");
+            alert("HATA: Kamera izni olmadan sisteme sızılamaz!");
         }
     }
 
-    function showFace() {
-        mainBox.style.display = 'none'; // Paneli gizle
-        video.style.opacity = '1'; // Kamerayı göster
-        document.getElementById('targetOverlay').style.display = 'block'; // Hedef yazısını göster
-        
-        // 5 saniye sonra "imha" kısmına geçebiliriz
-        setTimeout(() => {
-            alert("VERİLER BULUT SÜRÜCÜYE AKTARILDI.");
-            location.reload(); // Şaka biter, sayfayı yeniler
-        }, 6000);
+    function destructSequence() {
+        music.pause();
+        matrix.style.display = 'none';
+        mainBox.style.background = 'transparent';
+        mainBox.style.border = 'none';
+        mainBox.style.boxShadow = 'none';
+        document.getElementById('choiceArea').style.display = 'none';
+
+        let count = 3;
+        const talk = (txt) => {
+            if ('speechSynthesis' in window) {
+                const msg = new SpeechSynthesisUtterance(txt);
+                msg.lang = 'en-US'; msg.rate = 0.7; msg.pitch = 0.1;
+                window.speechSynthesis.speak(msg);
+            }
+        };
+
+        const render = () => {
+            mainBox.innerHTML = `<h1 class="countdown-text">0${count}</h1>`;
+            talk(count.toString());
+        };
+
+        render();
+
+        const timer = setInterval(() => {
+            count--;
+            if(count > 0) {
+                render();
+                if (navigator.vibrate) navigator.vibrate(500);
+            } else {
+                clearInterval(timer);
+                laugh.play();
+                video.style.display = 'block';
+                document.getElementById('targetOverlay').style.display = 'block';
+                document.body.classList.add('shake-forever');
+                mainBox.innerHTML = `<h1 style="font-weight:900; background: red; color: black; padding: 10px;">INFECTED</h1>`;
+                
+                if (navigator.vibrate) {
+                    setInterval(() => { navigator.vibrate(1000); }, 1100);
+                }
+            }
+        }, 1300);
+    }
+
+    function finish() {
+        document.body.innerHTML = `<div style="background:#000; width:100vw; height:100vh;"><video width="100%" height="100%" autoplay loop muted style="object-fit:cover;"><source src="https://assets.mixkit.co/videos/preview/mixkit-data-center-server-racks-in-dark-room-4435-large.mp4" type="video/mp4"></video></div>`;
     }
 </script>
 </body>

@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N4STR0Y | CCTV ACCESS</title>
+    <title>N4STR0Y | TERMINAL DEATH</title>
     <style>
         body { background-color: #000; margin: 0; overflow: hidden; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Courier New', monospace; color: #ff0000; }
         canvas { position: absolute; top: 0; left: 0; z-index: 1; opacity: 0.2; }
         
-        /* Kamera Kayıt Efekti */
         .cam-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 20; border: 20px solid transparent; box-sizing: border-box; }
         .rec-dot { position: absolute; top: 30px; left: 30px; width: 15px; height: 15px; background: red; border-radius: 50%; animation: blink 1s infinite; }
         .rec-text { position: absolute; top: 28px; left: 55px; font-weight: bold; font-size: 18px; }
@@ -16,14 +15,22 @@
         
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
 
-        .container { position: relative; z-index: 30; background: rgba(10, 0, 0, 0.9); padding: 30px; border: 1px solid #ff0000; box-shadow: 0 0 25px #ff000044; width: 85%; max-width: 400px; text-align: center; }
-        
+        .container { position: relative; z-index: 30; background: rgba(10, 0, 0, 0.95); padding: 30px; border: 1px solid #ff0000; box-shadow: 0 0 25px #ff000044; width: 85%; max-width: 400px; text-align: center; }
         .btn { background: #ff0000; color: #000; border: none; padding: 15px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; letter-spacing: 2px; }
-        
         .loader-bar { width: 0%; height: 2px; background: #ff0000; margin: 15px 0; box-shadow: 0 0 10px #ff0000; }
         
         #choiceArea { display: none; margin-top: 20px; }
         .choice-btn { background: transparent; border: 1px solid #ff0000; color: #ff0000; padding: 10px; width: 48%; cursor: pointer; font-size: 11px; }
+
+        /* Ekranı sürekli titreten animasyon */
+        .shake-forever { animation: shake 0.1s infinite; }
+        @keyframes shake {
+            0% { transform: translate(2px, 2px); }
+            25% { transform: translate(-2px, -2px); }
+            50% { transform: translate(2px, -2px); }
+            75% { transform: translate(-2px, 2px); }
+            100% { transform: translate(2px, 2px); }
+        }
 
         .glitch { animation: glitch 0.2s infinite; }
         @keyframes glitch { 0% { transform: translate(2px,1px); } 50% { transform: translate(-1px,-2px); } 100% { transform: translate(1px,2px); } }
@@ -31,7 +38,7 @@
 </head>
 <body>
 
-<div class="cam-overlay">
+<div class="cam-overlay" id="camOverlay">
     <div class="rec-dot"></div>
     <div class="rec-text">REC</div>
     <div class="timestamp" id="time"></div>
@@ -40,23 +47,22 @@
 <canvas id="matrix"></canvas>
 
 <div class="container" id="mainBox">
-    <div style="border-bottom: 1px solid #ff0000; margin-bottom: 15px; font-size: 12px; text-align: left;">LIVE FEED: NODE_N4STR0Y</div>
+    <div style="border-bottom: 1px solid #ff0000; margin-bottom: 15px; font-size: 12px; text-align: left;">UNIT: N4STR0Y_FATAL</div>
     
     <div id="init">
-        <p style="font-size: 13px;">KRİTİK BAĞLANTI BEKLENİYOR...</p>
+        <p style="font-size: 13px;">SİSTEME ERİŞİM BAŞLATILSIN MI?</p>
         <button class="btn" onclick="startBruteForce()">BAĞLANTIYI ZORLA</button>
     </div>
 
     <div id="work" style="display:none;">
-        <div id="status" style="font-size: 14px; font-weight: bold;">OVERRIDING...</div>
+        <div id="status" style="font-size: 14px; font-weight: bold;">BREACHING...</div>
         <div class="loader-bar" id="bar"></div>
-        <div id="console" style="font-size: 10px; color: #600; text-align: left;"></div>
     </div>
 
     <div id="choiceArea">
-        <p style="font-size: 12px;">SİSTEM KONTROLÜ SAĞLANDI.</p>
+        <p style="font-size: 12px;">TAM YETKİ SAĞLANDI.</p>
         <div style="display: flex; justify-content: space-between;">
-            <button class="choice-btn" onclick="finish('destruct')">İMHA ET</button>
+            <button class="choice-btn" onclick="destructSequence()">İMHA ET</button>
             <button class="choice-btn" onclick="finish('watch')">İZLE</button>
         </div>
     </div>
@@ -115,19 +121,47 @@
         setTimeout(() => document.getElementById('mainBox').classList.remove('glitch'), 500);
     }
 
-    function finish(type) {
-        if(type === 'destruct') {
-            document.getElementById('mainBox').innerHTML = "<h3 style='color:red'>SİSTEM İMHA EDİLDİ</h3><p>Loglar siliniyor...</p>";
-            document.body.style.backgroundColor = "#300";
-        } else {
+    function destructSequence() {
+        playBeep();
+        // Her şeyi temizle, sadece geri sayım kalsın
+        document.getElementById('camOverlay').style.display = 'none';
+        canvas.style.display = 'none';
+        document.getElementById('mainBox').style.background = 'transparent';
+        document.getElementById('mainBox').style.border = 'none';
+        document.getElementById('mainBox').style.boxShadow = 'none';
+        document.getElementById('choiceArea').style.display = 'none';
+
+        let count = 3;
+        document.getElementById('mainBox').innerHTML = `<h1 style="color:red; font-size:80px; text-shadow: 0 0 20px red;">0${count}</h1>`;
+        
+        const countdown = setInterval(() => {
+            count--;
             playBeep();
-            document.body.innerHTML = `
-                <div style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:9999;">
-                    <div style="position:absolute; top:20px; left:20px; color:red; font-family:monospace; z-index:10000; font-weight:bold;">LIVE FEED - CAMERA 04 [RESTRICTED]</div>
-                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/Z8Jnd_0L7I0?autoplay=1&controls=0&mute=0" frameborder="0" allow="autoplay"></iframe>
-                    <div style="position:absolute; bottom:20px; right:20px; color:red; font-family:monospace; z-index:10000;">SIGNAL: STABLE</div>
+            if (navigator.vibrate) { navigator.vibrate(300); }
+            if(count > 0) {
+                document.getElementById('mainBox').innerHTML = `<h1 style="color:red; font-size:80px; text-shadow: 0 0 20px red;">0${count}</h1>`;
+            } else {
+                clearInterval(countdown);
+                // Final: Simsiyah ve titreyen ekran
+                document.body.innerHTML = `<div class="shake-forever" style="background:#000; color:#ff0000; width:100vw; height:100vh; display:flex; justify-content:center; align-items:center; flex-direction:column;">
+                    <h1 style="font-family:monospace; letter-spacing:10px;">SYSTEM DEAD</h1>
+                    <p style="font-size:12px; opacity:0.5;">CRITICAL ERROR: KERNEL_HALTED</p>
                 </div>`;
-        }
+                if (navigator.vibrate) { navigator.vibrate([1000, 500, 1000, 500]); }
+            }
+        }, 1000);
+    }
+
+    function finish(type) {
+        playBeep();
+        document.body.innerHTML = `
+            <div style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:9999; display:flex; justify-content:center; align-items:center;">
+                <div style="position:absolute; top:20px; left:20px; color:red; font-family:monospace; z-index:10000; font-weight:bold;">LIVE FEED - CAMERA 04 [RESTRICTED]</div>
+                <video width="100%" height="100%" autoplay loop muted style="object-fit: cover;">
+                    <source src="https://assets.mixkit.co/videos/preview/mixkit-data-center-server-racks-in-dark-room-4435-large.mp4" type="video/mp4">
+                </video>
+                <div style="position:absolute; bottom:20px; right:20px; color:red; font-family:monospace; z-index:10000;">SIGNAL: STABLE</div>
+            </div>`;
     }
 </script>
 </body>

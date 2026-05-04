@@ -3,152 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N4STR0Y | FINAL</title>
+    <title>N4STR0Y | SOURCE ACCESS</title>
     <style>
         body { background-color: #000; margin: 0; overflow: hidden; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Courier New', monospace; color: #ff0000; }
-        canvas { position: absolute; top: 0; left: 0; z-index: 1; opacity: 0.15; }
         
-        .container { position: relative; z-index: 30; background: rgba(10, 0, 0, 0.95); padding: 30px; border: 1px solid #ff0000; box-shadow: 0 0 25px #ff000044; width: 85%; max-width: 400px; text-align: center; }
-        .btn { background: #ff0000; color: #000; border: none; padding: 15px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; letter-spacing: 2px; }
-        .loader-bar { width: 0%; height: 2px; background: #ff0000; margin: 15px 0; }
-        
-        #choiceArea { display: none; margin-top: 20px; }
-        .choice-btn { background: transparent; border: 1px solid #ff0000; color: #ff0000; padding: 10px; width: 48%; cursor: pointer; }
-
-        /* İstediğin o devasa ve çok kalın rakamlar */
-        .countdown-text { color: #ff0000; font-size: 150px; font-weight: 900; text-shadow: 0 0 40px red; font-family: 'Arial Black', sans-serif; line-height: 1; margin: 0; }
-
-        .shake-forever { animation: shake 0.1s infinite; }
-        @keyframes shake {
-            0% { transform: translate(5px, 5px); }
-            25% { transform: translate(-5px, -5px); }
-            50% { transform: translate(5px, -5px); }
-            75% { transform: translate(-5px, 5px); }
-            100% { transform: translate(5px, 5px); }
+        /* Kamera Görüntüsü Katmanı */
+        #videoElement {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover; z-index: 5; opacity: 0; transition: opacity 1s;
+            filter: grayscale(100%) brightness(80%) sepia(100%) hue-rotate(-50deg) saturate(600%); /* Kırmızı Hacker Filtresi */
         }
+
+        .container { position: relative; z-index: 30; background: rgba(10, 0, 0, 0.85); padding: 30px; border: 1px solid #ff0000; width: 85%; max-width: 400px; text-align: center; }
+        .btn { background: #ff0000; color: #000; border: none; padding: 15px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+        
+        #targetOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            border: 2px solid red; box-sizing: border-box; z-index: 10;
+            display: none; pointer-events: none;
+            background: radial-gradient(circle, transparent 30%, rgba(255,0,0,0.2) 100%);
+        }
+
+        .target-text { position: absolute; top: 20%; left: 50%; transform: translateX(-50%); color: red; font-weight: 900; font-size: 20px; text-shadow: 0 0 10px red; }
     </style>
 </head>
 <body>
 
-<canvas id="matrix"></canvas>
+<video id="videoElement" autoplay playsinline></video>
+<div id="targetOverlay">
+    <div class="target-text">HEDEF BELİRLENDİ: ANALİZ EDİLİYOR...</div>
+</div>
 
 <div class="container" id="mainBox">
     <div id="init">
-        <p style="font-size: 12px; letter-spacing: 1px;">SİSTEM YETKİSİ BEKLENİYOR...</p>
-        <button class="btn" onclick="startBruteForce()">BAĞLANTIYI ZORLA</button>
+        <p style="font-size: 13px;">SİSTEME GİRİŞ YAPMAK İÇİN BİYOMETRİK DOĞRULAMA GEREKLİ.</p>
+        <button class="btn" onclick="startCamera()">DOĞRULAMAYI BAŞLAT</button>
     </div>
 
-    <div id="work" style="display:none;">
-        <div id="status" style="font-weight: bold; font-size: 14px;">BREACHING...</div>
-        <div class="loader-bar" id="bar"></div>
-    </div>
-
-    <div id="choiceArea">
-        <p style="font-size: 12px;">ERİŞİM SAĞLANDI.</p>
-        <div style="display: flex; justify-content: space-between;">
-            <button class="choice-btn" onclick="destructSequence()">İMHA ET</button>
-            <button class="choice-btn" onclick="finish()">İZLE</button>
+    <div id="loading" style="display:none;">
+        <p id="statusText">KAMERA ERİŞİMİ SAĞLANIYOR...</p>
+        <div style="width: 100%; background: #200; height: 5px; margin-top: 10px;">
+            <div id="bar" style="width: 0%; background: red; height: 100%; transition: 0.1s;"></div>
         </div>
     </div>
-
-    <audio id="music" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg"></audio>
-    <audio id="beep"><source src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" type="audio/mpeg"></audio>
-    <audio id="laugh" loop><source src="https://assets.mixkit.co/active_storage/sfx/1042/1042-preview.mp3" type="audio/mpeg"></audio>
 </div>
 
 <script>
-    const canvas = document.getElementById('matrix');
-    const ctx = canvas.getContext('2d');
-    const music = document.getElementById('music');
-    const beep = document.getElementById('beep');
-    const laugh = document.getElementById('laugh');
+    const video = document.getElementById('videoElement');
+    const mainBox = document.getElementById('mainBox');
 
-    canvas.height = window.innerHeight; canvas.width = window.innerWidth;
-    const drops = Array(Math.floor(canvas.width/16)).fill(1);
-    function draw() {
-        ctx.fillStyle = "rgba(0,0,0,0.05)"; ctx.fillRect(0,0,canvas.width,canvas.height);
-        ctx.fillStyle = "#f00"; ctx.font = "16px arial";
-        drops.forEach((y, i) => {
-            ctx.fillText(Math.floor(Math.random()*2), i*16, y*16);
-            if(y*16 > canvas.height && Math.random() > 0.98) drops[i] = 0;
-            drops[i]++;
-        });
-    }
-
-    function playBeep() { beep.currentTime = 0; beep.play().catch(e => {}); }
-
-    function startBruteForce() {
-        playBeep(); music.play().catch(e => {});
-        if (navigator.vibrate) { navigator.vibrate(3000); }
-        document.getElementById('init').style.display = 'none';
-        document.getElementById('work').style.display = 'block';
-        setInterval(draw, 50);
-
-        let w = 0;
-        const intr = setInterval(() => {
-            w += 2;
-            if(w >= 100) { w = 100; clearInterval(intr); showFinal(); }
-            document.getElementById('bar').style.width = w + "%";
-            document.getElementById('status').innerText = "HACKING: %" + Math.floor(w);
-        }, 80);
-    }
-
-    function showFinal() {
-        document.getElementById('work').style.display = 'none';
-        document.getElementById('choiceArea').style.display = 'block';
-        playBeep();
-    }
-
-    function destructSequence() {
-        playBeep();
-        music.pause();
-        canvas.style.display = 'none';
-        document.getElementById('mainBox').style.background = 'transparent';
-        document.getElementById('mainBox').style.border = 'none';
-        document.getElementById('mainBox').style.boxShadow = 'none';
-        document.getElementById('choiceArea').style.display = 'none';
-
-        let count = 3;
-        const renderCount = () => {
-            document.getElementById('mainBox').innerHTML = `<h1 class="countdown-text">0${count}</h1>`;
-            // Sesli konuşma (Hata riskine karşı kontrol eklendi)
-            if ('speechSynthesis' in window) {
-                const msg = new SpeechSynthesisUtterance(count.toString());
-                msg.lang = 'en-US'; msg.rate = 0.7; msg.pitch = 0.1;
-                window.speechSynthesis.speak(msg);
-            }
-        };
-
-        renderCount();
-
-        const countdown = setInterval(() => {
-            count--;
-            if(count > 0) {
-                renderCount();
-                if (navigator.vibrate) { navigator.vibrate(500); }
-            } else {
-                clearInterval(countdown);
-                laugh.play().catch(e => {}); 
-                document.body.innerHTML = `
-                <div class="shake-forever" style="background:#000; color:#ff0000; width:100vw; height:100vh; display:flex; justify-content:center; align-items:center; flex-direction:column; text-align:center;">
-                    <h1 style="font-family:sans-serif; letter-spacing:5px; font-size:45px; font-weight:900; margin:0;">SYSTEM DEAD</h1>
-                    <p style="font-size:18px; margin-top:10px; font-weight:bold; letter-spacing:2px;">YOU ARE INFECTED</p>
-                </div>`;
-                
-                if (navigator.vibrate) {
-                    setInterval(() => { navigator.vibrate(1000); }, 1100);
+    async function startCamera() {
+        try {
+            // Kamera izni istiyoruz
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+            video.srcObject = stream;
+            
+            // İzin verilince arayüzü değiştir
+            document.getElementById('init').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+            
+            let w = 0;
+            const intr = setInterval(() => {
+                w += 1;
+                document.getElementById('bar').style.width = w + "%";
+                if(w === 50) document.getElementById('statusText').innerText = "YÜZ TARANIYOR...";
+                if(w >= 100) {
+                    clearInterval(intr);
+                    showFace();
                 }
-            }
-        }, 1300);
+            }, 40);
+
+        } catch (err) {
+            alert("SİSTEM HATASI: Kamera izni verilmediği için sızma işlemi başarısız oldu.");
+        }
     }
 
-    function finish() {
-        playBeep();
-        document.body.innerHTML = `<div style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:9999;">
-            <video width="100%" height="100%" autoplay loop muted style="object-fit:cover;">
-                <source src="https://assets.mixkit.co/videos/preview/mixkit-data-center-server-racks-in-dark-room-4435-large.mp4" type="video/mp4">
-            </video>
-        </div>`;
+    function showFace() {
+        mainBox.style.display = 'none'; // Paneli gizle
+        video.style.opacity = '1'; // Kamerayı göster
+        document.getElementById('targetOverlay').style.display = 'block'; // Hedef yazısını göster
+        
+        // 5 saniye sonra "imha" kısmına geçebiliriz
+        setTimeout(() => {
+            alert("VERİLER BULUT SÜRÜCÜYE AKTARILDI.");
+            location.reload(); // Şaka biter, sayfayı yeniler
+        }, 6000);
     }
 </script>
 </body>

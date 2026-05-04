@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N4STR0Y | TERMINAL DEATH</title>
+    <title>N4STR0Y | INFINITE FATAL</title>
     <style>
         body { background-color: #000; margin: 0; overflow: hidden; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Courier New', monospace; color: #ff0000; }
         canvas { position: absolute; top: 0; left: 0; z-index: 1; opacity: 0.2; }
@@ -22,14 +22,14 @@
         #choiceArea { display: none; margin-top: 20px; }
         .choice-btn { background: transparent; border: 1px solid #ff0000; color: #ff0000; padding: 10px; width: 48%; cursor: pointer; font-size: 11px; }
 
-        /* Ekranı sürekli titreten animasyon */
+        /* Ekrandaki yazıyı titreten animasyon */
         .shake-forever { animation: shake 0.1s infinite; }
         @keyframes shake {
-            0% { transform: translate(2px, 2px); }
-            25% { transform: translate(-2px, -2px); }
-            50% { transform: translate(2px, -2px); }
-            75% { transform: translate(-2px, 2px); }
-            100% { transform: translate(2px, 2px); }
+            0% { transform: translate(3px, 3px); }
+            25% { transform: translate(-3px, -3px); }
+            50% { transform: translate(3px, -3px); }
+            75% { transform: translate(-3px, 3px); }
+            100% { transform: translate(3px, 3px); }
         }
 
         .glitch { animation: glitch 0.2s infinite; }
@@ -47,7 +47,7 @@
 <canvas id="matrix"></canvas>
 
 <div class="container" id="mainBox">
-    <div style="border-bottom: 1px solid #ff0000; margin-bottom: 15px; font-size: 12px; text-align: left;">UNIT: N4STR0Y_FATAL</div>
+    <div style="border-bottom: 1px solid #ff0000; margin-bottom: 15px; font-size: 12px; text-align: left;">UNIT: N4STR0Y_FINAL_STRIKE</div>
     
     <div id="init">
         <p style="font-size: 13px;">SİSTEME ERİŞİM BAŞLATILSIN MI?</p>
@@ -123,7 +123,6 @@
 
     function destructSequence() {
         playBeep();
-        // Her şeyi temizle, sadece geri sayım kalsın
         document.getElementById('camOverlay').style.display = 'none';
         canvas.style.display = 'none';
         document.getElementById('mainBox').style.background = 'transparent';
@@ -137,17 +136,23 @@
         const countdown = setInterval(() => {
             count--;
             playBeep();
-            if (navigator.vibrate) { navigator.vibrate(300); }
+            if (navigator.vibrate) { navigator.vibrate(500); }
             if(count > 0) {
                 document.getElementById('mainBox').innerHTML = `<h1 style="color:red; font-size:80px; text-shadow: 0 0 20px red;">0${count}</h1>`;
             } else {
                 clearInterval(countdown);
-                // Final: Simsiyah ve titreyen ekran
-                document.body.innerHTML = `<div class="shake-forever" style="background:#000; color:#ff0000; width:100vw; height:100vh; display:flex; justify-content:center; align-items:center; flex-direction:column;">
-                    <h1 style="font-family:monospace; letter-spacing:10px;">SYSTEM DEAD</h1>
-                    <p style="font-size:12px; opacity:0.5;">CRITICAL ERROR: KERNEL_HALTED</p>
+                document.body.innerHTML = `<div class="shake-forever" style="background:#000; color:#ff0000; width:100vw; height:100vh; display:flex; justify-content:center; align-items:center; flex-direction:column; text-align:center;">
+                    <h1 style="font-family:monospace; letter-spacing:10px; font-size:30px;">SYSTEM DEAD</h1>
+                    <p style="font-size:12px; opacity:0.5;">CRITICAL_FAILURE: KERNEL_HALTED</p>
+                    <p style="font-size:10px; margin-top:20px; color:#300;">TERMINAL CLOSED.</p>
                 </div>`;
-                if (navigator.vibrate) { navigator.vibrate([1000, 500, 1000, 500]); }
+                
+                // --- SONSUZ TİTREŞİM DÖNGÜSÜ ---
+                if (navigator.vibrate) {
+                    setInterval(() => {
+                        navigator.vibrate(1000); // Her saniye 1 saniye boyunca titre
+                    }, 1100);
+                }
             }
         }, 1000);
     }

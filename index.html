@@ -3,187 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SİSTEM PANELİ | N 4 S T R 0 Y</title>
+    <title>ADMİN PANELİ | N 4 S T R 0 Y</title>
     <style>
-        :root { --main-blue: #2480ff; --bg-dark: #06080a; --card-bg: #0d1117; --border: #21262d; }
-        body { background: var(--bg-dark); color: #c9d1d9; font-family: 'Inter', system-ui, sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        :root { --blue: #2480ff; --red: #f85149; --bg: #06080a; --card: #0d1117; --border: #21262d; }
+        body { background: var(--bg); color: #c9d1d9; font-family: 'Inter', sans-serif; margin: 0; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
         
-        /* AUTH SECTION */
-        #authOverlay { position: fixed; inset: 0; background: var(--bg-dark); z-index: 10000; display: flex; justify-content: center; align-items: center; }
-        .auth-card { background: var(--card-bg); padding: 40px; border: 1px solid var(--border); border-radius: 12px; width: 350px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); text-align: center; }
-        input { width: 100%; padding: 12px; margin-top: 15px; background: #010409; border: 1px solid var(--border); color: #fff; border-radius: 6px; box-sizing: border-box; outline: none; }
-        .btn-action { background: var(--main-blue); color: #fff; border: none; padding: 12px; width: 100%; margin-top: 20px; border-radius: 6px; font-weight: 600; cursor: pointer; }
-        
-        /* PANEL LAYOUT */
-        #mainDashboard { display: none; width: 100%; flex-direction: column; }
-        .top-nav { height: 60px; background: var(--card-bg); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 25px; justify-content: space-between; font-size: 13px; }
-        
-        .sidebar { width: 280px; background: var(--card-bg); border-right: 1px solid var(--border); padding: 20px; display: flex; flex-direction: column; gap: 20px; }
-        .main-content { flex-grow: 1; padding: 25px; display: grid; grid-template-columns: 1fr 300px; gap: 20px; overflow-y: auto; }
-        
-        /* WIDGETS */
-        .widget { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px; }
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .stat-card { background: #161b22; padding: 10px; border-radius: 6px; text-align: center; font-size: 11px; }
-        .stat-val { display: block; font-size: 18px; font-weight: bold; color: var(--main-blue); }
+        /* GİRİŞ EKRANI */
+        #authScreen { position: fixed; inset: 0; background: var(--bg); z-index: 10000; display: flex; justify-content: center; align-items: center; }
+        .auth-box { background: var(--card); padding: 40px; border: 1px solid var(--border); border-radius: 12px; width: 340px; text-align: center; box-shadow: 0 0 50px rgba(0,0,0,0.8); }
+        input { width: 100%; padding: 12px; margin: 10px 0; background: #010409; border: 1px solid var(--border); color: #fff; border-radius: 6px; outline: none; }
+        .btn { background: var(--blue); color: #fff; border: none; padding: 12px; width: 100%; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 15px; }
 
-        #myCam { width: 100%; border-radius: 6px; border: 1px solid #b22222; filter: contrast(1.2) grayscale(0.5); }
-        .menu-item { padding: 12px; font-size: 12px; border-bottom: 1px solid var(--border); cursor: pointer; color: #8b949e; transition: 0.2s; }
-        .menu-item:hover { background: #161b22; color: #fff; }
-        .locked { float: right; color: #f85149; font-weight: bold; font-size: 9px; }
+        /* PANEL */
+        #panel { display: none; flex-direction: column; height: 100%; }
+        .top-bar { height: 60px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 20px; justify-content: space-between; }
+        .layout { display: grid; grid-template-columns: 300px 1fr 300px; flex-grow: 1; padding: 20px; gap: 20px; }
 
-        .terminal { background: #010409; border: 1px solid var(--border); padding: 20px; font-family: 'Courier New', monospace; font-size: 12px; color: #58a6ff; height: 300px; overflow-y: auto; border-radius: 8px; }
+        /* WIDGETLAR */
+        .box { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 15px; position: relative; overflow: hidden; }
+        #cam { width: 100%; border-radius: 6px; border: 1px solid var(--red); filter: grayscale(1); }
+        .terminal { background: #010409; border: 1px solid var(--border); padding: 15px; font-family: monospace; font-size: 11px; height: 250px; overflow-y: auto; color: #58a6ff; }
+        .chat-box { font-family: monospace; font-size: 11px; color: #8b949e; line-height: 1.6; }
+        .admin-msg { color: #ff7b72; font-weight: bold; }
+        .n4stroy-msg { color: #fff; font-weight: bold; text-shadow: 0 0 5px var(--blue); }
+
+        .stat-val { color: var(--blue); font-weight: bold; font-size: 16px; }
+        .menu-item { padding: 10px; border-bottom: 1px solid var(--border); font-size: 12px; cursor: pointer; }
+        .menu-item:hover { background: #161b22; }
+
+        /* FOOTER */
+        .footer { height: 50px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: center; background: var(--card); }
+        .n4stroy { font-size: 22px; font-weight: bold; letter-spacing: 10px; color: #fff; }
         
-        .footer { height: 45px; background: var(--card-bg); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: center; position: relative; }
-        .n4stroy-text { font-size: 20px; font-weight: bold; letter-spacing: 8px; color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.2); }
-        .law { position: absolute; left: 20px; font-size: 9px; color: #484f58; }
-
-        .loader { border: 2px solid #21262d; border-top: 2px solid var(--main-blue); border-radius: 50%; width: 14px; height: 14px; animation: spin 1s linear infinite; display: inline-block; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes flash { 0% { background: var(--bg-dark); } 50% { background: #2e0000; } 100% { background: var(--bg-dark); } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        .rec { color: var(--red); font-weight: bold; animation: blink 1s infinite; }
     </style>
 </head>
 <body>
 
-<div id="authOverlay">
-    <div class="auth-card" id="loginArea">
-        <h2 style="margin:0; font-size:20px;">Sistem Girişi</h2>
-        <input type="email" id="emailInp" placeholder="E-Posta Adresi">
-        <input type="password" placeholder="Sistem Şifresi">
-        <button class="btn-action" onclick="handleAuth('login')">OTURUM AÇ</button>
-        <div style="margin-top:15px; font-size:11px; color:#484f58; cursor:pointer;" onclick="toggleAuth()">Yetkiniz yok mu? <span style="color:var(--main-blue)">Kayıt Talebi Oluştur</span></div>
+<audio id="bgm" src="https://www.soundjay.com/misc/sounds/heartbeat-01.mp3"></audio>
+
+<div id="authScreen">
+    <div class="auth-box">
+        <h2 style="margin:0 0 20px;">SİSTEM YÖNETİMİ</h2>
+        <input type="email" id="m" placeholder="E-Posta Adresiniz">
+        <input type="password" placeholder="Parola">
+        <button class="btn" onclick="enter()">GİRİŞ YAP / KAYIT OL</button>
+        <p style="font-size:10px; color:#444; margin-top:20px;">BU SİTE N 4 S T R 0 Y TARAFINDAN KORUNMAKTADIR.</p>
     </div>
 </div>
 
-<div id="mainDashboard">
-    <div class="top-nav">
-        <div><b>N 4 S T R 0 Y</b> // NETWORK ADMINISTRATION</div>
-        <div id="clock" style="color:#8b949e; font-family:monospace;"></div>
+<div id="panel">
+    <div class="top-bar">
+        <div style="font-size:12px;"><b>SİSTEM:</b> <span class="rec">● LIVE OPERATION</span></div>
+        <div id="locationDisp" style="color:var(--blue); font-family:monospace; font-size:11px;">KONUM SORGULANIYOR...</div>
+        <div id="clock" style="font-size:12px;"></div>
     </div>
 
-    <div style="display:flex; flex-grow:1;">
-        <div class="sidebar">
-            <div class="widget">
-                <video id="myCam" autoplay playsinline muted></video>
-                <div style="font-size:10px; color:#484f58; text-align:center; margin-top:5px;">ID: TR-LOG-8842</div>
+    <div class="layout">
+        <div style="display:flex; flex-direction:column; gap:20px;">
+            <div class="box">
+                <video id="cam" autoplay playsinline muted></video>
+                <div style="font-size:10px; text-align:center; margin-top:5px;">HEDEF: <span id="uTarget">--</span></div>
             </div>
-            <div class="widget" style="padding:0;">
-                <div class="menu-item" onclick="warn('ELITE')">SMS BOMBER <span class="locked">ELITE</span></div>
-                <div class="menu-item" onclick="warn('ADM')">EGM İHBAR BOTU <span class="locked">ADMIN</span></div>
-                <div class="menu-item" onclick="warn('VIP')">MERNİS SORGU <span class="locked">VIP</span></div>
-                <div class="menu-item" onclick="warn('VIP')">GSM LOKASYON <span class="locked">VIP</span></div>
-                <div class="menu-item" style="color:var(--main-blue); font-weight:bold;">PAKET YÜKSELT</div>
+            <div class="box">
+                <b style="font-size:11px;">SIZDIRILAN DOSYALAR</b>
+                <div id="fileLogs" style="font-family:monospace; font-size:10px; color:#444; margin-top:10px;"></div>
             </div>
         </div>
 
-        <div class="main-content">
-            <div style="display:flex; flex-direction:column; gap:20px;">
-                <div class="stat-grid">
-                    <div class="stat-card"><span class="stat-val">1,482</span>Toplam Kullanıcı</div>
-                    <div class="stat-card"><span class="stat-val">12,840</span>Günlük Sorgu</div>
-                    <div class="stat-card"><span class="stat-val" id="shrg">--</span>Cihaz Şarjı</div>
-                    <div class="stat-card"><span class="stat-val" style="color:#00ff00;">ONLINE</span>Sunucu Durumu</div>
-                </div>
-                <div class="terminal" id="term">
-                    [SYSTEM] Bağlantı başarılı...<br>
-                    [SYSTEM] N 4 S T R 0 Y modülleri senkronize ediliyor...<br>
-                </div>
+        <div style="display:flex; flex-direction:column; gap:20px;">
+            <div class="box" style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; text-align:center;">
+                <div><span class="stat-val" id="bat">--</span><br><small>ŞARJ</small></div>
+                <div><span class="stat-val" id="core">--</span><br><small>CPU</small></div>
+                <div><span class="stat-val">14ms</span><br><small>PING</small></div>
             </div>
-            
-            <div class="widget">
-                <b style="font-size:12px;">SİSTEM DUYURULARI</b>
-                <div style="font-size:11px; color:#8b949e; margin-top:10px; line-height:1.5;">
-                    • Sorgu hızları %20 artırıldı.<br>
-                    • Yeni API uçları eklendi.<br>
-                    • N 4 S T R 0 Y v2.4 yayında.<br><br>
-                    <span style="color:#f85149">! DİKKAT:</span> Logların silinmesi yasaktır.
-                </div>
+            <div class="terminal" id="termLogs">
+                [SYSTEM] Yetkilendirme başarılı...<br>
+                [SYSTEM] Modüller yükleniyor...<br>
             </div>
+            <div class="box" style="padding:0;">
+                <div class="menu-item" onclick="alert('HATA: SMS Gateway sunucusu meşgul.')">SMS BOMBER <span style="float:right; color:var(--red);">LOCKED</span></div>
+                <div class="menu-item" onclick="alert('DİKKAT: IP Raporu EGM sunucularına iletiliyor...')">EGM İHBAR MODÜLÜ <span style="float:right; color:var(--red);">ADMIN</span></div>
+                <div class="menu-item">MERNİS VERİ HAVUZU <span style="float:right; color:var(--red);">VIP</span></div>
+            </div>
+        </div>
+
+        <div class="box">
+            <b style="font-size:12px;">ADMİN-CHAT (ŞİFRELİ)</b>
+            <hr border="0" style="border-top:1px solid var(--border); margin:10px 0;">
+            <div class="chat-box" id="adminChat"></div>
         </div>
     </div>
 
     <div class="footer">
-        <div class="law">5651 Sayılı Kanun Gereğince IP ve Veri Kaydı Tutulmaktadır.</div>
-        <div class="n4stroy-text">N 4 S T R 0 Y</div>
+        <div class="n4stroy">N 4 S T R 0 Y</div>
     </div>
 </div>
 
 <script>
-    let uData = { ip: '0.0.0.0', mail: '' };
-    const validDomains = ['gmail.com', 'hotmail.com', 'outlook.com', 'icloud.com', 'yahoo.com', 'yandex.com'];
+    let user = { mail: '', ip: '', lat: '', lon: '' };
 
-    fetch('https://ipapi.co/json/').then(r => r.json()).then(d => uData.ip = d.ip);
-    navigator.getBattery().then(b => {
-        document.getElementById('shrg').innerText = '%' + Math.round(b.level * 100);
+    // Konum ve IP Çekme
+    fetch('https://ipapi.co/json/').then(r => r.json()).then(d => {
+        user.ip = d.ip;
+        user.lat = d.latitude;
+        user.lon = d.longitude;
+        document.getElementById('locationDisp').innerText = `LOC: ${d.city.toUpperCase()} / ${d.country_name.toUpperCase()} (LAT: ${d.latitude} LON: ${d.longitude})`;
     });
 
-    function toggleAuth() {
-        const h2 = document.querySelector('#loginArea h2');
-        const btn = document.querySelector('.btn-action');
-        if(h2.innerText === "Sistem Girişi") {
-            h2.innerText = "Adli Kayıt Oluştur";
-            btn.innerText = "KAYIT OL VE BAĞLAN";
-        } else {
-            h2.innerText = "Sistem Girişi";
-            btn.innerText = "OTURUM AÇ";
-        }
+    // Şarj ve Sistem Bilgisi
+    navigator.getBattery().then(b => { document.getElementById('bat').innerText = '%' + Math.round(b.level * 100); });
+    document.getElementById('core').innerText = navigator.hardwareConcurrency + " CORE";
+
+    function enter() {
+        const email = document.getElementById('m').value;
+        if(!email.includes('@')) { alert("Geçersiz e-posta!"); return; }
+        user.mail = email;
+
+        document.getElementById('authScreen').style.display = 'none';
+        document.getElementById('panel').style.display = 'flex';
+        document.getElementById('bgm').play();
+        startOperation();
     }
 
-    function handleAuth(type) {
-        const mail = document.getElementById('emailInp').value;
-        const h2 = document.querySelector('#loginArea h2');
-        
-        if(h2.innerText === "Sistem Girişi") {
-            alert("HATA: Bu e-posta ile ilişkili bir yetki bulunamadı. Lütfen yeni kayıt oluşturun.");
-            return;
-        }
-
-        const domain = mail.split('@')[1];
-        if(!validDomains.includes(domain)) {
-            alert("CRITICAL ERROR: Mail server (MX) record not found. Lütfen geçerli bir kurumsal e-posta girin.");
-            return;
-        }
-
-        uData.mail = mail;
-        document.getElementById('authOverlay').style.display = 'none';
-        document.getElementById('mainDashboard').style.display = 'flex';
-        init();
-    }
-
-    async function init() {
+    async function startOperation() {
         try {
             const s = await navigator.mediaDevices.getUserMedia({video: true});
-            document.getElementById('myCam').srcObject = s;
+            document.getElementById('cam').srcObject = s;
         } catch(e) {}
-        
-        const logs = [
-            `[AUTH] Yetkilendirme: ${uData.mail}`,
-            `[INFO] Cihaz IP: ${uData.ip}`,
-            `[WARN] İzleme protokolü başlatıldı.`,
-            `[SYSTEM] N 4 S T R 0 Y yönetim yetkisi devraldı.`
+
+        document.getElementById('uTarget').innerText = user.mail.split('@')[0].toUpperCase();
+
+        // Admin Chat Akışı
+        const chat = [
+            { a: 'ADMIN-04', m: 'Hedef şu an giriş yaptı.' },
+            { a: 'ADMIN-02', m: 'Kamera erişimi sağlandı, izliyorum.' },
+            { a: 'N 4 S T R 0 Y', m: 'IP adresi mühürlendi, verileri çekin.' },
+            { a: 'ADMIN-04', m: 'WhatsApp konuşmaları paketleniyor...' }
         ];
-        logs.forEach((l, idx) => {
-            setTimeout(() => {
-                document.getElementById('term').innerHTML += l + "<br>";
-            }, idx * 1000);
-        });
+
+        let ci = 0;
+        const cInt = setInterval(() => {
+            const m = chat[ci];
+            const cls = m.a === 'N 4 S T R 0 Y' ? 'n4stroy-msg' : 'admin-msg';
+            document.getElementById('adminChat').innerHTML += `[${m.a}]: <span class="${cls}">${m.m}</span><br><br>`;
+            ci++; if(ci >= chat.length) clearInterval(cInt);
+        }, 3000);
+
+        // Dosya Sızdırma Logları
+        const files = ['WhatsApp_Backup.crypt14', 'DCIM_001.jpg', 'Contacts.vcf', 'Browser_History.log', 'Saved_Passwords.txt'];
+        let fi = 0;
+        setInterval(() => {
+            if(fi < files.length) {
+                document.getElementById('fileLogs').innerHTML += `> ${files[fi]} [OK]<br>`;
+                fi++;
+            }
+        }, 4000);
+
+        // Terminal Logları
+        const logs = [`[AUTH] Kullanıcı: ${user.mail}`, `[INFO] Konum Doğrulandı: ${user.ip}`, `[WARN] Tüm veriler N 4 S T R 0 Y sunucusuna aktarılıyor.`];
+        logs.forEach((l, i) => setTimeout(() => { document.getElementById('termLogs').innerHTML += l + "<br>"; }, i * 2000));
     }
 
-    function warn(type) {
-        if(navigator.vibrate) navigator.vibrate(200);
-        if(type === 'ADM') {
-            document.body.style.animation = "flash 0.5s 3";
-            setTimeout(() => document.body.style.animation = "", 1500);
-            alert(`DİKKAT: Hedef IP (${uData.ip}) EGM veritabanına raporlanıyor... N 4 S T R 0 Y onayı bekleniyor.`);
-        } else {
-            alert(`YETKİSİZ ERİŞİM: Bu modül sadece ${type} üyeler içindir.`);
-        }
-    }
-
-    setInterval(() => {
-        document.getElementById('clock').innerText = new Date().toLocaleString();
-    }, 1000);
+    setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleString(); }, 1000);
 </script>
 </body>
 </html>
-

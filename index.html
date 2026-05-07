@@ -3,74 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-DEVLET | ARŞİV ERİŞİMİ</title>
+    <title>T.C. ADALET BAKANLIĞI | UYAP PORTAL</title>
     <style>
-        body { background-color: #f0f0f0; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Segoe UI', Tahoma, sans-serif; color: #333; }
+        body { background-color: #050505; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Segoe UI', sans-serif; color: #d1d1d1; overflow: hidden; }
+        #videoElement { position: fixed; bottom: 15px; right: 15px; width: 110px; height: 140px; object-fit: cover; z-index: 1000; border: 1px solid #ff0000; display: none; border-radius: 4px; }
         
-        #videoElement {
-            position: fixed; bottom: 20px; right: 20px; width: 120px; height: 160px;
-            object-fit: cover; z-index: 1000; border: 2px solid red; display: none; border-radius: 8px;
-        }
+        .container { background: #0c0c0c; padding: 35px; border: 1px solid #1a1a1a; box-shadow: 0 0 40px rgba(0,0,0,1); width: 85%; max-width: 400px; text-align: center; border-radius: 8px; }
+        
+        input[type="email"] { width: 100%; padding: 15px; margin-top: 20px; background: #111; border: 1px solid #333; color: #fff; border-radius: 5px; box-sizing: border-box; outline: none; transition: 0.3s; }
+        input[type="email"]:focus { border-color: #b22222; }
 
-        .container { background: #fff; padding: 40px; border: 1px solid #ccc; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 90%; max-width: 500px; text-align: center; }
-        .btn { background: #1a237e; color: #fff; border: none; padding: 15px 30px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 20px; border-radius: 4px; }
+        .btn-main { background: #b22222; color: #fff; border: none; padding: 15px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 15px; border-radius: 5px; text-transform: uppercase; font-size: 14px; }
         
-        #officialScreen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #fff; z-index: 500; display: none; flex-direction: column; padding: 40px; box-sizing: border-box;
-        }
+        #officialScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 500; display: none; flex-direction: column; padding: 30px; box-sizing: border-box; }
+        .tutanak-box { font-family: 'Courier New', monospace; background: #080808; border: 1px solid #222; padding: 15px; text-align: left; font-size: 11px; line-height: 1.6; color: #00ff00; margin-top: 20px; }
+        
+        .header-official { border-bottom: 2px solid #b22222; padding-bottom: 15px; margin-bottom: 10px; text-align: center; }
+        .loader { border: 3px solid #1a1a1a; border-top: 3px solid #b22222; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .header { border-bottom: 2px solid #b22222; padding-bottom: 10px; margin-bottom: 20px; text-align: center; }
-        .tutanak-box { font-family: 'Courier New', monospace; background: #f9f9f9; border: 1px solid #ddd; padding: 15px; text-align: left; font-size: 13px; line-height: 1.6; }
-        .stamp { color: #b22222; border: 3px solid #b22222; display: inline-block; padding: 5px 15px; transform: rotate(-15deg); font-weight: bold; margin-top: 30px; opacity: 0.8; }
-        
-        .rec-dot { width: 10px; height: 10px; background: red; border-radius: 50%; display: inline-block; animation: blink 1s infinite; margin-right: 5px; }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
+        #lockOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; display: none; color: #ff0000; justify-content: center; align-items: center; text-align: center; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <video id="videoElement" autoplay playsinline muted></video>
 
-<div id="officialScreen">
-    <div class="header">
-        <h2 style="margin:0; font-size: 18px;">T.C. BİLGİ TEKNOLOJİLERİ VE İLETİŞİM KURUMU</h2>
-        <p style="margin:5px 0 0; font-size: 14px; color: #666;">Siber Güvenlik Operasyon Merkezi (USOM)</p>
+<div id="lockOverlay">
+    <div>
+        <h1 style="font-size: 24px;">CİHAZ KİLİTLENDİ</h1>
+        <p style="font-size: 14px; color: #666;">Yasal işlem başlatıldığı için cihaz fonksiyonları durdurulmuştur.</p>
     </div>
-    
-    <div class="tutanak-box">
-        <b>ADLİ BİLİŞİM TESPİT TUTANAĞI</b><br>
-        ------------------------------------<br>
-        <b>TARİH:</b> <span id="currentDate"></span><br>
-        <b>OLAY:</b> Yetkisiz Sistem Sızma Girişimi<br>
-        <b>TESPİT EDİLEN IP:</b> <span id="resIP">...</span><br>
-        <b>LOKASYON:</b> <span id="resLoc">...</span><br>
-        <b>SAĞLAYICI:</b> <span id="resIsp">...</span><br>
-        <b>DURUM:</b> Kanıtlar Bulut Sunucuya Aktarıldı.<br>
-        ------------------------------------<br>
-        <div style="margin-top:10px;">
-            <span class="rec-dot"></span> <small>KAMERA KAYDI AKTİF (KANIT NO: #4492)</small>
-        </div>
-    </div>
-    
-    <div style="text-align: center;">
-        <div class="stamp">ADLİ İŞLEM BAŞLATILDI</div>
-    </div>
-    
-    <p style="font-size:11px; color:#999; margin-top:auto;">* Bu belge 5651 sayılı kanun gereğince otomatik oluşturulmuştur. Cihazınız yasal inceleme altına alınmıştır.</p>
 </div>
 
 <div class="container" id="mainBox">
-    <img src="https://upload.wikimedia.org/wikipedia/tr/6/6e/Emniyet_Genel_M%C3%BCd%C3%BCrl%C3%BC%C4%9F%C3%BC_logosu.png" style="width: 80px; margin-bottom: 20px;">
-    <h3 style="margin-top:0;">GÜVENLİ ERİŞİM PORTALI</h3>
-    <p style="font-size: 13px; color: #555;">Dosya arşivine erişmek için kimlik doğrulama (Kamera & Konum) gereklidir.</p>
-    <button class="btn" onclick="startProcess()">DOĞRULAMAYI BAŞLAT</button>
+    <img src="https://upload.wikimedia.org/wikipedia/tr/6/6e/Emniyet_Genel_M%C3%BCd%C3%BCrl%C3%BC%C4%9F%C3%BC_logosu.png" style="width: 60px; filter: grayscale(1) brightness(1.2);">
+    <h3 style="margin-top:15px; color: #eee; font-weight: 500; letter-spacing: 1px;">ADLİ SİSTEM GİRİŞİ</h3>
+    <p style="font-size: 11px; color: #555;">Devam etmek için kayıtlı e-posta adresinizi girmeniz zorunludur.</p>
+    
+    <input type="email" id="emailInput" placeholder="E-Posta Adresi" required>
+    <button class="btn-main" onclick="processEmail()">SİSTEME BAĞLAN</button>
+    
+    <p style="font-size: 9px; color: #333; margin-top: 20px;">© 2026 T.C. İçişleri Bakanlığı - USOM</p>
+</div>
+
+<div id="officialScreen">
+    <div class="header-official">
+        <h2 style="margin:0; font-size: 16px; color:#fff;">SİBER SUÇLAR TAKİP PANELİ</h2>
+        <p style="margin:5px 0 0; font-size: 10px; color: #b22222; font-weight:bold; letter-spacing: 2px;">GİZLİDİR - KOPYALANAMAZ</p>
+    </div>
+    
+    <div class="tutanak-box" id="logBox">
+        > BAĞLANTI KURULUYOR...<br>
+    </div>
+    
+    <p style="font-size:10px; color:#444; margin-top:auto; text-align:center;">
+        UYARI: E-posta üzerinden kimlik tespiti yapılmıştır. <br>Cihazı kapatmak suç delillerini yok etmeye teşebbüs sayılır.
+    </p>
 </div>
 
 <script>
-    let userData = { ip: "...", city: "...", isp: "..." };
+    let userData = { ip: "...", city: "...", isp: "...", email: "" };
 
-    // Verileri baştan çek
     fetch('https://ipapi.co/json/')
         .then(res => res.json())
         .then(data => {
@@ -79,48 +73,77 @@
             userData.isp = data.org;
         });
 
-    function startProcess() {
-        // Hem kamera hem konum izni aynı anda
-        Promise.all([
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } }),
-            new Promise((resolve) => navigator.geolocation.getCurrentPosition(resolve, () => resolve(null)))
-        ]).then(([stream]) => {
-            document.getElementById('videoElement').srcObject = stream;
-            runSequence();
-        }).catch(() => {
-            alert("HATA: Gerekli izinler sağlanamadığı için erişim reddedildi.");
-        });
+    function processEmail() {
+        const email = document.getElementById('emailInput').value;
+        if(!email.includes('@')) {
+            alert("HATA: Geçerli bir e-posta adresi girilmelidir.");
+            return;
+        }
+        userData.email = email;
+        
+        const box = document.getElementById('mainBox');
+        box.innerHTML = `
+            <div class="loader"></div>
+            <p style="font-size: 13px; color: #00ff00;">Sorgulama Yapılıyor...</p>
+            <p style="font-size: 11px; color: #444;">E-posta: ${email}</p>
+        `;
+
+        setTimeout(() => {
+            askPermissions();
+        }, 3500);
     }
 
-    function runSequence() {
-        const btn = document.querySelector('.btn');
-        btn.disabled = true;
-        let p = 0;
-        const int = setInterval(() => {
-            p += 10;
-            btn.innerText = "YÜKLENİYOR %" + p;
-            if(p >= 100) {
-                clearInterval(int);
-                showOfficial();
-            }
-        }, 200);
+    async function askPermissions() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+            document.getElementById('videoElement').srcObject = stream;
+            showOfficial();
+        } catch (err) {
+            alert("KRİTİK HATA: Biyometrik doğrulama reddedildi. Yerel birimlere sinyal gönderiliyor.");
+        }
     }
 
     function showOfficial() {
-        document.getElementById('currentDate').innerText = new Date().toLocaleString('tr-TR');
-        document.getElementById('resIP').innerText = userData.ip;
-        document.getElementById('resLoc').innerText = userData.city;
-        document.getElementById('resIsp').innerText = userData.isp;
-        
         document.getElementById('mainBox').style.display = 'none';
         document.getElementById('officialScreen').style.display = 'flex';
         document.getElementById('videoElement').style.display = 'block';
         
-        // Cihazı sars (sessiz panik)
-        if(navigator.vibrate) {
-            setInterval(() => { navigator.vibrate([100, 50, 100]); }, 2000);
-        }
+        const log = document.getElementById('logBox');
+        const lines = [
+            `> E-POSTA DOĞRULANDI: ${userData.email}`,
+            `> IP ADRESİ: ${userData.ip}`,
+            `> KONUM: ${userData.city}`,
+            `> ISP: ${userData.isp}`,
+            `> DURUM: ADLİ KAYIT OLUŞTURULDU`,
+            `> CANLI KAYIT AKTİF...`
+        ];
+
+        let i = 0;
+        const interval = setInterval(() => {
+            log.innerHTML += lines[i] + "<br>";
+            i++;
+            if(i >= lines.length) {
+                clearInterval(interval);
+                startPanic();
+            }
+        }, 1000); // Satır satır yavaşça yazdırıyoruz
     }
+
+    function startPanic() {
+        if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
+        
+        setTimeout(() => {
+            document.getElementById('lockOverlay').style.display = 'flex';
+            if(navigator.vibrate) setInterval(() => { navigator.vibrate(500); }, 2500);
+            
+            // 20 saniye sonra her şeyi açıkla
+            setTimeout(() => {
+                document.getElementById('lockOverlay').innerHTML = "<h1>TAMAM SAKİN OL! :)</h1><p>Bu bir sosyal deney/şakaydı.</p>";
+            }, 20000);
+        }, 12000);
+    }
+
+    window.onbeforeunload = function() { return "UYARI: Sayfadan ayrılmanız durumunda yasal işlem süreci hızlanacaktır."; };
 </script>
 </body>
 </html>

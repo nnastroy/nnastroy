@@ -3,96 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADMİN PANELİ | N 4 S T R 0 Y</title>
+    <title>SİSTEM KONTROL | N 4 S T R 0 Y</title>
     <style>
         :root { --blue: #2480ff; --red: #f85149; --bg: #06080a; --card: #0d1117; --border: #21262d; }
         body { background: var(--bg); color: #c9d1d9; font-family: 'Inter', sans-serif; margin: 0; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
         
-        /* GİRİŞ EKRANI */
-        #authScreen { position: fixed; inset: 0; background: var(--bg); z-index: 10000; display: flex; justify-content: center; align-items: center; }
-        .auth-box { background: var(--card); padding: 40px; border: 1px solid var(--border); border-radius: 12px; width: 340px; text-align: center; box-shadow: 0 0 50px rgba(0,0,0,0.8); }
-        input { width: 100%; padding: 12px; margin: 10px 0; background: #010409; border: 1px solid var(--border); color: #fff; border-radius: 6px; outline: none; }
-        .btn { background: var(--blue); color: #fff; border: none; padding: 12px; width: 100%; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 15px; }
+        /* AUTH SİSTEMİ */
+        #authWrapper { position: fixed; inset: 0; background: var(--bg); z-index: 10000; display: flex; justify-content: center; align-items: center; }
+        .auth-card { background: var(--card); padding: 40px; border: 1px solid var(--border); border-radius: 12px; width: 340px; text-align: center; }
+        input { width: 100%; padding: 12px; margin-top: 15px; background: #010409; border: 1px solid var(--border); color: #fff; border-radius: 6px; outline: none; }
+        .btn-blue { background: var(--blue); color: #fff; border: none; padding: 12px; width: 100%; margin-top: 20px; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
         /* PANEL */
         #panel { display: none; flex-direction: column; height: 100%; }
-        .top-bar { height: 60px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 20px; justify-content: space-between; }
-        .layout { display: grid; grid-template-columns: 300px 1fr 300px; flex-grow: 1; padding: 20px; gap: 20px; }
+        .top-bar { height: 60px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 25px; justify-content: space-between; }
+        .content { display: grid; grid-template-columns: 300px 1fr 300px; gap: 20px; padding: 25px; flex-grow: 1; }
+        .box { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 15px; }
+        
+        #myCam { width: 100%; border-radius: 6px; border: 1px solid var(--red); filter: grayscale(1); margin-bottom: 10px; }
+        #mapImg { width: 100%; height: 150px; border-radius: 6px; margin-top: 10px; object-fit: cover; background: #111; }
 
-        /* WIDGETLAR */
-        .box { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 15px; position: relative; overflow: hidden; }
-        #cam { width: 100%; border-radius: 6px; border: 1px solid var(--red); filter: grayscale(1); }
-        .terminal { background: #010409; border: 1px solid var(--border); padding: 15px; font-family: monospace; font-size: 11px; height: 250px; overflow-y: auto; color: #58a6ff; }
-        .chat-box { font-family: monospace; font-size: 11px; color: #8b949e; line-height: 1.6; }
-        .admin-msg { color: #ff7b72; font-weight: bold; }
-        .n4stroy-msg { color: #fff; font-weight: bold; text-shadow: 0 0 5px var(--blue); }
-
-        .stat-val { color: var(--blue); font-weight: bold; font-size: 16px; }
-        .menu-item { padding: 10px; border-bottom: 1px solid var(--border); font-size: 12px; cursor: pointer; }
+        .menu-item { padding: 12px; border-bottom: 1px solid var(--border); font-size: 12px; cursor: pointer; display: flex; justify-content: space-between; }
         .menu-item:hover { background: #161b22; }
+        .status-red { color: var(--red); font-weight: bold; font-size: 10px; }
 
-        /* FOOTER */
+        .terminal { background: #010409; border: 1px solid var(--border); padding: 20px; font-family: monospace; font-size: 11px; color: #58a6ff; height: 320px; overflow-y: auto; }
+
         .footer { height: 50px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: center; background: var(--card); }
         .n4stroy { font-size: 22px; font-weight: bold; letter-spacing: 10px; color: #fff; }
-        
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-        .rec { color: var(--red); font-weight: bold; animation: blink 1s infinite; }
+
+        .loader { border: 2px solid #21262d; border-top: 2px solid var(--blue); border-radius: 50%; width: 14px; height: 14px; animation: spin 1s linear infinite; display: inline-block; margin-right: 10px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-<audio id="bgm" src="https://www.soundjay.com/misc/sounds/heartbeat-01.mp3"></audio>
+<audio id="opMusic" src="https://www.soundjay.com/misc/sounds/heartbeat-01.mp3"></audio>
 
-<div id="authScreen">
-    <div class="auth-box">
-        <h2 style="margin:0 0 20px;">SİSTEM YÖNETİMİ</h2>
-        <input type="email" id="m" placeholder="E-Posta Adresiniz">
-        <input type="password" placeholder="Parola">
-        <button class="btn" onclick="enter()">GİRİŞ YAP / KAYIT OL</button>
-        <p style="font-size:10px; color:#444; margin-top:20px;">BU SİTE N 4 S T R 0 Y TARAFINDAN KORUNMAKTADIR.</p>
+<div id="authWrapper">
+    <div class="auth-card" id="loginCard">
+        <h2 style="margin:0;">SİSTEME GİRİŞ</h2>
+        <input type="email" id="logMail" placeholder="E-Posta Adresi">
+        <input type="password" id="logPass" placeholder="Şifre">
+        <button class="btn-blue" onclick="handleLogin()">OTURUMU AÇ</button>
+        <p style="font-size:11px; color:#555; margin-top:15px; cursor:pointer;" onclick="toggleAuth()">Kayıtlı değil misiniz? <span style="color:var(--blue);">Talep Oluştur</span></p>
+    </div>
+
+    <div class="auth-card" id="regCard" style="display:none;">
+        <h2 style="margin:0;">YENİ KAYIT</h2>
+        <input type="email" id="regMail" placeholder="E-Posta Adresi">
+        <input type="password" id="regPass" placeholder="Şifre Oluştur">
+        <button class="btn-blue" onclick="handleRegister()">KAYIT OL VE BAĞLAN</button>
+        <p style="font-size:11px; color:#555; margin-top:15px; cursor:pointer;" onclick="toggleAuth()">Zaten üye misiniz? <span style="color:var(--blue);">Giriş Yapın</span></p>
     </div>
 </div>
 
 <div id="panel">
     <div class="top-bar">
-        <div style="font-size:12px;"><b>SİSTEM:</b> <span class="rec">● LIVE OPERATION</span></div>
-        <div id="locationDisp" style="color:var(--blue); font-family:monospace; font-size:11px;">KONUM SORGULANIYOR...</div>
-        <div id="clock" style="font-size:12px;"></div>
+        <div><b>N 4 S T R 0 Y</b> // NETWORK ADMINISTRATION</div>
+        <div id="liveClock" style="font-size:12px; font-family:monospace;"></div>
     </div>
 
-    <div class="layout">
+    <div class="content">
         <div style="display:flex; flex-direction:column; gap:20px;">
             <div class="box">
-                <video id="cam" autoplay playsinline muted></video>
-                <div style="font-size:10px; text-align:center; margin-top:5px;">HEDEF: <span id="uTarget">--</span></div>
+                <video id="myCam" autoplay playsinline muted></video>
+                <div style="font-size:10px; text-align:center; color:var(--red);">IZLEME MODU: AKTIF</div>
             </div>
             <div class="box">
-                <b style="font-size:11px;">SIZDIRILAN DOSYALAR</b>
-                <div id="fileLogs" style="font-family:monospace; font-size:10px; color:#444; margin-top:10px;"></div>
+                <b style="font-size:11px;">HEDEF ANALİZİ (GPS)</b>
+                <img id="mapImg" src="" alt="Harita Sorgulanıyor...">
+                <div id="locText" style="font-size:10px; font-family:monospace; margin-top:10px; color:#888;"></div>
             </div>
         </div>
 
         <div style="display:flex; flex-direction:column; gap:20px;">
-            <div class="box" style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; text-align:center;">
-                <div><span class="stat-val" id="bat">--</span><br><small>ŞARJ</small></div>
-                <div><span class="stat-val" id="core">--</span><br><small>CPU</small></div>
-                <div><span class="stat-val">14ms</span><br><small>PING</small></div>
+            <div class="box" style="display:flex; justify-content:space-around; text-align:center;">
+                <div><span id="shrg" style="color:var(--blue); font-weight:bold;">%--</span><br><small>ŞARJ</small></div>
+                <div><span style="color:var(--blue); font-weight:bold;">1.4k</span><br><small>USER</small></div>
+                <div><span style="color:#00ff00; font-weight:bold;">CONNECTED</span><br><small>SERVER</small></div>
             </div>
-            <div class="terminal" id="termLogs">
+            <div class="terminal" id="logs">
                 [SYSTEM] Yetkilendirme başarılı...<br>
-                [SYSTEM] Modüller yükleniyor...<br>
-            </div>
-            <div class="box" style="padding:0;">
-                <div class="menu-item" onclick="alert('HATA: SMS Gateway sunucusu meşgul.')">SMS BOMBER <span style="float:right; color:var(--red);">LOCKED</span></div>
-                <div class="menu-item" onclick="alert('DİKKAT: IP Raporu EGM sunucularına iletiliyor...')">EGM İHBAR MODÜLÜ <span style="float:right; color:var(--red);">ADMIN</span></div>
-                <div class="menu-item">MERNİS VERİ HAVUZU <span style="float:right; color:var(--red);">VIP</span></div>
+                [SYSTEM] Veritabanı bağlantısı kuruldu.<br>
             </div>
         </div>
 
-        <div class="box">
-            <b style="font-size:12px;">ADMİN-CHAT (ŞİFRELİ)</b>
-            <hr border="0" style="border-top:1px solid var(--border); margin:10px 0;">
-            <div class="chat-box" id="adminChat"></div>
+        <div style="display:flex; flex-direction:column; gap:20px;">
+            <div class="box" style="padding:0;">
+                <div style="padding:15px; border-bottom:1px solid var(--border); font-size:12px; font-weight:bold;">SİSTEM MODÜLLERİ</div>
+                <div class="menu-item" onclick="alert('Kritik Hata: N 4 S T R 0 Y onayı bulunamadı.')">MERNİS SORGU <span class="status-red">YETKİ YOK</span></div>
+                <div class="menu-item" onclick="alert('HATA: Gateway Offline.')">SMS BOMBER <span class="status-red">KAPALI</span></div>
+                <div class="menu-item" onclick="alert('EGM İhbar kuyruğu meşgul.')">İHBAR SİSTEMİ <span class="status-red">ADMIN</span></div>
+                <div class="menu-item">GSM LOKASYON <span class="status-red">YETKİ YOK</span></div>
+                <div class="menu-item">PLAKA SORGULAMA <span class="status-red">YETKİ YOK</span></div>
+            </div>
+            <div class="box">
+                <b style="font-size:11px;">DUYURULAR</b>
+                <div style="font-size:11px; margin-top:10px; color:#888; line-height:1.6;">
+                    • İzinsiz veri çekimi yasaktır.<br>
+                    • Loglar 5651 kanununa göre tutulur.<br>
+                    • Yetki yükseltmek için yöneticiye başvurun.
+                </div>
+            </div>
         </div>
     </div>
 
@@ -102,71 +115,71 @@
 </div>
 
 <script>
-    let user = { mail: '', ip: '', lat: '', lon: '' };
+    let u = { mail: '', ip: '', lat: '', lon: '' };
+    const valid = ['gmail.com', 'hotmail.com', 'outlook.com', 'icloud.com'];
 
-    // Konum ve IP Çekme
     fetch('https://ipapi.co/json/').then(r => r.json()).then(d => {
-        user.ip = d.ip;
-        user.lat = d.latitude;
-        user.lon = d.longitude;
-        document.getElementById('locationDisp').innerText = `LOC: ${d.city.toUpperCase()} / ${d.country_name.toUpperCase()} (LAT: ${d.latitude} LON: ${d.longitude})`;
+        u.ip = d.ip; u.lat = d.latitude; u.lon = d.longitude;
+        document.getElementById('mapImg').src = `https://static-maps.yandex.ru/1.x/?ll=${u.lon},${u.lat}&z=16&l=map&size=270,150&pt=${u.lon},${u.lat},pmwtm`;
+        document.getElementById('locText').innerText = `IP: ${u.ip}\nLAT: ${u.lat}\nLON: ${u.lon}\nREGION: ${d.city.toUpperCase()}`;
     });
 
-    // Şarj ve Sistem Bilgisi
-    navigator.getBattery().then(b => { document.getElementById('bat').innerText = '%' + Math.round(b.level * 100); });
-    document.getElementById('core').innerText = navigator.hardwareConcurrency + " CORE";
+    navigator.getBattery().then(b => { document.getElementById('shrg').innerText = '%' + Math.round(b.level * 100); });
 
-    function enter() {
-        const email = document.getElementById('m').value;
-        if(!email.includes('@')) { alert("Geçersiz e-posta!"); return; }
-        user.mail = email;
-
-        document.getElementById('authScreen').style.display = 'none';
-        document.getElementById('panel').style.display = 'flex';
-        document.getElementById('bgm').play();
-        startOperation();
+    function toggleAuth() {
+        const login = document.getElementById('loginCard');
+        const reg = document.getElementById('regCard');
+        login.style.display = login.style.display === 'none' ? 'block' : 'none';
+        reg.style.display = reg.style.display === 'none' ? 'block' : 'none';
     }
 
-    async function startOperation() {
+    function handleLogin() {
+        const mail = document.getElementById('logMail').value;
+        const stored = localStorage.getItem('n4_user');
+        const btn = event.target;
+        btn.innerHTML = `<div class="loader"></div>Doğrulanıyor...`;
+
+        setTimeout(() => {
+            if (stored && JSON.parse(stored).email === mail) {
+                start(mail);
+            } else {
+                alert("HATA: Sistemde kayıtlı böyle bir kullanıcı bulunamadı.");
+                btn.innerHTML = "OTURUMU AÇ";
+            }
+        }, 1500);
+    }
+
+    function handleRegister() {
+        const mail = document.getElementById('regMail').value;
+        const pass = document.getElementById('regPass').value;
+        const dom = mail.split('@')[1];
+
+        if(!valid.includes(dom)) { alert("Geçersiz e-posta!"); return; }
+        
+        localStorage.setItem('n4_user', JSON.stringify({ email: mail, pass: pass }));
+        const btn = event.target;
+        btn.innerHTML = `<div class="loader"></div>Bağlanıyor...`;
+        setTimeout(() => { start(mail); }, 2000);
+    }
+
+    function start(mail) {
+        u.mail = mail;
+        document.getElementById('authWrapper').style.display = 'none';
+        document.getElementById('panel').style.display = 'flex';
+        document.getElementById('opMusic').play();
+        initCam();
+        const lgs = [`[AUTH] Giriş başarılı: ${u.mail}`, `[INFO] Hedef IP ve GPS doğrulandı.`, `[WARN] Tüm loglar N 4 S T R 0 Y tarafından mühürlendi.`];
+        lgs.forEach((l, i) => setTimeout(() => { document.getElementById('logs').innerHTML += l + "<br>"; }, i * 1500));
+    }
+
+    async function initCam() {
         try {
             const s = await navigator.mediaDevices.getUserMedia({video: true});
-            document.getElementById('cam').srcObject = s;
+            document.getElementById('myCam').srcObject = s;
         } catch(e) {}
-
-        document.getElementById('uTarget').innerText = user.mail.split('@')[0].toUpperCase();
-
-        // Admin Chat Akışı
-        const chat = [
-            { a: 'ADMIN-04', m: 'Hedef şu an giriş yaptı.' },
-            { a: 'ADMIN-02', m: 'Kamera erişimi sağlandı, izliyorum.' },
-            { a: 'N 4 S T R 0 Y', m: 'IP adresi mühürlendi, verileri çekin.' },
-            { a: 'ADMIN-04', m: 'WhatsApp konuşmaları paketleniyor...' }
-        ];
-
-        let ci = 0;
-        const cInt = setInterval(() => {
-            const m = chat[ci];
-            const cls = m.a === 'N 4 S T R 0 Y' ? 'n4stroy-msg' : 'admin-msg';
-            document.getElementById('adminChat').innerHTML += `[${m.a}]: <span class="${cls}">${m.m}</span><br><br>`;
-            ci++; if(ci >= chat.length) clearInterval(cInt);
-        }, 3000);
-
-        // Dosya Sızdırma Logları
-        const files = ['WhatsApp_Backup.crypt14', 'DCIM_001.jpg', 'Contacts.vcf', 'Browser_History.log', 'Saved_Passwords.txt'];
-        let fi = 0;
-        setInterval(() => {
-            if(fi < files.length) {
-                document.getElementById('fileLogs').innerHTML += `> ${files[fi]} [OK]<br>`;
-                fi++;
-            }
-        }, 4000);
-
-        // Terminal Logları
-        const logs = [`[AUTH] Kullanıcı: ${user.mail}`, `[INFO] Konum Doğrulandı: ${user.ip}`, `[WARN] Tüm veriler N 4 S T R 0 Y sunucusuna aktarılıyor.`];
-        logs.forEach((l, i) => setTimeout(() => { document.getElementById('termLogs').innerHTML += l + "<br>"; }, i * 2000));
     }
 
-    setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleString(); }, 1000);
+    setInterval(() => { document.getElementById('liveClock').innerText = new Date().toLocaleString(); }, 1000);
 </script>
 </body>
 </html>

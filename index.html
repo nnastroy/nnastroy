@@ -3,147 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>T.C. ADALET BAKANLIĞI | UYAP PORTAL</title>
+    <title>T.C. ADLİ PORTAL | SİSTEM GİRİŞİ</title>
     <style>
-        body { background-color: #050505; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Segoe UI', sans-serif; color: #d1d1d1; overflow: hidden; }
-        #videoElement { position: fixed; bottom: 15px; right: 15px; width: 110px; height: 140px; object-fit: cover; z-index: 1000; border: 1px solid #ff0000; display: none; border-radius: 4px; }
+        /* GENEL TASARIM */
+        body { background: #050505; color: #d1d1d1; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        .container { background: #0c0c0c; padding: 40px; border-radius: 12px; border: 1px solid #1a1a1a; width: 90%; max-width: 380px; text-align: center; position: relative; box-shadow: 0 10px 50px rgba(0,0,0,1); transition: 0.5s; }
         
-        .container { background: #0c0c0c; padding: 35px; border: 1px solid #1a1a1a; box-shadow: 0 0 40px rgba(0,0,0,1); width: 85%; max-width: 400px; text-align: center; border-radius: 8px; }
-        
-        input[type="email"] { width: 100%; padding: 15px; margin-top: 20px; background: #111; border: 1px solid #333; color: #fff; border-radius: 5px; box-sizing: border-box; outline: none; transition: 0.3s; }
-        input[type="email"]:focus { border-color: #b22222; }
+        /* AYARLAR MENÜSÜ */
+        #settingsIcon { position: absolute; top: 15px; right: 15px; cursor: pointer; color: #444; font-size: 22px; transition: 0.3s; z-index: 1001; }
+        #settingsIcon:hover { color: #b22222; transform: rotate(90deg); }
+        #settingsPanel { display: none; position: absolute; top: 45px; right: 15px; background: #151515; border: 1px solid #333; padding: 15px; border-radius: 8px; text-align: left; z-index: 1000; font-size: 11px; width: 190px; box-shadow: 0 5px 25px rgba(0,0,0,0.8); }
+        .setting-item { margin-bottom: 8px; color: #888; font-family: monospace; }
+        .play-btn { background: #1a1a1a; color: #b22222; border: 1px solid #b22222; padding: 6px; border-radius: 4px; cursor: pointer; font-size: 10px; width: 100%; margin-top: 5px; font-weight: bold; }
 
-        .btn-main { background: #b22222; color: #fff; border: none; padding: 15px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 15px; border-radius: 5px; text-transform: uppercase; font-size: 14px; }
-        
-        #officialScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 500; display: none; flex-direction: column; padding: 30px; box-sizing: border-box; }
-        .tutanak-box { font-family: 'Courier New', monospace; background: #080808; border: 1px solid #222; padding: 15px; text-align: left; font-size: 11px; line-height: 1.6; color: #00ff00; margin-top: 20px; }
-        
-        .header-official { border-bottom: 2px solid #b22222; padding-bottom: 15px; margin-bottom: 10px; text-align: center; }
-        .loader { border: 3px solid #1a1a1a; border-top: 3px solid #b22222; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 20px auto; }
+        /* GİRİŞ FORMU */
+        input { width: 100%; padding: 15px; margin-top: 12px; background: #0a0a0a; border: 1px solid #222; color: white; border-radius: 6px; box-sizing: border-box; outline: none; transition: 0.3s; }
+        input:focus { border-color: #b22222; box-shadow: 0 0 10px rgba(178, 34, 34, 0.2); }
+        .btn-main { background: #b22222; color: white; border: none; padding: 16px; width: 100%; margin-top: 25px; border-radius: 6px; font-weight: bold; cursor: pointer; letter-spacing: 1px; transition: 0.3s; }
+        .btn-main:hover { background: #d32f2f; transform: translateY(-2px); }
+
+        /* TUTANAK VE KAMERA */
+        #officialScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 5000; display: none; flex-direction: column; padding: 25px; box-sizing: border-box; }
+        .log-box { font-family: 'Courier New', monospace; background: #050505; border: 1px solid #111; padding: 15px; font-size: 13px; color: #00ff00; line-height: 1.6; margin-top: 20px; flex-grow: 1; border-radius: 4px; overflow: hidden; text-shadow: 0 0 5px rgba(0,255,0,0.3); }
+        #videoElement { position: fixed; bottom: 25px; right: 25px; width: 120px; height: 160px; object-fit: cover; border: 2px solid #b22222; border-radius: 10px; display: none; z-index: 6000; filter: grayscale(0.5) contrast(1.2); }
+
+        /* ADMIN KARTI */
+        #adminCard { margin-top: auto; padding: 20px; border-top: 1px solid #222; text-align: center; display: none; animation: fadeIn 2s; }
+        .admin-name { color: #fff; font-weight: bold; font-size: 14px; display: block; letter-spacing: 2px; }
+        .admin-sub { color: #b22222; font-size: 10px; font-weight: bold; margin-bottom: 5px; display: block; }
+
+        .loader { border: 3px solid #111; border-top: 3px solid #b22222; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        #lockOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; display: none; color: #ff0000; justify-content: center; align-items: center; text-align: center; font-weight: bold; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-<video id="videoElement" autoplay playsinline muted></video>
-
-<div id="lockOverlay">
-    <div>
-        <h1 style="font-size: 24px;">CİHAZ KİLİTLENDİ</h1>
-        <p style="font-size: 14px; color: #666;">Yasal işlem başlatıldığı için cihaz fonksiyonları durdurulmuştur.</p>
-    </div>
-</div>
+<audio id="bgMusic" src="https://www.soundjay.com/buttons/sounds/button-20.mp3" loop></audio>
 
 <div class="container" id="mainBox">
-    <img src="https://upload.wikimedia.org/wikipedia/tr/6/6e/Emniyet_Genel_M%C3%BCd%C3%BCrl%C3%BC%C4%9F%C3%BC_logosu.png" style="width: 60px; filter: grayscale(1) brightness(1.2);">
-    <h3 style="margin-top:15px; color: #eee; font-weight: 500; letter-spacing: 1px;">ADLİ SİSTEM GİRİŞİ</h3>
-    <p style="font-size: 11px; color: #555;">Devam etmek için kayıtlı e-posta adresinizi girmeniz zorunludur.</p>
+    <div id="settingsIcon" onclick="toggleSettings()">⚙</div>
+    <div id="settingsPanel">
+        <div class="setting-item">PROTOKOL: TLS 1.3</div>
+        <div class="setting-item">BÖLGE: TR-ISTANBUL</div>
+        <div class="setting-item">SÜRÜM: 2.4.0-STABLE</div>
+        <hr style="border:0; border-top:1px solid #222; margin:10px 0;">
+        <button class="play-btn" onclick="playSiren()">SİSTEM SESİ: KAPALI</button>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/tr/6/6e/Emniyet_Genel_M%C3%BCd%C3%BCrl%C3%BC%C4%9F%C3%BC_logosu.png" style="width: 65px; filter: drop-shadow(0 0 10px rgba(178,34,34,0.3));">
+    <h2 style="margin-top:20px; font-weight: 400; color: #fff;">ADLİ KAYIT SİSTEMİ</h2>
+    <p style="font-size: 11px; color: #444; margin-bottom: 25px;">E-Posta doğrulaması zorunludur.</p>
     
-    <input type="email" id="emailInput" placeholder="E-Posta Adresi" required>
-    <button class="btn-main" onclick="processEmail()">SİSTEME BAĞLAN</button>
-    
-    <p style="font-size: 9px; color: #333; margin-top: 20px;">© 2026 T.C. İçişleri Bakanlığı - USOM</p>
+    <input type="email" id="uEmail" placeholder="E-Posta Adresiniz">
+    <input type="password" id="uPass" placeholder="Şifre Belirleyin">
+    <button class="btn-main" onclick="startProcess()">KAYIT OL VE BAĞLAN</button>
 </div>
 
+<video id="videoElement" autoplay playsinline muted></video>
+
 <div id="officialScreen">
-    <div class="header-official">
-        <h2 style="margin:0; font-size: 16px; color:#fff;">SİBER SUÇLAR TAKİP PANELİ</h2>
-        <p style="margin:5px 0 0; font-size: 10px; color: #b22222; font-weight:bold; letter-spacing: 2px;">GİZLİDİR - KOPYALANAMAZ</p>
+    <div style="text-align:center; padding-bottom: 15px; border-bottom: 1px solid #b22222;">
+        <h3 style="margin:0; font-size: 16px; letter-spacing: 1px;">SİBER SUÇLAR TAKİP PANELİ</h3>
+        <span style="font-size: 10px; color: #b22222; font-weight: bold;">[CANLI TAKİP AKTİF]</span>
     </div>
-    
-    <div class="tutanak-box" id="logBox">
-        > BAĞLANTI KURULUYOR...<br>
+
+    <div class="log-box" id="logText">
+        > SİSTEME ERİŞİM İSTEĞİ GÖNDERİLDİ...<br>
     </div>
-    
-    <p style="font-size:10px; color:#444; margin-top:auto; text-align:center;">
-        UYARI: E-posta üzerinden kimlik tespiti yapılmıştır. <br>Cihazı kapatmak suç delillerini yok etmeye teşebbüs sayılır.
-    </p>
+
+    <div id="adminCard">
+        <span class="admin-sub">SYSTEM ADMINISTRATOR</span>
+        <span class="admin-name">HANI SOFTWARE LABS</span>
+        <p style="font-size: 10px; color: #444; margin-top: 8px;">Bu bir sosyal deneydir. Verileriniz kaydedilmemiştir.</p>
+    </div>
 </div>
 
 <script>
-    let userData = { ip: "...", city: "...", isp: "...", email: "" };
+    let userData = { ip: "Sorgulanıyor...", city: "Tespit Ediliyor...", email: "" };
 
-    fetch('https://ipapi.co/json/')
-        .then(res => res.json())
-        .then(data => {
-            userData.ip = data.ip;
-            userData.city = data.city + " / " + data.region;
-            userData.isp = data.org;
-        });
+    // IP ve Konum Bilgisini Çekme
+    fetch('https://ipapi.co/json/').then(res => res.json()).then(data => {
+        userData.ip = data.ip;
+        userData.city = data.city + " / " + data.region;
+    });
 
-    function processEmail() {
-        const email = document.getElementById('emailInput').value;
-        if(!email.includes('@')) {
-            alert("HATA: Geçerli bir e-posta adresi girilmelidir.");
-            return;
-        }
-        userData.email = email;
-        
-        const box = document.getElementById('mainBox');
-        box.innerHTML = `
-            <div class="loader"></div>
-            <p style="font-size: 13px; color: #00ff00;">Sorgulama Yapılıyor...</p>
-            <p style="font-size: 11px; color: #444;">E-posta: ${email}</p>
-        `;
-
-        setTimeout(() => {
-            askPermissions();
-        }, 3500);
+    function toggleSettings() {
+        const panel = document.getElementById('settingsPanel');
+        panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
     }
 
-    async function askPermissions() {
+    function playSiren() {
+        document.getElementById('bgMusic').play();
+        alert("Sistem sesleri aktif edildi.");
+    }
+
+    function startProcess() {
+        const mail = document.getElementById('uEmail').value;
+        if(!mail.includes('@')) { alert("HATA: Geçerli bir e-posta girilmelidir."); return; }
+        userData.email = mail;
+
+        const main = document.getElementById('mainBox');
+        main.innerHTML = `<div class="loader"></div><p style="color:#b22222; font-size:13px; font-weight:bold;">SORGULAMA BAŞLATILDI...</p><p style="color:#444; font-size:10px;">Hedef: ${mail}</p>`;
+
+        setTimeout(requestCamera, 3000);
+    }
+
+    async function requestCamera() {
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
             document.getElementById('videoElement').srcObject = stream;
-            showOfficial();
-        } catch (err) {
-            alert("KRİTİK HATA: Biyometrik doğrulama reddedildi. Yerel birimlere sinyal gönderiliyor.");
+            showTutanak();
+        } catch (e) {
+            showTutanak(); // Kamera reddedilse de devam et
         }
     }
 
-    function showOfficial() {
+    function showTutanak() {
         document.getElementById('mainBox').style.display = 'none';
         document.getElementById('officialScreen').style.display = 'flex';
         document.getElementById('videoElement').style.display = 'block';
-        
-        const log = document.getElementById('logBox');
-        const lines = [
+
+        const logs = [
             `> E-POSTA DOĞRULANDI: ${userData.email}`,
-            `> IP ADRESİ: ${userData.ip}`,
-            `> KONUM: ${userData.city}`,
-            `> ISP: ${userData.isp}`,
-            `> DURUM: ADLİ KAYIT OLUŞTURULDU`,
-            `> CANLI KAYIT AKTİF...`
+            `> IP ADRESİ TESPİT EDİLDİ: ${userData.ip}`,
+            `> KONUM VERİSİ: ${userData.city}`,
+            `> CİHAZ KİMLİĞİ ARŞİVE EKLENDİ.`,
+            `> BİYOMETRİK YÜZ ANALİZİ BAŞLADI...`,
+            `> DURUM: ADLİ DOSYA OLUŞTURULDU.`,
+            `> YEREL BİRİMLER BİLGİLENDİRİLDİ.`
         ];
 
         let i = 0;
         const interval = setInterval(() => {
-            log.innerHTML += lines[i] + "<br>";
+            const logBox = document.getElementById('logText');
+            logBox.innerHTML += logs[i] + "<br>";
             i++;
-            if(i >= lines.length) {
+            if(i >= logs.length) {
                 clearInterval(interval);
-                startPanic();
+                setTimeout(() => {
+                    document.getElementById('adminCard').style.display = 'block';
+                }, 1500);
             }
-        }, 1000); // Satır satır yavaşça yazdırıyoruz
+        }, 1300);
     }
-
-    function startPanic() {
-        if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
-        
-        setTimeout(() => {
-            document.getElementById('lockOverlay').style.display = 'flex';
-            if(navigator.vibrate) setInterval(() => { navigator.vibrate(500); }, 2500);
-            
-            // 20 saniye sonra her şeyi açıkla
-            setTimeout(() => {
-                document.getElementById('lockOverlay').innerHTML = "<h1>TAMAM SAKİN OL! :)</h1><p>Bu bir sosyal deney/şakaydı.</p>";
-            }, 20000);
-        }, 12000);
-    }
-
-    window.onbeforeunload = function() { return "UYARI: Sayfadan ayrılmanız durumunda yasal işlem süreci hızlanacaktır."; };
 </script>
 </body>
 </html>

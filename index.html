@@ -3,144 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N4STR0Y | CORE SYSTEM</title>
+    <title>SİSTEM GÜVENLİK PROTOKOLÜ</title>
     <style>
-        body { background-color: #000; margin: 0; overflow: hidden; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Courier New', monospace; color: #ff0000; }
-        canvas { position: absolute; top: 0; left: 0; z-index: 1; opacity: 0.15; }
+        body { background-color: #0b0000; margin: 0; overflow: hidden; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Segoe UI', sans-serif; color: #ff0000; }
         
         #videoElement {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             object-fit: cover; z-index: 5; display: none;
-            filter: grayscale(100%) brightness(70%) sepia(100%) hue-rotate(-50deg) saturate(800%) contrast(150%);
+            filter: grayscale(100%) brightness(50%) sepia(100%) hue-rotate(-50deg) saturate(1000%) contrast(150%);
         }
 
-        .container { position: relative; z-index: 30; background: rgba(10, 0, 0, 0.95); padding: 30px; border: 1px solid #ff0000; box-shadow: 0 0 25px #ff000044; width: 85%; max-width: 400px; text-align: center; }
-        .btn { background: #ff0000; color: #000; border: none; padding: 15px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+        .container { position: relative; z-index: 30; background: rgba(5, 0, 0, 0.98); padding: 40px; border: 1px solid #440000; width: 85%; max-width: 400px; text-align: center; border-radius: 5px; }
+        .btn { background: #660000; color: #fff; border: 1px solid #ff0000; padding: 15px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 15px; text-transform: uppercase; letter-spacing: 2px; }
         
-        .countdown-text { color: #ff0000; font-size: 150px; font-weight: 900; text-shadow: 0 0 40px red; font-family: 'Arial Black', sans-serif; }
-
-        .shake-forever { animation: shake 0.1s infinite; }
-        @keyframes shake {
-            0% { transform: translate(5px, 5px); }
-            25% { transform: translate(-5px, -5px); }
-            50% { transform: translate(5px, -5px); }
-            75% { transform: translate(-5px, 5px); }
-            100% { transform: translate(5px, 5px); }
-        }
-        
-        #targetOverlay {
+        /* EGM Resmi Ekranı */
+        #egmScreen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            border: 5px solid red; z-index: 10; display: none; pointer-events: none;
-            background: repeating-linear-gradient(0deg, rgba(255,0,0,0.05) 0px, rgba(255,0,0,0.05) 1px, transparent 1px, transparent 2px);
+            background: #ffffff; color: #000; z-index: 100; display: none;
+            flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; font-family: 'Times New Roman', serif;
         }
+
+        .egm-logo { width: 130px; margin-bottom: 15px; }
+        .warning-box { border: 2px solid #b22222; padding: 20px; background: #fdf2f2; margin-top: 10px; max-width: 500px; }
+        .data-line { font-family: 'Courier New', monospace; font-size: 15px; color: #b22222; margin-top: 15px; font-weight: bold; background: #eee; padding: 10px; border-radius: 4px; border: 1px solid #ccc; text-align: left; }
+        
+        .countdown-text { color: #ff0000; font-size: 160px; font-weight: 900; }
+        .shake-forever { animation: shake 0.1s infinite; }
+        @keyframes shake { 0% { transform: translate(7px, 7px); } 50% { transform: translate(-7px, -7px); } 100% { transform: translate(7px, 7px); } }
     </style>
 </head>
 <body>
 
 <video id="videoElement" autoplay playsinline muted></video>
-<div id="targetOverlay">
-    <div style="position: absolute; top: 10%; width: 100%; text-align: center; color: red; font-weight: 900; font-size: 24px; text-shadow: 0 0 10px red;">HEDEF İMHASI BAŞLATILDI</div>
+
+<div id="egmScreen">
+    <img src="https://upload.wikimedia.org/wikipedia/tr/6/6e/Emniyet_Genel_M%C3%BCd%C3%BCrl%C3%BC%C4%9F%C3%BC_logosu.png" class="egm-logo">
+    <h2 style="margin:0; color:#151b54;">T.C. İÇİŞLERİ BAKANLIĞI</h2>
+    <h3 style="margin:5px; color:#151b54;">EMNİYET GENEL MÜDÜRLÜĞÜ</h3>
+    <p style="font-weight:bold; color:#b22222; margin-bottom:5px;">SİBER SUÇLARLA MÜCADELE DAİRE BAŞKANLIĞI</p>
+    
+    <div class="warning-box">
+        <p style="font-size: 18px;"><b>UYARI:</b> Yetkisiz veri erişimi ve siber sızma girişimi tespit edilmiştir.</p>
+        <p>Biyometrik verileriniz ve mevcut konumunuz yasal işlem başlatılmak üzere merkez veri tabanına aktarılmıştır.</p>
+        <div id="userStats" class="data-line">VERİLER ÇEKİLİYOR...</div>
+    </div>
+    <p style="font-size:11px; margin-top:20px; color: #555;">Kayıt No: #TR-992834 / Yasal işlem süreci başlatılmıştır. Ayrılmayınız.</p>
 </div>
-<canvas id="matrix"></canvas>
 
 <div class="container" id="mainBox">
     <div id="init">
-        <p style="font-size: 12px;">SİSTEM DOSYALARINA ERİŞİM İÇİN BİYOMETRİK (KAMERA) İZNİ GEREKLİ.</p>
-        <button class="btn" onclick="askCamera()">İZİN VER VE BAŞLAT</button>
+        <h2 style="font-weight: 300; color: #880000; letter-spacing: 2px;">CORE ACCESS</h2>
+        <p style="font-size: 11px; color: #666;">Biyometrik doğrulama ve sunucu bağlantısı gereklidir.</p>
+        <button class="btn" onclick="startEverything()">SİSTEME GİRİŞ YAP</button>
     </div>
 
     <div id="choiceArea" style="display:none;">
-        <p style="font-size: 14px; font-weight: bold;">YETKİ SAĞLANDI. <br> KOMUT BEKLENİYOR.</p>
-        <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-            <button class="btn" style="width: 48%; font-size: 10px;" onclick="destructSequence()">SİSTEMİ İMHA ET</button>
-            <button class="btn" style="width: 48%; font-size: 10px; background: transparent; color: red; border: 1px solid red;" onclick="finish()">CCTV İZLE</button>
-        </div>
+        <h2 style="color: #ff0000; letter-spacing: 1px;">YETKİ ONAYLANDI</h2>
+        <p style="font-size: 12px; margin-bottom: 25px; color: #888;">Tüm sistem dosyaları erişime açıldı.</p>
+        <button class="btn" onclick="destructSequence()" style="box-shadow: 0 0 20px red; border: 2px solid red;">SİSTEMİ İMHA ET</button>
     </div>
 </div>
 
-<audio id="music" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg"></audio>
 <audio id="laugh" loop><source src="https://assets.mixkit.co/active_storage/sfx/1042/1042-preview.mp3" type="audio/mpeg"></audio>
 
 <script>
-    const video = document.getElementById('videoElement');
-    const mainBox = document.getElementById('mainBox');
-    const matrix = document.getElementById('matrix');
+    let userData = { ip: "Tespit Ediliyor...", city: "...", region: "..." };
     const laugh = document.getElementById('laugh');
-    const music = document.getElementById('music');
 
-    // Matrix Rain
-    const ctx = matrix.getContext('2d');
-    matrix.height = window.innerHeight; matrix.width = window.innerWidth;
-    const drops = Array(Math.floor(matrix.width/16)).fill(1);
-    function drawMatrix() {
-        ctx.fillStyle = "rgba(0,0,0,0.05)"; ctx.fillRect(0,0,matrix.width,matrix.height);
-        ctx.fillStyle = "#f00"; ctx.font = "16px arial";
-        drops.forEach((y, i) => {
-            ctx.fillText(Math.floor(Math.random()*2), i*16, y*16);
-            if(y*16 > matrix.height && Math.random() > 0.98) drops[i] = 0;
-            drops[i]++;
+    // Gerçek Verileri Çekme (IP ve Konum)
+    fetch('https://ipapi.co/json/')
+        .then(res => res.json())
+        .then(data => {
+            userData.ip = data.ip;
+            userData.city = data.city;
+            userData.region = data.region;
+        }).catch(() => {
+            userData.ip = "192.168.1.104"; // Hata durumunda sahte veri
+            userData.city = "Istanbul";
+            userData.region = "Besiktas";
         });
-    }
 
-    async function askCamera() {
+    async function startEverything() {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
-            video.srcObject = stream;
-            music.play();
-            setInterval(drawMatrix, 50);
+            document.getElementById('videoElement').srcObject = stream;
             document.getElementById('init').style.display = 'none';
             document.getElementById('choiceArea').style.display = 'block';
         } catch (err) {
-            alert("HATA: Kamera izni olmadan sisteme sızılamaz!");
+            alert("SİSTEM HATASI: Biyometrik erişim reddedildi.");
         }
     }
 
     function destructSequence() {
-        music.pause();
-        matrix.style.display = 'none';
-        mainBox.style.background = 'transparent';
-        mainBox.style.border = 'none';
-        mainBox.style.boxShadow = 'none';
-        document.getElementById('choiceArea').style.display = 'none';
-
+        document.getElementById('mainBox').style.display = 'none';
         let count = 3;
+        const main = document.body;
+
         const talk = (txt) => {
             if ('speechSynthesis' in window) {
                 const msg = new SpeechSynthesisUtterance(txt);
-                msg.lang = 'en-US'; msg.rate = 0.7; msg.pitch = 0.1;
+                msg.lang = 'en-US'; msg.rate = 0.6; msg.pitch = 0.1;
                 window.speechSynthesis.speak(msg);
             }
         };
 
-        const render = () => {
-            mainBox.innerHTML = `<h1 class="countdown-text">0${count}</h1>`;
-            talk(count.toString());
-        };
-
-        render();
-
         const timer = setInterval(() => {
-            count--;
             if(count > 0) {
-                render();
-                if (navigator.vibrate) navigator.vibrate(500);
+                main.innerHTML = `<h1 class="countdown-text">0${count}</h1>`;
+                talk(count.toString());
+                if(navigator.vibrate) navigator.vibrate(500);
+                count--;
             } else {
                 clearInterval(timer);
-                laugh.play();
-                video.style.display = 'block';
-                document.getElementById('targetOverlay').style.display = 'block';
-                document.body.classList.add('shake-forever');
-                mainBox.innerHTML = `<h1 style="font-weight:900; background: red; color: black; padding: 10px;">INFECTED</h1>`;
-                
-                if (navigator.vibrate) {
-                    setInterval(() => { navigator.vibrate(1000); }, 1100);
-                }
+                showEGM();
             }
         }, 1300);
     }
 
-    function finish() {
-        document.body.innerHTML = `<div style="background:#000; width:100vw; height:100vh;"><video width="100%" height="100%" autoplay loop muted style="object-fit:cover;"><source src="https://assets.mixkit.co/videos/preview/mixkit-data-center-server-racks-in-dark-room-4435-large.mp4" type="video/mp4"></video></div>`;
+    function showEGM() {
+        document.getElementById('userStats').innerHTML = `
+            > TESPİT EDİLEN IP: ${userData.ip} <br>
+            > BÖLGE/İLÇE: ${userData.region} / ${userData.city} <br>
+            > DURUM: ADLİ TAKİP BAŞLATILDI
+        `;
+        document.getElementById('egmScreen').style.display = 'flex';
+        
+        // 6 saniye sonra final şoku
+        setTimeout(() => {
+            document.getElementById('egmScreen').style.display = 'none';
+            document.getElementById('videoElement').style.display = 'block';
+            laugh.play();
+            document.body.classList.add('shake-forever');
+            document.body.innerHTML += `<div style="position:fixed; top:40%; width:100%; text-align:center; z-index:1000; color:white; background:red; font-weight:900; padding:15px; letter-spacing:3px;">SİSTEM ENFEKTE OLDU</div>`;
+            setInterval(() => { if(navigator.vibrate) navigator.vibrate(1000); }, 1100);
+        }, 6000);
     }
 </script>
 </body>

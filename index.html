@@ -3,140 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SİSTEM GÜVENLİK PROTOKOLÜ</title>
+    <title>E-DEVLET | ARŞİV ERİŞİMİ</title>
     <style>
-        body { background-color: #0b0000; margin: 0; overflow: hidden; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Segoe UI', sans-serif; color: #ff0000; }
+        body { background-color: #f0f0f0; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Segoe UI', Tahoma, sans-serif; color: #333; }
         
         #videoElement {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; z-index: 5; display: none;
-            filter: grayscale(100%) brightness(50%) sepia(100%) hue-rotate(-50deg) saturate(1000%) contrast(150%);
+            position: fixed; bottom: 20px; right: 20px; width: 120px; height: 160px;
+            object-fit: cover; z-index: 1000; border: 2px solid red; display: none; border-radius: 8px;
         }
 
-        .container { position: relative; z-index: 30; background: rgba(5, 0, 0, 0.98); padding: 40px; border: 1px solid #440000; width: 85%; max-width: 400px; text-align: center; border-radius: 5px; }
-        .btn { background: #660000; color: #fff; border: 1px solid #ff0000; padding: 15px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 15px; text-transform: uppercase; letter-spacing: 2px; }
+        .container { background: #fff; padding: 40px; border: 1px solid #ccc; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 90%; max-width: 500px; text-align: center; }
+        .btn { background: #1a237e; color: #fff; border: none; padding: 15px 30px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 20px; border-radius: 4px; }
         
-        /* EGM Resmi Ekranı */
-        #egmScreen {
+        #officialScreen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #ffffff; color: #000; z-index: 100; display: none;
-            flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; font-family: 'Times New Roman', serif;
+            background: #fff; z-index: 500; display: none; flex-direction: column; padding: 40px; box-sizing: border-box;
         }
 
-        .egm-logo { width: 130px; margin-bottom: 15px; }
-        .warning-box { border: 2px solid #b22222; padding: 20px; background: #fdf2f2; margin-top: 10px; max-width: 500px; }
-        .data-line { font-family: 'Courier New', monospace; font-size: 15px; color: #b22222; margin-top: 15px; font-weight: bold; background: #eee; padding: 10px; border-radius: 4px; border: 1px solid #ccc; text-align: left; }
+        .header { border-bottom: 2px solid #b22222; padding-bottom: 10px; margin-bottom: 20px; text-align: center; }
+        .tutanak-box { font-family: 'Courier New', monospace; background: #f9f9f9; border: 1px solid #ddd; padding: 15px; text-align: left; font-size: 13px; line-height: 1.6; }
+        .stamp { color: #b22222; border: 3px solid #b22222; display: inline-block; padding: 5px 15px; transform: rotate(-15deg); font-weight: bold; margin-top: 30px; opacity: 0.8; }
         
-        .countdown-text { color: #ff0000; font-size: 160px; font-weight: 900; }
-        .shake-forever { animation: shake 0.1s infinite; }
-        @keyframes shake { 0% { transform: translate(7px, 7px); } 50% { transform: translate(-7px, -7px); } 100% { transform: translate(7px, 7px); } }
+        .rec-dot { width: 10px; height: 10px; background: red; border-radius: 50%; display: inline-block; animation: blink 1s infinite; margin-right: 5px; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
     </style>
 </head>
 <body>
 
 <video id="videoElement" autoplay playsinline muted></video>
 
-<div id="egmScreen">
-    <img src="https://upload.wikimedia.org/wikipedia/tr/6/6e/Emniyet_Genel_M%C3%BCd%C3%BCrl%C3%BC%C4%9F%C3%BC_logosu.png" class="egm-logo">
-    <h2 style="margin:0; color:#151b54;">T.C. İÇİŞLERİ BAKANLIĞI</h2>
-    <h3 style="margin:5px; color:#151b54;">EMNİYET GENEL MÜDÜRLÜĞÜ</h3>
-    <p style="font-weight:bold; color:#b22222; margin-bottom:5px;">SİBER SUÇLARLA MÜCADELE DAİRE BAŞKANLIĞI</p>
-    
-    <div class="warning-box">
-        <p style="font-size: 18px;"><b>UYARI:</b> Yetkisiz veri erişimi ve siber sızma girişimi tespit edilmiştir.</p>
-        <p>Biyometrik verileriniz ve mevcut konumunuz yasal işlem başlatılmak üzere merkez veri tabanına aktarılmıştır.</p>
-        <div id="userStats" class="data-line">VERİLER ÇEKİLİYOR...</div>
+<div id="officialScreen">
+    <div class="header">
+        <h2 style="margin:0; font-size: 18px;">T.C. BİLGİ TEKNOLOJİLERİ VE İLETİŞİM KURUMU</h2>
+        <p style="margin:5px 0 0; font-size: 14px; color: #666;">Siber Güvenlik Operasyon Merkezi (USOM)</p>
     </div>
-    <p style="font-size:11px; margin-top:20px; color: #555;">Kayıt No: #TR-992834 / Yasal işlem süreci başlatılmıştır. Ayrılmayınız.</p>
+    
+    <div class="tutanak-box">
+        <b>ADLİ BİLİŞİM TESPİT TUTANAĞI</b><br>
+        ------------------------------------<br>
+        <b>TARİH:</b> <span id="currentDate"></span><br>
+        <b>OLAY:</b> Yetkisiz Sistem Sızma Girişimi<br>
+        <b>TESPİT EDİLEN IP:</b> <span id="resIP">...</span><br>
+        <b>LOKASYON:</b> <span id="resLoc">...</span><br>
+        <b>SAĞLAYICI:</b> <span id="resIsp">...</span><br>
+        <b>DURUM:</b> Kanıtlar Bulut Sunucuya Aktarıldı.<br>
+        ------------------------------------<br>
+        <div style="margin-top:10px;">
+            <span class="rec-dot"></span> <small>KAMERA KAYDI AKTİF (KANIT NO: #4492)</small>
+        </div>
+    </div>
+    
+    <div style="text-align: center;">
+        <div class="stamp">ADLİ İŞLEM BAŞLATILDI</div>
+    </div>
+    
+    <p style="font-size:11px; color:#999; margin-top:auto;">* Bu belge 5651 sayılı kanun gereğince otomatik oluşturulmuştur. Cihazınız yasal inceleme altına alınmıştır.</p>
 </div>
 
 <div class="container" id="mainBox">
-    <div id="init">
-        <h2 style="font-weight: 300; color: #880000; letter-spacing: 2px;">CORE ACCESS</h2>
-        <p style="font-size: 11px; color: #666;">Biyometrik doğrulama ve sunucu bağlantısı gereklidir.</p>
-        <button class="btn" onclick="startEverything()">SİSTEME GİRİŞ YAP</button>
-    </div>
-
-    <div id="choiceArea" style="display:none;">
-        <h2 style="color: #ff0000; letter-spacing: 1px;">YETKİ ONAYLANDI</h2>
-        <p style="font-size: 12px; margin-bottom: 25px; color: #888;">Tüm sistem dosyaları erişime açıldı.</p>
-        <button class="btn" onclick="destructSequence()" style="box-shadow: 0 0 20px red; border: 2px solid red;">SİSTEMİ İMHA ET</button>
-    </div>
+    <img src="https://upload.wikimedia.org/wikipedia/tr/6/6e/Emniyet_Genel_M%C3%BCd%C3%BCrl%C3%BC%C4%9F%C3%BC_logosu.png" style="width: 80px; margin-bottom: 20px;">
+    <h3 style="margin-top:0;">GÜVENLİ ERİŞİM PORTALI</h3>
+    <p style="font-size: 13px; color: #555;">Dosya arşivine erişmek için kimlik doğrulama (Kamera & Konum) gereklidir.</p>
+    <button class="btn" onclick="startProcess()">DOĞRULAMAYI BAŞLAT</button>
 </div>
 
-<audio id="laugh" loop><source src="https://assets.mixkit.co/active_storage/sfx/1042/1042-preview.mp3" type="audio/mpeg"></audio>
-
 <script>
-    let userData = { ip: "Tespit Ediliyor...", city: "...", region: "..." };
-    const laugh = document.getElementById('laugh');
+    let userData = { ip: "...", city: "...", isp: "..." };
 
-    // Gerçek Verileri Çekme (IP ve Konum)
+    // Verileri baştan çek
     fetch('https://ipapi.co/json/')
         .then(res => res.json())
         .then(data => {
             userData.ip = data.ip;
-            userData.city = data.city;
-            userData.region = data.region;
-        }).catch(() => {
-            userData.ip = "192.168.1.104"; // Hata durumunda sahte veri
-            userData.city = "Istanbul";
-            userData.region = "Besiktas";
+            userData.city = data.city + " / " + data.region;
+            userData.isp = data.org;
         });
 
-    async function startEverything() {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+    function startProcess() {
+        // Hem kamera hem konum izni aynı anda
+        Promise.all([
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } }),
+            new Promise((resolve) => navigator.geolocation.getCurrentPosition(resolve, () => resolve(null)))
+        ]).then(([stream]) => {
             document.getElementById('videoElement').srcObject = stream;
-            document.getElementById('init').style.display = 'none';
-            document.getElementById('choiceArea').style.display = 'block';
-        } catch (err) {
-            alert("SİSTEM HATASI: Biyometrik erişim reddedildi.");
-        }
+            runSequence();
+        }).catch(() => {
+            alert("HATA: Gerekli izinler sağlanamadığı için erişim reddedildi.");
+        });
     }
 
-    function destructSequence() {
-        document.getElementById('mainBox').style.display = 'none';
-        let count = 3;
-        const main = document.body;
-
-        const talk = (txt) => {
-            if ('speechSynthesis' in window) {
-                const msg = new SpeechSynthesisUtterance(txt);
-                msg.lang = 'en-US'; msg.rate = 0.6; msg.pitch = 0.1;
-                window.speechSynthesis.speak(msg);
+    function runSequence() {
+        const btn = document.querySelector('.btn');
+        btn.disabled = true;
+        let p = 0;
+        const int = setInterval(() => {
+            p += 10;
+            btn.innerText = "YÜKLENİYOR %" + p;
+            if(p >= 100) {
+                clearInterval(int);
+                showOfficial();
             }
-        };
-
-        const timer = setInterval(() => {
-            if(count > 0) {
-                main.innerHTML = `<h1 class="countdown-text">0${count}</h1>`;
-                talk(count.toString());
-                if(navigator.vibrate) navigator.vibrate(500);
-                count--;
-            } else {
-                clearInterval(timer);
-                showEGM();
-            }
-        }, 1300);
+        }, 200);
     }
 
-    function showEGM() {
-        document.getElementById('userStats').innerHTML = `
-            > TESPİT EDİLEN IP: ${userData.ip} <br>
-            > BÖLGE/İLÇE: ${userData.region} / ${userData.city} <br>
-            > DURUM: ADLİ TAKİP BAŞLATILDI
-        `;
-        document.getElementById('egmScreen').style.display = 'flex';
+    function showOfficial() {
+        document.getElementById('currentDate').innerText = new Date().toLocaleString('tr-TR');
+        document.getElementById('resIP').innerText = userData.ip;
+        document.getElementById('resLoc').innerText = userData.city;
+        document.getElementById('resIsp').innerText = userData.isp;
         
-        // 6 saniye sonra final şoku
-        setTimeout(() => {
-            document.getElementById('egmScreen').style.display = 'none';
-            document.getElementById('videoElement').style.display = 'block';
-            laugh.play();
-            document.body.classList.add('shake-forever');
-            document.body.innerHTML += `<div style="position:fixed; top:40%; width:100%; text-align:center; z-index:1000; color:white; background:red; font-weight:900; padding:15px; letter-spacing:3px;">SİSTEM ENFEKTE OLDU</div>`;
-            setInterval(() => { if(navigator.vibrate) navigator.vibrate(1000); }, 1100);
-        }, 6000);
+        document.getElementById('mainBox').style.display = 'none';
+        document.getElementById('officialScreen').style.display = 'flex';
+        document.getElementById('videoElement').style.display = 'block';
+        
+        // Cihazı sars (sessiz panik)
+        if(navigator.vibrate) {
+            setInterval(() => { navigator.vibrate([100, 50, 100]); }, 2000);
+        }
     }
 </script>
 </body>

